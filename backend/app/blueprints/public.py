@@ -9,7 +9,8 @@ def index():
 
 @public_bp.route('/data')
 def show_data():
-  components = [x.get_data() for x in controller.components]
+  components = [x.to_json() for x in controller.components]
+  print(components)
   return jsonify(components), 200
 
 
@@ -27,14 +28,10 @@ def create_data():
   except Exception as e:
     return "Exception: " + str(e), 500
 
-@public_bp.route('/data/<id>/calculateOutputs')
-def calculateOutputs(id):
-  outputs = controller.calculateOutputs(id)
+@public_bp.route('/data/<id>/calculate_outputs')
+def calculate_outputs(id):
+  outputs = controller.calculate_outputs(id)
   if (outputs == None):
     return "Component with id: " + str(id) + " doesn't exist.", 400
 
   return jsonify(outputs), 200
-
-@public_bp.route('/error')
-def error():
-  raise ValueError('This is a ValueError!')

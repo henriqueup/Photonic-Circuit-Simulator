@@ -49,10 +49,15 @@ class SwN(Component):
       'outputs': self.outputs,
     }
 
-  def get_data(self):
-    return ComponentCollection.objects(id=self.id).get()
+  def to_json(self):
+    return {
+      'id': str(self.id),
+      'kind': self.kind,
+      'inputs': [x.to_json() for x in self.inputs],
+      'outputs': [x.to_json() for x in self.outputs]
+    }
 
-  def calculateOutputs(self):
+  def calculate_outputs(self):
     self.outputs[0].power = self.inputs[0].power
     self.outputs[1].power = self.inputs[1].power
 

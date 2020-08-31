@@ -31,8 +31,12 @@ class Port():
   def as_dict(self):
     return {'target': self.target, 'power': self.power}
   
-  def get_data(self):
-    return PortCollection.objects(id=self.id).get()
+  def to_json(self):
+    return {
+      'id': str(self.id),
+      'target': self.target,
+      'power': float(self.power)
+    }
 
-  def calculateOutputs(self):
+  def calculate_outputs(self):
     return [self.power]

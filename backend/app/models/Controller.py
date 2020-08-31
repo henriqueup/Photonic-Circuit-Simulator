@@ -24,9 +24,6 @@ class Controller:
       if component.kind == "swn":
         components.append(SwN.load(component.id))
 
-    for port in PortCollection.objects:
-      components.append(Port.load(port.id))
-
     for component in components:
       self.components.append(component)
 
@@ -35,19 +32,15 @@ class Controller:
     if (kind == 'swn'):
       swn = SwN.create()
       self.components.append(swn)
-      for port in swn.inputs:
-        self.components.append(Port.load(port))
-      for port in swn.outputs:
-        self.components.append(Port.load(port))
     else:
       raise TypeError("Kind \'" + kind + "\' doesn't exist.")
     
 
-  def calculateOutputs(self, id):
+  def calculate_outputs(self, id):
     component = next((x for x in self.components if str(x.id) == id), None)
     if (component == None):
       return None
 
     return {
-      'outputs': [float(x) for x in component.calculateOutputs()]
+      'outputs': [float(x) for x in component.calculate_outputs()]
     }
