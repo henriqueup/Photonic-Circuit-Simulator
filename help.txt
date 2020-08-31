@@ -1,7 +1,0 @@
-Accessing the DB:
-  1- docker exec -it "mongodb container name" bash
-  2- mongo -u "user" -p
-
-Clearing ports:
-  1- docker container ls
-  2- docker rm -f <id>
