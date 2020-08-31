@@ -1,0 +1,43 @@
+version: "3.5"
+services:
+  flask:
+    build:
+      context: ./backendPOC
+      dockerfile: Dockerfile
+    container_name: backend_flaskpoc
+    ports:
+      - "5000:5000"
+    environment:
+      APP_SETTINGS: "configurations.DevelopmentConfig"
+      MONGODB_URL: "mongodb://flaskuser:5up3r54f3@mongodb_flaskpoc:27017/flaskdb"
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ./backendPOC:/app
+    depends_on:
+      - mongodb
+    networks:
+      - backend
+  mongodb:
+    image: mongo:4.4.0
+    container_name: mongodb_flaskpoc
+    command: mongod --auth
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: 3xtr454f3
+      MONGO_INITDB_DATABASE: flaskdb
+      MONGO_DATA_DIR: /data/db
+      MONGO_LOG_DIR: /dev/null
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodbdata:/data/db
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
+volumes:
+  mongodbdata:
+    driver: local
+  backendPOC:
+    driver: local

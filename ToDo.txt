@@ -1,0 +1,4 @@
+-to_json method in classes
+-PUT request
+-Lumerical values collection?
+-calculateOutputs with aprox
