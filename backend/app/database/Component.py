@@ -4,6 +4,6 @@ from app.database.Port import Port
 
 class Component(gj.Document):
   kind = db.StringField()
-  inputs = db.ListField(db.LazyReferenceField(Port), required=True)
+  inputs = db.ListField(db.LazyReferenceField(Port))
   outputs = db.ListField(db.LazyReferenceField(Port), required=True)
   label = db.StringField()

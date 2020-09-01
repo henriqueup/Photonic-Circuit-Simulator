@@ -38,16 +38,16 @@ def calculate_outputs(id):
 @public_bp.route('/data/<id>/set_outputs', methods=['PUT'])
 def set_outputs(id):
   body = request.get_json()
-  if (not hasattr(body, 'outputs') or not isinstance(body.outputs, list)):
+  if (not 'outputs' in body or not isinstance(body['outputs'], list)):
     return "Body doesn't have an \'outputs\' list field.", 400
 
-  for output in body.outputs:
-    if (not hasattr(output, 'id') or not hasattr(output, 'target')):
+  for output in body['outputs']:
+    if (not 'id' in output or not 'target' in output):
       return "Outputs don't have the required fields (\'id\' and \'target\').", 400
 
-  status, component = controller.set_outputs(id, body.outputs)
+  status, component = controller.set_outputs(id, body['outputs'])
   
   if (component == None):
     return status, 400
 
-  return jsonify(component), 200
+  return jsonify(component.to_json()), 200

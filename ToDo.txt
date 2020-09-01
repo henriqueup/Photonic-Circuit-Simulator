@@ -1,5 +1,5 @@
 -to_json method in classes DONE
 -PUT request DONE
--Create PowerSources
+-Create PowerSources DONE
 -Lumerical values collection?
 -calculateOutputs with aprox

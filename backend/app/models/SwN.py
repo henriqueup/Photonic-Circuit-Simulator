@@ -1,7 +1,6 @@
 from app.models.Port import Port
 from app.models.Component import Component
 from app.database.Component import Component as ComponentCollection
-import json
 
 class SwN(Component):
   def __init__(self, inputs, outputs, id=None):
@@ -46,17 +45,21 @@ class SwN(Component):
     return next((x for x in self.inputs if str(x.id) == id), None)
 
   def set_input(self, output):
-    input = self.get_input(output.target)
-    input.target = output.id
-    input.update_data()
+    input = self.get_input(output['target'])
+    if (input != None):
+      input.target = output['id']
+      input.update_data()
+
 
   def get_output(self, id):
     return next((x for x in self.outputs if str(x.id) == id), None)
 
   def set_output(self, output):
-    own_output = self.get_output(output.id)
-    own_output.target = output.target
-    own_output.update_data()
+    own_output = self.get_output(output['id'])
+    if (own_output != None):
+      own_output.target = output['target']
+      own_output.update_data()
+
 
   def as_dict(self):
     return {
@@ -72,6 +75,7 @@ class SwN(Component):
       'inputs': [x.to_json() for x in self.inputs],
       'outputs': [x.to_json() for x in self.outputs]
     }
+
 
   def calculate_outputs(self):
     self.outputs[0].power = self.inputs[0].power
