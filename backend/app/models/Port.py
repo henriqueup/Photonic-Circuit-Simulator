@@ -38,5 +38,8 @@ class Port():
       'power': float(self.power)
     }
 
+  def update_data(self):
+    PortCollection.objects.get(id=self.id).update(**self.as_dict())
+
   def calculate_outputs(self):
     return [self.power]

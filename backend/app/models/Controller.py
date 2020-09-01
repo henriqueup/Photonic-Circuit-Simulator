@@ -36,11 +36,37 @@ class Controller:
       raise TypeError("Kind \'" + kind + "\' doesn't exist.")
     
 
+  def get_component(self, id):
+    return next((x for x in self.components if str(x.id) == id), None)
+
   def calculate_outputs(self, id):
-    component = next((x for x in self.components if str(x.id) == id), None)
+    component = self.get_component(id)
     if (component == None):
       return None
 
     return {
       'outputs': [float(x) for x in component.calculate_outputs()]
     }
+
+  def get_component_with_input_port(self, input_port_id):
+    return next((x for x in self.components if input_port_id in [str(id) for id in x.inputs]), None)
+
+  def set_outputs(self, id, outputs):
+    component = self.get_component(id)
+    if (component == None):
+      return "Component with id: " + str(id) + " doesn't exist.", None
+
+    for output in outputs:
+      if (component.get_output(output.id) == None):
+        return "The specified component doesn't have output with id: " + output.id, None
+
+      target_component = self.get_component_with_input_port(output.target)
+      if (target_component == None):
+        return "The specified input port with id: \'" + output.target + "\' doesn't exist.", None
+
+      component.set_output(output)
+      target_component.set_input(output)
+
+    return "Success", component
+
+    

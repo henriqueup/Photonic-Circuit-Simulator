@@ -5,5 +5,23 @@ class Component:
     self.outputs = [] #Ports
     self.label = ""
 
-  def calculateOutputs(self):
+  def calculate_outputs(self):
+    raise NotImplementedError
+
+  def to_json(self):
+    raise NotImplementedError
+
+  def as_dict(self):
+    raise NotImplementedError
+
+  def get_input(self, id):
+    raise NotImplementedError
+
+  def set_input(self, output):
+    raise NotImplementedError
+
+  def get_output(self, id):
+    raise NotImplementedError
+
+  def set_output(self, output):
     raise NotImplementedError

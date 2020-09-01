@@ -42,6 +42,22 @@ class SwN(Component):
     return swn
 
 
+  def get_input(self, id):
+    return next((x for x in self.inputs if str(x.id) == id), None)
+
+  def set_input(self, output):
+    input = self.get_input(output.target)
+    input.target = output.id
+    input.update_data()
+
+  def get_output(self, id):
+    return next((x for x in self.outputs if str(x.id) == id), None)
+
+  def set_output(self, output):
+    own_output = self.get_output(output.id)
+    own_output.target = output.target
+    own_output.update_data()
+
   def as_dict(self):
     return {
       'kind': self.kind,
