@@ -21,7 +21,10 @@ class Port():
   def load(cls, id):
     port_db = PortCollection.objects(id=id).get()
 
-    target = port_db.target
+    if (port_db.target != None):
+      target = port_db.target.id
+    else:
+      target = None
     power = port_db.power
 
     port = cls(target, power, id)
@@ -34,7 +37,7 @@ class Port():
   def to_json(self):
     return {
       'id': str(self.id),
-      'target': self.target,
+      'target': str(self.target) if self.target else None,
       'power': float(self.power)
     }
 
