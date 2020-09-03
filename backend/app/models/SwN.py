@@ -12,12 +12,12 @@ class SwN(Component):
   @classmethod
   def create(cls):
     inputs = []
-    inputs.append(Port.create().id)
-    inputs.append(Port.create().id)
+    inputs.append(Port.create())
+    inputs.append(Port.create())
     
     outputs = []
-    outputs.append(Port.create().id)
-    outputs.append(Port.create().id)
+    outputs.append(Port.create())
+    outputs.append(Port.create())
 
     swn = cls(inputs, outputs)
     swn_db = ComponentCollection(**swn.as_dict()).save()
@@ -44,28 +44,37 @@ class SwN(Component):
   def get_input(self, id):
     return next((x for x in self.inputs if str(x.id) == id), None)
 
-  def set_input(self, output):
-    input = self.get_input(output['target'])
+  def set_input(self, id, target_port):
+    input = self.get_input(id)
     if (input != None):
-      input.target = output['id']
+      input.target = target_port
       input.update_data()
 
 
   def get_output(self, id):
     return next((x for x in self.outputs if str(x.id) == id), None)
 
-  def set_output(self, output):
-    own_output = self.get_output(output['id'])
+  def set_output(self, id, target_port):
+    own_output = self.get_output(id)
     if (own_output != None):
-      own_output.target = output['target']
+      own_output.target = target_port
       own_output.update_data()
+
+  def delete(self):
+    for port in self.inputs:
+      port.delete()
+    
+    for port in self.outputs:
+      port.delete()
+
+    ComponentCollection.objects(id=self.id).get().delete()
 
 
   def as_dict(self):
     return {
       'kind': self.kind,
-      'inputs': self.inputs,
-      'outputs': self.outputs,
+      'inputs': [port.id for port in self.inputs],
+      'outputs': [port.id for port in self.outputs],
     }
 
   def to_json(self):

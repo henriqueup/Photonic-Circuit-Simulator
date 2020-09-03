@@ -25,3 +25,6 @@ class Component:
 
   def set_output(self, output):
     raise NotImplementedError
+  
+  def delete(self):
+    raise NotImplementedError

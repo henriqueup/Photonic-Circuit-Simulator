@@ -3,3 +3,5 @@
 -Create PowerSources DONE
 -Lumerical values collection?
 -calculateOutputs with aprox
+-format request outputs ({error:"", message: ""}, status)
+-implement try catch on requests?

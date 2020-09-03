@@ -32,17 +32,25 @@ class Port():
 
 
   def as_dict(self):
-    return {'target': self.target, 'power': self.power}
+    return {'target': str(self.target.id) if self.target else None, 'power': self.power}
   
   def to_json(self):
     return {
       'id': str(self.id),
-      'target': str(self.target) if self.target else None,
+      'target': str(self.target.id) if self.target else None,
       'power': float(self.power)
     }
 
   def update_data(self):
     PortCollection.objects.get(id=self.id).update(**self.as_dict())
+
+  def delete(self):
+    if (self.target):
+      target_port = self.target
+      target_port.target = None
+      target_port.update_data()
+      
+    PortCollection.objects(id=self.id).get().delete()
 
   def calculate_outputs(self):
     return [self.power]
