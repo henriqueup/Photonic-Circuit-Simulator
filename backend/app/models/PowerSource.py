@@ -39,11 +39,9 @@ class PowerSource(Component):
     own_output = self.get_output(id)
     if (own_output != None):
       own_output.target = target_port
-      own_output.update_data()
 
   def set_powers(self, powers):
     self.outputs[0].power = powers[0]
-    self.outputs[0].update_data()
 
   def delete(self):
     for port in self.inputs:

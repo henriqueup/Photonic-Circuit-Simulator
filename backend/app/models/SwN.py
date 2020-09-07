@@ -1,6 +1,7 @@
 from app.models.Port import Port
 from app.models.Component import Component
 from app.database.Component import Component as ComponentCollection
+from app.database.Lumerical import Lumerical
 
 class SwN(Component):
   def __init__(self, inputs, outputs, id=None):
@@ -48,7 +49,7 @@ class SwN(Component):
     input = self.get_input(id)
     if (input != None):
       input.target = target_port
-      input.update_data()
+      input.power = target_port.power
 
 
   def get_output(self, id):
@@ -58,7 +59,6 @@ class SwN(Component):
     own_output = self.get_output(id)
     if (own_output != None):
       own_output.target = target_port
-      own_output.update_data()
 
   def delete(self):
     for port in self.inputs:
@@ -87,7 +87,10 @@ class SwN(Component):
 
 
   def calculate_outputs(self):
-    self.outputs[0].power = self.inputs[0].power
-    self.outputs[1].power = self.inputs[1].power
+    col = self.kind + "_output"
+    self.outputs[0].power = Lumerical.calculate(col, self.inputs[0].power, self.inputs[1].power)
+
+    col = self.kind + "_drain"
+    self.outputs[1].power = Lumerical.calculate(col, self.inputs[0].power, self.inputs[1].power)
 
     return [self.outputs[0].power, self.outputs[1].power]

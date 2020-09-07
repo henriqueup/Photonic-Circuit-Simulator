@@ -2,3 +2,7 @@ flask
 flask-mongoengine
 mongoengine-goodjson
 flask-restful
+pandas
+numpy
+scikit-learn
+sympy

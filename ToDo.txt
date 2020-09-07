@@ -1,7 +1,9 @@
 -to_json method in classes DONE
 -PUT request DONE
 -Create PowerSources DONE
--Lumerical values collection?
--calculateOutputs with aprox
+-Lumerical values collection? DONE
+-calculateOutputs with aprox 
 -format request outputs ({error:"", message: ""}, status)
 -implement try catch on requests?
+-pesquisar ABC
+-change outputs

@@ -6,6 +6,29 @@ class Port():
     self.power = power
     self.id = id
 
+  #region Getters and Setters
+  @property
+  def power(self):
+    return self._power
+  @power.setter
+  def power(self, power):
+    self._power = power
+    if (hasattr(self, 'id')):
+      self.update_data()
+
+    if (self.target is not None and hasattr(self.target, 'power') and self.target.power != power):
+      self.target.power = power
+
+  @property
+  def target(self):
+    return self._target
+  @target.setter
+  def target(self, target):
+    self._target = target
+    if (hasattr(self, 'id')):
+      self.update_data()
+  #endregion
+
   @classmethod
   def create(cls):
     target = None

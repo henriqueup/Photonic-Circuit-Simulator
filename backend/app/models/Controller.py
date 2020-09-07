@@ -44,9 +44,9 @@ class Controller:
         self.ports.append(port)
 
     for port in self.ports:
-      if (port.target != None):
+      if (port.target is not None):
         target_port = self.get_port(port.target)
-        if (target_port != None):
+        if (target_port is not None):
           target_port.target = port
           port.target = target_port
 
@@ -69,10 +69,10 @@ class Controller:
     
 
   def get_component(self, id):
-    return next((x for x in self.components if str(x.id) == id), None)
+    return next((x for x in self.components if str(x.id) == str(id)), None)
 
   def get_port(self, id):
-    return next((x for x in self.ports if str(x.id) == id), None)
+    return next((x for x in self.ports if str(x.id) == str(id)), None)
 
   def calculate_outputs(self, id):
     component = self.get_component(id)
