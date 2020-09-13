@@ -72,3 +72,8 @@ def set_power(id):
     return response, 400
 
   return jsonify(component.to_json()), 200
+
+@public_bp.route('/data/reset', methods=['GET'])
+def reset():
+  controller.reset()
+  return "OK", 200

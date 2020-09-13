@@ -1,6 +1,7 @@
 from app.models.SwN import SwN
 from app.models.PowerSource import PowerSource
 from app.models.Port import Port
+from app.models.SwP import SwP
 from app.database.Component import Component as ComponentCollection
 from app.database.Port import Port as PortCollection
 
@@ -35,6 +36,8 @@ class Controller:
         components.append(SwN.load(component.id))
       elif component.kind == "power_source":
         components.append(PowerSource.load(component.id))
+      elif component.kind == "swp":
+        components.append(SwP.load(component.id))
 
     for component in components:
       self.components.append(component)
@@ -63,6 +66,13 @@ class Controller:
       power_source = PowerSource.create()
       self.components.append(power_source)
       for port in power_source.outputs:
+        self.ports.append(port)
+    elif (kind == 'swp'):
+      swp = SwP.create()
+      self.components.append(swp)
+      for port in swp.inputs:
+        self.ports.append(port)
+      for port in swp.outputs:
         self.ports.append(port)
     else:
       raise TypeError("Kind \'" + kind + "\' doesn't exist.")
@@ -139,3 +149,12 @@ class Controller:
     del self.components[self.components.index(component)]
     
     return None
+
+
+  def reset(self):
+    for component in self.components:
+      component.delete()
+      del self.components[self.components.index(component)]
+
+    for port in self.ports:
+      del self.ports[self.ports.index(port)]
