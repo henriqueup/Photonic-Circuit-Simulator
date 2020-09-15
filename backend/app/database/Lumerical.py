@@ -85,4 +85,4 @@ class Lumerical(gj.Document):
     function = '+'.join(function)
 
     result = eval(function)
-    return result #if result >= 0 else 0
+    return result if result >= 0 else 0
