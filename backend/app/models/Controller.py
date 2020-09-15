@@ -4,157 +4,55 @@ from app.models.Port import Port
 from app.models.SwP import SwP
 from app.database.Component import Component as ComponentCollection
 from app.database.Port import Port as PortCollection
+from app.models.Circuit import Circuit
+from app.database.Circuit import Circuit as CircuitCollection
 
 class Controller:
   def __init__(self):
-    self._components = []
-    self._ports = []
+    self.circuit_ids = []
+    self.current_circuit = None
 
-#region Getters and Setters
-  @property
-  def components(self):
-    return self._components
+  def start(self):
+    for circuit in CircuitCollection.objects:
+      self.circuit_ids.append(str(circuit.id))
 
-  @components.setter
-  def components(self, components):
-    raise AttributeError("Operation \'set\' not allowed.")
+  def load_circuit(self, circuit_id):
+    if (str(circuit_id) not in self.circuit_ids):
+      return "The circuit with id " + str(circuit_id) + " doesn\'t exist.", None
+    
+    self.current_circuit = Circuit.load(circuit_id)
+    return "Success", self.current_circuit.to_json()
 
-  @property
-  def ports(self):
-    return self._ports
+  def add_circuit(self, label):
+    circuit = Circuit.create(label)
 
-  @ports.setter
-  def ports(self, ports):
-    raise AttributeError("Operation \'set\' not allowed.")
-#endregion
+    self.circuit_ids.append(str(circuit.id))
+    self.current_circuit = circuit
 
-  def load_components(self):
-    components = []
-
-    for component in ComponentCollection.objects:
-      if component.kind == "swn":
-        components.append(SwN.load(component.id))
-      elif component.kind == "power_source":
-        components.append(PowerSource.load(component.id))
-      elif component.kind == "swp":
-        components.append(SwP.load(component.id))
-
-    for component in components:
-      self.components.append(component)
-      for port in component.inputs:
-        self.ports.append(port)
-      for port in component.outputs:
-        self.ports.append(port)
-
-    for port in self.ports:
-      if (port.target is not None):
-        target_port = self.get_port(port.target)
-        if (target_port is not None):
-          target_port.target = port
-          port.target = target_port
-
+  def get_components(self):
+    # if (self.current_circuit is None):
+    return self.current_circuit.components
 
   def add_component(self, kind):
-    if (kind == 'swn'):
-      swn = SwN.create()
-      self.components.append(swn)
-      for port in swn.inputs:
-        self.ports.append(port)
-      for port in swn.outputs:
-        self.ports.append(port)
-    elif (kind == 'power_source'):
-      power_source = PowerSource.create()
-      self.components.append(power_source)
-      for port in power_source.outputs:
-        self.ports.append(port)
-    elif (kind == 'swp'):
-      swp = SwP.create()
-      self.components.append(swp)
-      for port in swp.inputs:
-        self.ports.append(port)
-      for port in swp.outputs:
-        self.ports.append(port)
-    else:
-      raise TypeError("Kind \'" + kind + "\' doesn't exist.")
-    
-
-  def get_component(self, id):
-    return next((x for x in self.components if str(x.id) == str(id)), None)
-
-  def get_port(self, id):
-    return next((x for x in self.ports if str(x.id) == str(id)), None)
+    # if (self.current_circuit is None):
+    self.current_circuit.add_component(kind)
 
   def calculate_outputs(self, id):
-    component = self.get_component(id)
-    if (component == None):
-      return None
-
-    return {
-      'outputs': [float(x) for x in component.calculate_outputs()]
-    }
-
-  def get_component_with_input_port(self, input_port_id):
-    for component in self.components:
-      if (input_port_id in [str(input.id) for input in component.inputs]):
-        return component
-    else:
-      return None
+    # if (self.current_circuit is None):
+    return self.current_circuit.calculate_outputs(id)
 
   def set_outputs(self, id, outputs):
-    component = self.get_component(id)
-    if (component == None):
-      return "Component with id: " + str(id) + " doesn\'t exist.", None
-
-    for output in outputs:
-      if (component.get_output(output['id']) == None):
-        return "The specified component doesn\'t have output with id: " + output['id'], None
-
-      target_component = self.get_component_with_input_port(output['target'])
-      if (target_component == None):
-        return "The specified input port with id: \'" + output['target'] + "\' doesn\'t exist.", None
-
-      component.set_output(output['id'], self.get_port(output['target']))
-      target_component.set_input(output['target'], self.get_port(output['id']))
-
-    return "Success", component
+    # if (self.current_circuit is None):
+    return self.current_circuit.set_outputs(id, outputs)
 
   def set_power(self, id, power):
-    component = self.get_component(id)
-    if (component == None):
-      return "Component with id: " + str(id) + " doesn\'t exist.", None
-
-    if (component.kind != "power_source"):
-      return "Component with id: " + str(id) + " isn\'t of kind \'power_source\'.", None
-
-    component.set_powers([power])
-    return "Success", component
+    # if (self.current_circuit is None):
+    return self.current_circuit.set_power(id, power)
     
-
   def delete_component(self, id):
-    component = self.get_component(id)
-    if (component == None):
-      return "Component with id: " + str(id) + " doesn\'t exist."
-    
-    component.delete()
-
-    for port in component.inputs:
-      port = self.get_port(port.id)
-      if (port != None):
-        del self.ports[self.ports.index(port)]
-    for port in component.outputs:
-      port = self.get_port(port.id)
-      if (port != None):
-         del self.ports[self.ports.index(port)]
-
-    del self.components[self.components.index(component)]
-    
-    return None
-
+    # if (self.current_circuit is None):
+    return self.current_circuit.delete_component(id)
 
   def reset(self):
-    for component in self.components:
-      component.delete()
-      del self.components[self.components.index(component)]
-
-    for port in self.ports:
-      del self.ports[self.ports.index(port)]
+    # if (self.current_circuit is None):
+    self.current_circuit.reset()

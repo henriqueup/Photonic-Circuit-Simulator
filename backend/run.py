@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
   initialize_db(app)
   LumericalCollection.initialize()
-  controller.load_components()
+  controller.start()
   # initialize_routes(app)
 
   app.run(host='0.0.0.0')

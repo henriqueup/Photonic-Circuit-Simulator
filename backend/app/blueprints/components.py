@@ -1,18 +1,18 @@
 from flask import Blueprint, request, Response, jsonify
 from app.resources.controller import controller
 
-public_bp = Blueprint('public', __name__)
+components_bp = Blueprint('components', __name__)
 
-@public_bp.route('/')
+@components_bp.route('/')
 def index():
   return "Hello World!"
 
-@public_bp.route('/data')
+@components_bp.route('/data')
 def show_data():
-  components = [x.to_json() for x in controller.components]
+  components = [x.to_json() for x in controller.get_components()]
   return jsonify(components), 200
 
-@public_bp.route('/data', methods=['POST'])
+@components_bp.route('/data', methods=['POST'])
 def create_data():
   try:
     kind = request.get_json().get('kind')
@@ -26,7 +26,7 @@ def create_data():
   except Exception as e:
     return "Exception: " + str(e), 500
 
-@public_bp.route('/data/<id>', methods=['DELETE'])
+@components_bp.route('/data/<id>', methods=['DELETE'])
 def delete_component(id):
   response = controller.delete_component(id)
 
@@ -35,7 +35,7 @@ def delete_component(id):
   
   return "OK", 200
 
-@public_bp.route('/data/<id>/calculate_outputs')
+@components_bp.route('/data/<id>/calculate_outputs')
 def calculate_outputs(id):
   outputs = controller.calculate_outputs(id)
   if (outputs == None):
@@ -43,7 +43,7 @@ def calculate_outputs(id):
 
   return jsonify(outputs), 200
 
-@public_bp.route('/data/<id>/set_outputs', methods=['PUT'])
+@components_bp.route('/data/<id>/set_outputs', methods=['PUT'])
 def set_outputs(id):
   body = request.get_json()
   if (not 'outputs' in body or not isinstance(body['outputs'], list)):
@@ -60,7 +60,7 @@ def set_outputs(id):
 
   return jsonify(component.to_json()), 200
 
-@public_bp.route('/data/<id>/set_power', methods=['PUT'])
+@components_bp.route('/data/<id>/set_power', methods=['PUT'])
 def set_power(id):
   body = request.get_json()
   if (not 'power' in body or (not isinstance(body['power'], float) and not isinstance(body['power'], int))):
@@ -73,7 +73,7 @@ def set_power(id):
 
   return jsonify(component.to_json()), 200
 
-@public_bp.route('/data/reset', methods=['GET'])
+@components_bp.route('/data/reset', methods=['GET'])
 def reset():
   controller.reset()
   return "OK", 200

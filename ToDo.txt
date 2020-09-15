@@ -2,8 +2,9 @@
 -PUT request DONE
 -Create PowerSources DONE
 -Lumerical values collection? DONE
--calculateOutputs with aprox 
+-calculateOutputs with aprox DONE
+-circuits: PUT, DELETE, reset
 -format request outputs ({error:"", message: ""}, status)
--implement try catch on requests?
+-implement try catch on requests, create BadRequestError (differentiate from internal server error)
 -pesquisar ABC
 -change outputs

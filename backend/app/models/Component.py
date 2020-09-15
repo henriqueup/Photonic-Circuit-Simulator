@@ -1,9 +1,15 @@
+from app.database.Component import Component as ComponentCollection
+
 class Component:
   def __init__(self):
     self.kind = "base"
     self.inputs = []  #Ports
     self.outputs = [] #Ports
     self.label = ""
+
+  @classmethod
+  def load(cls, id):
+    return ComponentCollection.objects(id=id).get()
 
   def calculate_outputs(self):
     raise NotImplementedError
