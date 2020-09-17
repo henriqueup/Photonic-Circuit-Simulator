@@ -5,7 +5,7 @@ components_bp = Blueprint('components', __name__)
 
 @components_bp.route('/')
 def index():
-  return "Hello World!"
+  return {"message": "Hello World!"}
 
 @components_bp.route('/data')
 def show_data():

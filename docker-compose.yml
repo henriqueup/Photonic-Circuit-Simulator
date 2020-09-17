@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3.8"
 services:
   flask:
     build:
@@ -17,6 +17,24 @@ services:
       - mongodb
     networks:
       - backend
+      - frontend
+
+  react:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - './frontend:/app'
+      - '/app/node_modules'
+    ports:
+      - 3000:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true
+    networks:
+      - frontend
+
   mongodb:
     image: mongo:4.4.0
     container_name: mongodb
@@ -33,11 +51,16 @@ services:
       - mongodbdata:/data/db
     networks:
       - backend
+      
 networks:
   backend:
+    driver: bridge
+  frontend:
     driver: bridge
 volumes:
   mongodbdata:
     driver: local
   backend:
+    driver: local
+  frontend:
     driver: local

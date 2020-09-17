@@ -1,2 +1,3 @@
 https://dev.to/paurakhsharma/flask-rest-api-part-0-setup-basic-crud-api-4650
 https://www.digitalocean.com/community/tutorials/how-to-set-up-flask-with-mongodb-and-docker
+https://levelup.gitconnected.com/how-to-setup-a-react-spa-with-typescript-redux-and-material-ui-99a1e1ec7d54
