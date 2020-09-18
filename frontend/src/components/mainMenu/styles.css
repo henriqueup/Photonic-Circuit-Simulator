@@ -1,0 +1,5 @@
+.mainMenu {
+  display: flex;
+  flex: 0 1 22px;
+  border-bottom: 2px solid;
+}

@@ -15,3 +15,11 @@ First time DB config (users, pwds and dbs must be named accordingly on docker-co
 Clearing ports:
   1- docker container ls
   2- docker rm -f <id>
+
+Reseting node_modules volume:
+  docker volume ls
+  docker volume rm VOLUME_NAME
+
+  OR
+
+  docker-compose down -v    (removes all volumes)

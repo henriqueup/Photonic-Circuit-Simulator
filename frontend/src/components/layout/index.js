@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import ComponentsMenu from "../componentsMenu";
+import InspectionMenu from "../inspectionMenu";
+import MainMenu from "../mainMenu";
+import Workspace from "../workspace";
+import "./styles.css";
 
 const Layout = () => {
-  const [name, setName] = useState("nome default");
-  const initializeName = () => {
-    fetch("http://localhost:5000")
-      .then((res) => res.json())
-      .then((data) => setName(data.message))
-      .catch((err) => err);
-    // setName("Initial Name");
-  };
-
-  useEffect(initializeName, []);
-
-  return <div>{name}</div>;
+  return (
+    <div className="main">
+      <MainMenu />
+      <div className="screen">
+        <ComponentsMenu />
+        <Workspace />
+        <InspectionMenu />
+      </div>
+    </div>
+  );
 };
 
 export default Layout;

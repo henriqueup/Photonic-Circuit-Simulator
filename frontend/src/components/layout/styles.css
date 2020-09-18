@@ -1,0 +1,10 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+.screen {
+  display: flex;
+  flex: 1 1 auto; /*short for: flex-grow 1, flex-shrink 1 flex-basis auto*/
+}

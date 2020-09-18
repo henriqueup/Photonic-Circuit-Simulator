@@ -1,0 +1,9 @@
+.inspectionMenu {
+  width: 10%;
+  border-left: 2px solid;
+  text-align: center;
+}
+.inspectionMenuTitle {
+  display: block;
+  margin: 8px 0px 0px 0px;
+}
