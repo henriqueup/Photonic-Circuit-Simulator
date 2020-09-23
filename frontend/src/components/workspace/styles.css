@@ -1,1 +1,3 @@
-
+.componentSprite:hover {
+  cursor: grab;
+}

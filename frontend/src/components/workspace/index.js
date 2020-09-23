@@ -7,14 +7,18 @@ const Workspace = () => {
   const [components, setComponents] = useState([]);
 
   const initialize = () => {
-    setComponents([new Component()]);
+    let initialComponents = [];
+    initialComponents.push(new Component());
+    initialComponents.push(new Component());
+
+    setComponents(initialComponents);
   };
 
   useEffect(initialize, []);
 
   return (
     <Stage
-      width={window.innerWidth - window.innerWidth / 5}
+      width={window.innerWidth - (window.innerWidth * 3) / 10}
       height={window.innerHeight - 22}
       options={{ antialias: true, backgroundColor: 0xffffff }}
     >

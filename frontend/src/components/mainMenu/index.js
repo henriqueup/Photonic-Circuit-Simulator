@@ -13,9 +13,16 @@ const MainMenu = () => {
 
   useEffect(initializeName, []);
 
+  const fileClick = () => {
+    alert("File button clicked.");
+  };
+
   return (
     <div className="mainMenu">
-      <span>{name}</span>
+      <div className="mainMenuButton" onClick={fileClick}>
+        File
+      </div>
+      <div className="mainMenuButton">{name}</div>
     </div>
   );
 };
