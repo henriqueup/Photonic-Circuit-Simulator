@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Stage, Sprite } from "@inlet/react-pixi";
-import Component from "../../models/Component.js";
+import { Stage, Container } from "@inlet/react-pixi";
+import CircuitComponentModel from "../../models/CircuitComponent.js";
+import CircuitComponent from "../circuitComponent";
 import "./styles.css";
 
 const Workspace = () => {
@@ -8,8 +9,8 @@ const Workspace = () => {
 
   const initialize = () => {
     let initialComponents = [];
-    initialComponents.push(new Component());
-    initialComponents.push(new Component());
+    initialComponents.push(new CircuitComponentModel());
+    initialComponents.push(new CircuitComponentModel());
 
     setComponents(initialComponents);
   };
@@ -22,19 +23,11 @@ const Workspace = () => {
       height={window.innerHeight - 22}
       options={{ antialias: true, backgroundColor: 0xffffff }}
     >
-      {components.map((component, index) => (
-        <Sprite
-          key={index}
-          image={component.image}
-          x={component.x}
-          y={component.y}
-          interactive={component.interactive}
-          buttonMode={component.buttonMode}
-          pointerdown={component.onDragStart}
-          pointerup={component.onDragEnd}
-          pointermove={component.onDragMove}
-        />
-      ))}
+      <Container>
+        {components.map((component, index) => (
+          <CircuitComponent base={component} key={index} />
+        ))}
+      </Container>
     </Stage>
   );
 };

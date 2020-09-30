@@ -1,8 +1,8 @@
 import React from "react";
-import ComponentsMenu from "../componentsMenu";
-import InspectionMenu from "../inspectionMenu";
-import MainMenu from "../mainMenu";
-import Workspace from "../workspace";
+import ComponentsMenu from "../components/componentsMenu";
+import InspectionMenu from "../components/inspectionMenu";
+import MainMenu from "../components/mainMenu";
+import Workspace from "../components/workspace";
 import "./styles.css";
 
 const Layout = () => {
