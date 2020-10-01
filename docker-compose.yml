@@ -25,8 +25,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - './frontend:/app'
-      - '/app/node_modules'
+      - ./frontend:/app
+      - /app/node_modules
     ports:
       - 3000:3000
     environment:
@@ -51,7 +51,7 @@ services:
       - mongodbdata:/data/db
     networks:
       - backend
-      
+
 networks:
   backend:
     driver: bridge

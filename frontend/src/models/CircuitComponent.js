@@ -1,67 +1,68 @@
+import { applyDefaultProps, PixiComponent } from "@inlet/react-pixi";
+import { Sprite } from "pixi.js";
 import componentPng from "../resources/images/component.png";
+import { store } from "../store";
+import { updatePos } from "../store/ducks/circuitComponent";
+import { snapToGrid } from "../utils/componentMovement";
 import Line from "./Line";
 import Port from "./Port";
 
-const GRID_SIZE = 18;
 const CIRCUIT_COMPONENT_WIDTH = 80;
 
-const snapToGrid = (position) => {
-  let x = Math.ceil(position.x);
-  let y = Math.ceil(position.y);
+export function onDragStart(event) {
+  this.data = event.data;
+  this.alpha = 0.5;
+  this.dragging = true;
+}
 
-  let remainderX = x % GRID_SIZE;
-  let remainderY = y % GRID_SIZE;
+export function onDragEnd() {
+  this.alpha = 1;
+  this.dragging = false;
 
-  position.x = x - remainderX;
-  position.y = y - remainderY;
-
-  return position;
-};
-
-export default class CircuitComponent {
-  constructor() {
-    this.image = componentPng;
-    this.x = Math.floor(Math.random() * 100) + 100;
-    this.y = Math.floor(Math.random() * 100) + 100;
-    this.interactive = true;
-    this.buttonMode = true;
-
-    this.ports = [];
-    this.ports.push(new Port(8));
-    this.ports.push(new Port(8, false, CIRCUIT_COMPONENT_WIDTH));
+  if (this.data) {
+    const position = snapToGrid(this.data.getLocalPosition(this.parent));
+    this.x = position.x - this.width / 2;
+    this.y = position.y - this.height / 2;
+    store.dispatch(updatePos(this.x, this.y));
   }
 
-  onDragStart(event) {
-    this.data = event.data;
-    this.alpha = 0.5;
-    this.dragging = true;
-  }
+  // set the interaction data to null
+  this.data = null;
+}
 
-  onDragEnd() {
-    this.alpha = 1;
-    this.dragging = false;
-
+export function onDragMove() {
+  if (this.dragging) {
     if (this.data) {
-      const position = snapToGrid(this.data.getLocalPosition(this.parent));
-      this.x = position.x - this.width / 2;
-      this.y = position.y - this.height / 2;
-    }
+      let newPosition = this.data.getLocalPosition(this.parent);
 
-    // let line = new Line([0, 0, this.x, this.y], 2);
-    // this.parent.addChild(line);
-
-    // set the interaction data to null
-    this.data = null;
-  }
-
-  onDragMove() {
-    if (this.dragging) {
-      if (this.data) {
-        let newPosition = this.data.getLocalPosition(this.parent);
-
-        this.x = newPosition.x - this.width / 2;
-        this.y = newPosition.y - this.height / 2;
-      }
+      this.x = newPosition.x - this.width / 2;
+      this.y = newPosition.y - this.height / 2;
     }
   }
 }
+
+export const CircuitComponent = PixiComponent("CircuitComponent", {
+  create() {
+    return new Sprite.from(componentPng);
+  },
+  applyProps(instance, oldProps, newProps) {
+    applyDefaultProps(instance, oldProps, newProps);
+  },
+});
+
+const createCircuitComponent = () => {
+  let ports = [];
+  ports.push(new Port(8));
+  ports.push(new Port(8, false, CIRCUIT_COMPONENT_WIDTH));
+
+  return {
+    image: componentPng,
+    x: Math.floor(Math.random() * 100) + 100,
+    y: Math.floor(Math.random() * 100) + 100,
+    interactive: true,
+    buttonMode: true,
+    ports: ports,
+  };
+};
+
+export default createCircuitComponent;

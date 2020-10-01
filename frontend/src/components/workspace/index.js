@@ -1,22 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Stage, Container } from "@inlet/react-pixi";
+import { connect } from "react-redux";
 import CircuitComponentModel from "../../models/CircuitComponent.js";
 import CircuitComponent from "../circuitComponent";
 import "./styles.css";
 
-const Workspace = () => {
-  const [components, setComponents] = useState([]);
-
-  const initialize = () => {
-    let initialComponents = [];
-    initialComponents.push(new CircuitComponentModel());
-    initialComponents.push(new CircuitComponentModel());
-
-    setComponents(initialComponents);
-  };
-
-  useEffect(initialize, []);
-
+const Workspace = ({ circuitComponents }) => {
   return (
     <Stage
       width={window.innerWidth - (window.innerWidth * 3) / 10}
@@ -24,12 +13,16 @@ const Workspace = () => {
       options={{ antialias: true, backgroundColor: 0xffffff }}
     >
       <Container>
-        {components.map((component, index) => (
-          <CircuitComponent base={component} key={index} />
+        {circuitComponents.map((component, index) => (
+          <CircuitComponent circuitComponent={component} key={index} />
         ))}
       </Container>
     </Stage>
   );
 };
 
-export default Workspace;
+const mapStateToProps = (state) => ({
+  circuitComponents: state.circuitComponent.circuitComponents,
+});
+
+export default connect(mapStateToProps, null)(Workspace);

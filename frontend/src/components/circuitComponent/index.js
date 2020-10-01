@@ -1,26 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Container, Sprite } from "@inlet/react-pixi";
+import {
+  onDragStart as circuitComponentOnDragStart,
+  onDragMove as circuitComponentOnDragMove,
+  onDragEnd as circuitComponentOnDragEnd,
+  CircuitComponent,
+} from "../../models/CircuitComponent";
+import { onDragStart as portOnDragStart, onDragMove as portOnDragMove, onDragEnd as portOnDragEnd } from "../../models/Port";
 import "./styles.css";
 
-const Component = (props) => {
-  const initialize = () => {};
-
-  useEffect(initialize, []);
-
+const Component = ({ circuitComponent }) => {
   return (
     <Container>
-      <Sprite
-        image={props.base.image}
-        x={props.base.x}
-        y={props.base.y}
-        interactive={props.base.interactive}
-        buttonMode={props.base.buttonMode}
-        pointerdown={props.base.onDragStart}
-        pointerup={props.base.onDragEnd}
-        pointerupoutside={props.base.onDragEnd}
-        pointermove={props.base.onDragMove}
+      <CircuitComponent
+        image={circuitComponent.image}
+        x={circuitComponent.x}
+        y={circuitComponent.y}
+        interactive={circuitComponent.interactive}
+        buttonMode={circuitComponent.buttonMode}
+        pointerdown={circuitComponentOnDragStart}
+        pointerup={circuitComponentOnDragEnd}
+        pointerupoutside={circuitComponentOnDragEnd}
+        pointermove={circuitComponentOnDragMove}
       >
-        {props.base.ports.map((port, index) => (
+        {circuitComponent.ports.map((port, index) => (
           <Sprite
             key={index}
             image={port.image}
@@ -28,13 +31,13 @@ const Component = (props) => {
             y={port.y}
             interactive={port.interactive}
             buttonMode={port.buttonMode}
-            pointerdown={port.onDragStart}
-            pointerup={port.onDragEnd}
-            pointerupoutside={port.onDragEnd}
-            pointermove={port.onDragMove}
+            pointerdown={portOnDragStart}
+            pointerup={portOnDragEnd}
+            pointerupoutside={portOnDragEnd}
+            pointermove={portOnDragMove}
           />
         ))}
-      </Sprite>
+      </CircuitComponent>
     </Container>
   );
 };

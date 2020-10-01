@@ -4,7 +4,7 @@ Accessing the DB:
 
 First time DB config (users, pwds and dbs must be named accordingly on docker-compose):
   1- docker-compose up (get the db running)
-  2- docker exec -it myContainerName bash
+  2- docker exec -it myContainerName(mongodb) bash
   3- mongo -u myRootUser -p
   4- use 'flaskdb'
   5- db.createUser({user: 'flaskuser', pwd: 'your password', roles: [{role: 'readWrite', db: 'flaskdb'}]})
@@ -19,6 +19,7 @@ Clearing ports:
 Reseting node_modules volume:
   docker volume ls
   docker volume rm VOLUME_NAME
+  docker-compose build --no-cache
 
   OR
 

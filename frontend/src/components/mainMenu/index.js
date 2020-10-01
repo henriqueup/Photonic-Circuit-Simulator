@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { setX } from "../../store/ducks/circuitComponent";
 import "./styles.css";
 
-const MainMenu = () => {
+const MainMenu = ({ setX }) => {
   const [name, setName] = useState("nome default");
   const initializeName = () => {
     fetch("http://localhost:5000")
@@ -22,9 +25,15 @@ const MainMenu = () => {
       <div className="mainMenuButton" onClick={fileClick}>
         File
       </div>
-      <div className="mainMenuButton">{name}</div>
+      <div className="mainMenuButton" onClick={setX}>
+        {name}
+      </div>
     </div>
   );
 };
 
-export default MainMenu;
+const mapDispatchToProps = (dispatch) => ({
+  setX: bindActionCreators(setX, dispatch),
+});
+
+export default connect(null, mapDispatchToProps)(MainMenu);

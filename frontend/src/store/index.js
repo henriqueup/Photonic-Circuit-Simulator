@@ -1,6 +1,10 @@
-import { combineReducers } from "redux";
+import { combineReducers, createStore } from "redux";
 import circuitComponent from "./ducks/circuitComponent";
 
-export default combineReducers({
+const reducers = combineReducers({
   circuitComponent,
 });
+
+export default reducers;
+
+export const store = createStore(reducers);

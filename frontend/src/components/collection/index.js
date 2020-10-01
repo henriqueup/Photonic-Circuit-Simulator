@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
 
-const Collection = () => {
+const Collection = ({ addComponent }) => {
   const [items, setItems] = useState([]);
   const initialize = () => {
     const initialItems = ["Switch N", "Switch P", "Power Source"];
@@ -20,7 +20,7 @@ const Collection = () => {
         <span>Basic Components</span>
       </div>
       {items.map((item, index) => (
-        <li className="collectionItem" key={index}>
+        <li className="collectionItem" key={index} onClick={addComponent}>
           {item}
         </li>
       ))}
