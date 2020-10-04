@@ -10,6 +10,7 @@
   left: 8px;
   padding: 0px 4px 0px 2px;
   background-color: white;
+  z-index: 1;
 }
 .collectionItem {
   text-indent: 4px;

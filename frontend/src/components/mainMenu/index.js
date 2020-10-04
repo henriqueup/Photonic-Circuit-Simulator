@@ -1,39 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { setX } from "../../store/ducks/circuitComponent";
+import React from "react";
 import "./styles.css";
+import MainMenuButton from "../mainMenuButton";
 
-const MainMenu = ({ setX }) => {
-  const [name, setName] = useState("nome default");
-  const initializeName = () => {
-    fetch("http://localhost:5000")
-      .then((res) => res.json())
-      .then((data) => setName(data.message))
-      .catch((err) => err);
-    // setName("Initial Name");
-  };
-
-  useEffect(initializeName, []);
-
-  const fileClick = () => {
-    alert("File button clicked.");
-  };
-
+const MainMenu = ({ buttons, onClick, onMouseEnter }) => {
   return (
     <div className="mainMenu">
-      <div className="mainMenuButton" onClick={fileClick}>
-        File
-      </div>
-      <div className="mainMenuButton" onClick={setX}>
-        {name}
-      </div>
+      {buttons.map((button, index) => (
+        <MainMenuButton key={index} name={button.name} onClick={onClick} onMouseEnter={() => onMouseEnter(index)} />
+      ))}
     </div>
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  setX: bindActionCreators(setX, dispatch),
-});
-
-export default connect(null, mapDispatchToProps)(MainMenu);
+export default MainMenu;

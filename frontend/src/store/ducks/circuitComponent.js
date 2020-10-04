@@ -6,7 +6,6 @@ import { store } from "../../store";
 // Action Types
 export const Types = {
   CREATE: "circuitComponent/CREATE",
-  SETX: "circuitComponent/SETX",
   UPDATE_POS: "circuitComponent/UPDATE_POS",
 };
 
@@ -22,11 +21,6 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         instances: state.instances.concat([createCircuitComponent(action.payload.ports)]),
-      };
-    case Types.SETX:
-      return {
-        ...state,
-        instances: state.instances.map((content, i) => (i === 0 ? { ...content, x: 50 } : content)),
       };
     case Types.UPDATE_POS:
       return {
@@ -61,12 +55,6 @@ export function create() {
     payload: {
       ports: ports,
     },
-  };
-}
-export function setX() {
-  return {
-    type: Types.SETX,
-    payload: {},
   };
 }
 export function updatePos(x, y) {
