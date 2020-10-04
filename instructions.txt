@@ -18,9 +18,11 @@ Clearing ports:
 
 Reseting node_modules volume:
   docker volume ls
-  docker volume rm VOLUME_NAME
+  docker volume rm VOLUME_NAME ('repo_frontend')
   docker-compose build --no-cache
+  docker-compose up --renew-anon-volumes
 
   OR
 
+  docker-compose down -v 'frontend'
   docker-compose down -v    (removes all volumes)

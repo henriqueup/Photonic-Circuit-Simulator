@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Stage, Container } from "@inlet/react-pixi";
 import { connect } from "react-redux";
-import CircuitComponentModel from "../../models/CircuitComponent.js";
 import CircuitComponent from "../circuitComponent";
 import "./styles.css";
 
+const STAGE_WIDTH = window.innerWidth - (window.innerWidth * 3) / 10;
+
 const Workspace = ({ circuitComponents }) => {
   return (
-    <Stage
-      width={window.innerWidth - (window.innerWidth * 3) / 10}
-      height={window.innerHeight - 22}
-      options={{ antialias: true, backgroundColor: 0xffffff }}
-    >
+    <Stage width={STAGE_WIDTH} height={window.innerHeight - 22} options={{ antialias: true, backgroundColor: 0xffffff }}>
       <Container>
         {circuitComponents.map((component, index) => (
           <CircuitComponent circuitComponent={component} key={index} />
@@ -22,7 +19,7 @@ const Workspace = ({ circuitComponents }) => {
 };
 
 const mapStateToProps = (state) => ({
-  circuitComponents: state.circuitComponent.circuitComponents,
+  circuitComponents: state.circuitComponent.instances,
 });
 
 export default connect(mapStateToProps, null)(Workspace);

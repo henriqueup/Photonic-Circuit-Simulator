@@ -5,17 +5,21 @@ import "./styles.css";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
-const ComponentsMenu = ({ addComponent }) => {
+const ComponentsMenu = ({ basicItems, addComponent }) => {
   return (
     <div className="componentsMenu">
       <span className="componentsMenuTitle">Components Menu</span>
-      <Collection addComponent={addComponent} />
+      <Collection items={basicItems} onClick={addComponent} />
     </div>
   );
 };
+
+const mapStateToProps = (state) => ({
+  basicItems: state.circuitComponent.basicKinds,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   addComponent: bindActionCreators(create, dispatch),
 });
 
-export default connect(null, mapDispatchToProps)(ComponentsMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(ComponentsMenu);

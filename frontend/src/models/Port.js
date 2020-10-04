@@ -1,3 +1,5 @@
+import { applyDefaultProps, PixiComponent } from "@inlet/react-pixi";
+import { Sprite } from "pixi.js";
 import portPng from "../resources/images/port.png";
 import Line from "./Line";
 
@@ -49,8 +51,7 @@ export function onDragEnd(event) {
     this.mouseX - this.initialMouseX + PORT_WIDTH / 2,
     this.mouseY - this.initialMouseY + PORT_WIDTH / 2,
   ];
-  console.log(linePos);
-  console.log(this.worldTransform);
+
   let line = new Line(linePos, 2);
   this.addChild(line);
   window.removeEventListener("mousemove", this.updateMouse);
@@ -69,14 +70,27 @@ export function onDragMove(event) {
   }
 }
 
-export default class Port {
-  constructor(y, isInput = true, width = 0) {
-    this.image = portPng;
-    this.interactive = true;
-    this.buttonMode = true;
-    this.isDragging = false;
+export const Port = PixiComponent("Port", {
+  create() {
+    return new Sprite.from(portPng);
+  },
+  applyProps(instance, oldProps, newProps) {
+    console.log("applying props");
+    applyDefaultProps(instance, oldProps, newProps);
+  },
+});
 
-    this.x = isInput ? 0 : width - PORT_WIDTH;
-    this.y = y;
-  }
-}
+const createPort = (y, isInput = true, width = 0) => {
+  let x = isInput ? 0 : width - PORT_WIDTH;
+
+  return {
+    image: portPng,
+    interactive: true,
+    buttonMode: true,
+    isDragging: false,
+    x: x,
+    y: y,
+  };
+};
+
+export default createPort;

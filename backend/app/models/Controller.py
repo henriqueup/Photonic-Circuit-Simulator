@@ -15,6 +15,8 @@ class Controller:
   def start(self):
     for circuit in CircuitCollection.objects:
       self.circuit_ids.append(str(circuit.id))
+    
+    self.add_circuit("New Circuit")
 
   def load_circuit(self, circuit_id):
     if (str(circuit_id) not in self.circuit_ids):
@@ -35,7 +37,7 @@ class Controller:
 
   def add_component(self, kind):
     # if (self.current_circuit is None):
-    self.current_circuit.add_component(kind)
+    return self.current_circuit.add_component(kind)
 
   def calculate_outputs(self, id):
     # if (self.current_circuit is None):

@@ -1,12 +1,12 @@
 import React from "react";
-import { Container, Sprite } from "@inlet/react-pixi";
+import { Container } from "@inlet/react-pixi";
 import {
   onDragStart as circuitComponentOnDragStart,
   onDragMove as circuitComponentOnDragMove,
   onDragEnd as circuitComponentOnDragEnd,
   CircuitComponent,
 } from "../../models/CircuitComponent";
-import { onDragStart as portOnDragStart, onDragMove as portOnDragMove, onDragEnd as portOnDragEnd } from "../../models/Port";
+import { onDragStart as portOnDragStart, onDragMove as portOnDragMove, onDragEnd as portOnDragEnd, Port } from "../../models/Port";
 import "./styles.css";
 
 const Component = ({ circuitComponent }) => {
@@ -24,7 +24,7 @@ const Component = ({ circuitComponent }) => {
         pointermove={circuitComponentOnDragMove}
       >
         {circuitComponent.ports.map((port, index) => (
-          <Sprite
+          <Port
             key={index}
             image={port.image}
             x={port.x}

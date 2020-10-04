@@ -1,26 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./styles.css";
 
-const Collection = ({ addComponent }) => {
-  const [items, setItems] = useState([]);
-  const initialize = () => {
-    const initialItems = ["Switch N", "Switch P", "Power Source"];
-
-    let newItems = [];
-    initialItems.forEach((item) => newItems.push(item));
-
-    setItems(newItems);
-  };
-
-  useEffect(initialize, []);
-
+const Collection = ({ items, onClick }) => {
   return (
     <div className="collectionContainer">
       <div className="collectionTitle">
         <span>Basic Components</span>
       </div>
       {items.map((item, index) => (
-        <li className="collectionItem" key={index} onClick={addComponent}>
+        <li className="collectionItem" key={index} onClick={onClick}>
           {item}
         </li>
       ))}

@@ -20,8 +20,8 @@ def create_data():
     if (kind == None):
       return "Bad Request", 400
 
-    controller.add_component(kind)
-    return "OK", 200
+    component = controller.add_component(kind)
+    return jsonify(component.to_json()), 200
 
   except Exception as e:
     return "Exception: " + str(e), 500

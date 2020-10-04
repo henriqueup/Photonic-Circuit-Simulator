@@ -3,11 +3,10 @@ import { Sprite } from "pixi.js";
 import componentPng from "../resources/images/component.png";
 import { store } from "../store";
 import { updatePos } from "../store/ducks/circuitComponent";
+import { create as createPort } from "../store/ducks/port";
 import { snapToGrid } from "../utils/componentMovement";
-import Line from "./Line";
-import Port from "./Port";
 
-const CIRCUIT_COMPONENT_WIDTH = 80;
+export const CIRCUIT_COMPONENT_WIDTH = 80;
 
 export function onDragStart(event) {
   this.data = event.data;
@@ -50,11 +49,7 @@ export const CircuitComponent = PixiComponent("CircuitComponent", {
   },
 });
 
-const createCircuitComponent = () => {
-  let ports = [];
-  ports.push(new Port(8));
-  ports.push(new Port(8, false, CIRCUIT_COMPONENT_WIDTH));
-
+const createCircuitComponent = (ports) => {
   return {
     image: componentPng,
     x: Math.floor(Math.random() * 100) + 100,

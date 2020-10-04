@@ -91,29 +91,25 @@ class Circuit():
       return None
 
   def add_component(self, kind):
+    component = None
+
     if (kind == 'swn'):
-      swn = SwN.create()
-      self.components.append(swn)
-      for port in swn.inputs:
-        self.ports.append(port)
-      for port in swn.outputs:
-        self.ports.append(port)
+      component = SwN.create()
     elif (kind == 'power_source'):
-      power_source = PowerSource.create()
-      self.components.append(power_source)
-      for port in power_source.outputs:
-        self.ports.append(port)
+      component = PowerSource.create()
     elif (kind == 'swp'):
-      swp = SwP.create()
-      self.components.append(swp)
-      for port in swp.inputs:
-        self.ports.append(port)
-      for port in swp.outputs:
-        self.ports.append(port)
+      component = SwP.create()
     else:
       raise TypeError("Kind \'" + kind + "\' doesn't exist.")
 
+    self.components.append(component)
+    for port in component.inputs:
+      self.ports.append(port)
+    for port in component.outputs:
+      self.ports.append(port)
+
     self.update_data()
+    return component
 
   def calculate_outputs(self, id):
     component = self.get_component(id)
