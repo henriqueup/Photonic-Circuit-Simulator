@@ -14,7 +14,12 @@ def create():
   if (label is None):
     return "Bad Request", 400
 
-  controller.add_circuit(label)
+  circuit = controller.add_circuit(label)
+  return jsonify(circuit.to_json()), 200
+
+@circuits_bp.route('/', methods=['DELETE'])
+def clear():
+  controller.clear()
   return "OK", 200
 
 @circuits_bp.route('/<id>')

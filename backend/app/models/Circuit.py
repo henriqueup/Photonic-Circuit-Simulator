@@ -179,3 +179,8 @@ class Circuit():
       del self.ports[self.ports.index(port)]
 
     self.update_data()
+
+  def delete(self):
+    self.reset()
+
+    CircuitCollection.objects(id=self.id).get().delete()

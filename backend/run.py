@@ -2,7 +2,7 @@ from flask import Flask
 from app import app
 from app.database.db import initialize_db
 from app.resources.controller import controller
-from app.database.Lumerical import Lumerical as LumericalCollection
+from app.database.stored.Lumerical import Lumerical as LumericalCollection
 import os
 
 if __name__ == '__main__':

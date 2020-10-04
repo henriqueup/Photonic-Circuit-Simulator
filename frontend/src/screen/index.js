@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ComponentsMenu from "../components/componentsMenu";
 import InspectionMenu from "../components/inspectionMenu";
 import MainMenu from "../components/mainMenu";
 import Workspace from "../components/workspace";
 import MainMenuDropdown from "../components/mainMenuDropdown";
 import "./styles.css";
+import api from "../api";
 
 const buttons = [
   {
@@ -41,6 +42,16 @@ const Layout = () => {
     const element = document.getElementById(buttons[index].name);
     setLeft(element.getBoundingClientRect().left);
   };
+
+  useEffect(() => {
+    async function startConnection() {
+      await api.clear();
+      await api.postCircuit();
+    }
+
+    console.log("using effect");
+    startConnection();
+  }, []);
 
   return (
     <div className="main">

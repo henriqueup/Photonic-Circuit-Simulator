@@ -1,7 +1,7 @@
 from app.models.Port import Port
 from app.models.Component import Component
 from app.database.Component import Component as ComponentCollection
-from app.database.Lumerical import Lumerical
+from app.database.stored.Lumerical import Lumerical
 
 class SwP(Component):
   def __init__(self, inputs, outputs, id=None):

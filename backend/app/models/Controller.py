@@ -15,8 +15,6 @@ class Controller:
   def start(self):
     for circuit in CircuitCollection.objects:
       self.circuit_ids.append(str(circuit.id))
-    
-    self.add_circuit("New Circuit")
 
   def load_circuit(self, circuit_id):
     if (str(circuit_id) not in self.circuit_ids):
@@ -30,6 +28,8 @@ class Controller:
 
     self.circuit_ids.append(str(circuit.id))
     self.current_circuit = circuit
+
+    return circuit
 
   def get_components(self):
     # if (self.current_circuit is None):
@@ -58,3 +58,9 @@ class Controller:
   def reset(self):
     # if (self.current_circuit is None):
     self.current_circuit.reset()
+
+  def clear(self):
+    if (self.current_circuit is not None):
+      self.current_circuit.delete()
+      
+    self.current_circuit = None

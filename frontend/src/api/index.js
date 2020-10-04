@@ -34,4 +34,30 @@ async function getAllComponents() {
   return body;
 }
 
-export default { healthCheck, postComponent, getAllComponents };
+async function clear() {
+  return await fetch(baseURL + "/circuits/", { method: "DELETE" });
+}
+
+async function postCircuit() {
+  let body = null;
+
+  try {
+    const response = await fetch(baseURL + "/circuits/", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        label: "New Circuit",
+      }),
+    });
+
+    body = await response.json();
+  } catch (err) {
+    console.log(err);
+  }
+  return body;
+}
+
+export default { healthCheck, postComponent, getAllComponents, clear, postCircuit };

@@ -1,5 +1,5 @@
 import { takeEvery, call } from "redux-saga/effects";
-import API from "../../api";
+import api from "../../api";
 
 export function* helloSaga() {
   console.log("Sagas working!");
@@ -7,10 +7,10 @@ export function* helloSaga() {
 
 function* createCircuitComponentSaga() {
   //call api
-  const healthCheck = yield call(API.healthCheck);
+  const healthCheck = yield call(api.healthCheck);
   console.log(healthCheck);
 
-  const post = yield call(API.postComponent);
+  const post = yield call(api.postComponent);
   console.log(post);
 }
 
