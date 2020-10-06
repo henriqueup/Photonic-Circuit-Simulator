@@ -1,5 +1,6 @@
 from app.database.Component import Component as ComponentCollection
 from app.database.Circuit import Circuit as CircuitCollection
+from app.database.stored.Circuit import StoredCircuit
 from app.models.Component import Component
 from app.models.SwN import SwN
 from app.models.SwP import SwP
@@ -184,3 +185,6 @@ class Circuit():
     self.reset()
 
     CircuitCollection.objects(id=self.id).get().delete()
+
+  def save(self):
+    StoredCircuit(**self.as_dict()).save()

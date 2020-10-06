@@ -1,3 +1,4 @@
+from mongoengine import NotUniqueError
 from app.models.SwN import SwN
 from app.models.PowerSource import PowerSource
 from app.models.Port import Port
@@ -64,3 +65,13 @@ class Controller:
       self.current_circuit.delete()
       
     self.current_circuit = None
+
+  def save(self):
+    if (self.current_circuit is None):
+      return "No circuit selected.", False
+
+    try:
+      self.current_circuit.save()
+      return "", True
+    except NotUniqueError:
+      return f"Circuit \'{self.current_circuit.label}\' already exists.", False

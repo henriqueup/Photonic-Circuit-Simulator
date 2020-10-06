@@ -31,3 +31,12 @@ def load_circuit(id):
 
   return loaded, 200
 
+@circuits_bp.route('/save', methods=['POST'])
+def save():
+  response, saved = controller.save()
+
+  if (not saved):
+    return response, 400
+
+  return "OK", 200
+

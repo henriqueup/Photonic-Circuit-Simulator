@@ -1,6 +1,7 @@
 import { all } from "redux-saga/effects";
-import { helloSaga, watchCreateCircuitComponent } from "./sagas";
+import { watchCreateCircuit, watchSaveCircuit } from "./circuit";
+import { helloSaga, watchCreateCircuitComponent } from "./circuitComponent";
 
 export default function* rootSaga() {
-  yield all([helloSaga(), watchCreateCircuitComponent()]);
+  yield all([helloSaga(), watchCreateCircuitComponent(), watchCreateCircuit(), watchSaveCircuit()]);
 }
