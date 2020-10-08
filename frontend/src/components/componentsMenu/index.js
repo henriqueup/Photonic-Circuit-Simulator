@@ -14,12 +14,8 @@ const ComponentsMenu = ({ basicItems, addComponent }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  basicItems: state.circuitComponent.basicKinds,
-});
-
 const mapDispatchToProps = (dispatch) => ({
   addComponent: bindActionCreators(create, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ComponentsMenu);
+export default connect(null, mapDispatchToProps)(ComponentsMenu);

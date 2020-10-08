@@ -10,20 +10,6 @@ export const Types = {
 // Reducer
 const INITIAL_STATE = {
   instances: [],
-  basicKinds: [
-    {
-      name: "Switch N",
-      kind: "swn",
-    },
-    {
-      name: "Switch P",
-      kind: "swp",
-    },
-    {
-      name: "Power Source",
-      kind: "power_source",
-    },
-  ],
 };
 
 export default function reducer(state = INITIAL_STATE, action) {
@@ -36,8 +22,8 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.UPDATE_POS:
       return {
         ...state,
-        instances: state.instances.map((content, i) =>
-          i === 0
+        instances: state.instances.map((content) =>
+          content.id === action.payload.id
             ? {
                 ...content,
                 x: action.payload.x,
@@ -70,10 +56,11 @@ export function createWithData(data) {
   };
 }
 
-export function updatePos(x, y) {
+export function updatePos(id, x, y) {
   return {
     type: Types.UPDATE_POS,
     payload: {
+      id: id,
       x: x,
       y: y,
     },

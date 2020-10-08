@@ -13,7 +13,9 @@ const Component = ({ circuitComponent }) => {
   return (
     <Container>
       <CircuitComponent
-        image={circuitComponent.image}
+        key={circuitComponent.id}
+        id={circuitComponent.id}
+        image={circuitComponent.kind.image}
         x={circuitComponent.x}
         y={circuitComponent.y}
         interactive={circuitComponent.interactive}
@@ -23,9 +25,10 @@ const Component = ({ circuitComponent }) => {
         pointerupoutside={circuitComponentOnDragEnd}
         pointermove={circuitComponentOnDragMove}
       >
-        {circuitComponent.inputs.map((port, index) => (
+        {circuitComponent.inputs.map((port) => (
           <Port
-            key={index}
+            key={port.id}
+            id={port.id}
             image={port.image}
             x={port.x}
             y={port.y}
@@ -37,9 +40,10 @@ const Component = ({ circuitComponent }) => {
             pointermove={portOnDragMove}
           />
         ))}
-        {circuitComponent.outputs.map((port, index) => (
+        {circuitComponent.outputs.map((port) => (
           <Port
-            key={index}
+            key={port.id}
+            id={port.id}
             image={port.image}
             x={port.x}
             y={port.y}

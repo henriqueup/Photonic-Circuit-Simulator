@@ -76,7 +76,6 @@ export const Port = PixiComponent("Port", {
     return new Sprite.from(portPng);
   },
   applyProps(instance, oldProps, newProps) {
-    console.log("applying props");
     applyDefaultProps(instance, oldProps, newProps);
   },
 });

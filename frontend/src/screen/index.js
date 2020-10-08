@@ -8,6 +8,7 @@ import "./styles.css";
 import api from "../api";
 import { store } from "../store";
 import { attemptSave, create as createCircuit } from "../store/ducks/circuit";
+import { basicKinds } from "../utils/componentBehaviour";
 
 const buttons = [
   {
@@ -87,7 +88,7 @@ const Layout = () => {
         {showDropdown ? <MainMenuDropdown items={currentButton ? currentButton.items : []} /> : null}
       </div>
       <div className="screen">
-        <ComponentsMenu />
+        <ComponentsMenu basicItems={basicKinds} />
         <Workspace />
         <InspectionMenu />
       </div>

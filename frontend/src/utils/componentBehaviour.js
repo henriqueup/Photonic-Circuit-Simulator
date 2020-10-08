@@ -1,10 +1,32 @@
+import swnPNG from "../resources/images/swn.png";
+import swpPNG from "../resources/images/swp.png";
+import powerSourcePNG from "../resources/images/power_source.png";
+
 const GRID_SIZE = 18;
 
 export const componentSizes = {
   swn: 80,
   swp: 80,
-  power_source: 50,
+  power_source: 40,
 };
+
+export const basicKinds = [
+  {
+    name: "Switch N",
+    kind: "swn",
+    image: swnPNG,
+  },
+  {
+    name: "Switch P",
+    kind: "swp",
+    image: swpPNG,
+  },
+  {
+    name: "Power Source",
+    kind: "power_source",
+    image: powerSourcePNG,
+  },
+];
 
 export const snapToGrid = (position) => {
   let x = Math.ceil(position.x);
