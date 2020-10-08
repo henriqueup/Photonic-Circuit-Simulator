@@ -7,7 +7,7 @@ import MainMenuDropdown from "../components/mainMenuDropdown";
 import "./styles.css";
 import api from "../api";
 import { store } from "../store";
-import { create as createCircuit, save } from "../store/ducks/circuit";
+import { attemptSave, create as createCircuit } from "../store/ducks/circuit";
 
 const buttons = [
   {
@@ -15,13 +15,13 @@ const buttons = [
     items: [
       {
         name: "New Circuit",
-        onClick: () => console.log(store.getState().circuit),
+        onClick: () => console.log(store.getState().circuit), //implement when workspace tabs
       },
       {
         name: "Save Circuit",
         onClick: () => {
           if (!store.getState().circuit.current.isSaved) {
-            store.dispatch(save());
+            store.dispatch(attemptSave());
           }
         },
       },
@@ -45,14 +45,14 @@ const Layout = () => {
 
   const wrapperRef = useRef(null);
 
-  const handleClickOutside = (event) => {
-    if (showDropdown && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-      //alert("You clicked outside of me!");
-      setShowDropdown(!showDropdown);
-    }
-  };
-
   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showDropdown && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        //alert("You clicked outside of me!");
+        setShowDropdown(!showDropdown);
+      }
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       // Unbind the event listener on clean up

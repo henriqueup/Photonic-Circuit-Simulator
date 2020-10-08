@@ -1,6 +1,6 @@
 import { baseURL } from "./index";
 
-async function postComponent() {
+async function postComponent(kind) {
   let body = null;
 
   try {
@@ -11,7 +11,7 @@ async function postComponent() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        kind: "swn",
+        kind: kind,
       }),
     });
 

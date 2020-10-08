@@ -1,4 +1,4 @@
-from app.database.Component import Component as ComponentCollection
+from app.database.stored.Component import StoredComponent
 
 class Component:
   def __init__(self):
@@ -9,7 +9,7 @@ class Component:
 
   @classmethod
   def load(cls, id):
-    return ComponentCollection.objects(id=id).get()
+    return StoredComponent.objects(id=id).get()
 
   def calculate_outputs(self):
     raise NotImplementedError
@@ -33,4 +33,7 @@ class Component:
     raise NotImplementedError
   
   def delete(self):
+    raise NotImplementedError
+
+  def save(self):
     raise NotImplementedError

@@ -15,7 +15,7 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.CREATE:
       return {
         ...state,
-        ports: state.ports.concat([createPort(action.payload.y, action.payload.isInput, action.payload.width)]),
+        ports: state.ports.concat([createPort(action.payload.y, action.payload.data, action.payload.isInput)]),
       };
     default:
       return state;
@@ -23,13 +23,13 @@ export default function reducer(state = INITIAL_STATE, action) {
 }
 
 // Action Creators
-export function create(y, isInput = true, width = 0) {
+export function create(y, data, isInput = true) {
   return {
     type: Types.CREATE,
     payload: {
       y: y,
+      data: data,
       isInput: isInput,
-      width: width,
     },
   };
 }

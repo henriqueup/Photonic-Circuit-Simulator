@@ -27,7 +27,7 @@ class Circuit():
 
   @classmethod
   def load(cls, id):
-    circuit_db = CircuitCollection.objects(id=id).get()
+    circuit_db = StoredCircuit.objects(id=id).get()
 
     label = circuit_db.label
     components = []
@@ -188,3 +188,6 @@ class Circuit():
 
   def save(self):
     StoredCircuit(**self.as_dict()).save()
+
+    for component in self.components:
+      component.save()

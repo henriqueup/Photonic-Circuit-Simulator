@@ -23,7 +23,21 @@ const Component = ({ circuitComponent }) => {
         pointerupoutside={circuitComponentOnDragEnd}
         pointermove={circuitComponentOnDragMove}
       >
-        {circuitComponent.ports.map((port, index) => (
+        {circuitComponent.inputs.map((port, index) => (
+          <Port
+            key={index}
+            image={port.image}
+            x={port.x}
+            y={port.y}
+            interactive={port.interactive}
+            buttonMode={port.buttonMode}
+            pointerdown={portOnDragStart}
+            pointerup={portOnDragEnd}
+            pointerupoutside={portOnDragEnd}
+            pointermove={portOnDragMove}
+          />
+        ))}
+        {circuitComponent.outputs.map((port, index) => (
           <Port
             key={index}
             image={port.image}

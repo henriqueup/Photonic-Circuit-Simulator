@@ -1,4 +1,5 @@
 from app.database.Port import Port as PortCollection
+from app.database.stored.Port import StoredPort
 
 class Port():
   def __init__(self, target, power, id=None):
@@ -42,7 +43,7 @@ class Port():
 
   @classmethod
   def load(cls, id):
-    port_db = PortCollection.objects(id=id).get()
+    port_db = StoredPort.objects(id=id).get()
 
     if (port_db.target != None):
       target = port_db.target.id
@@ -74,6 +75,10 @@ class Port():
       target_port.update_data()
       
     PortCollection.objects(id=self.id).get().delete()
+
+  def save(self):
+    StoredPort(**self.as_dict()).save()
+
 
   def calculate_outputs(self):
     return [self.power]

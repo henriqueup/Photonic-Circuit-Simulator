@@ -8,8 +8,8 @@ const Collection = ({ items, onClick }) => {
         <span>Basic Components</span>
       </div>
       {items.map((item, index) => (
-        <li className="collectionItem" key={index} onClick={onClick}>
-          {item}
+        <li className="collectionItem" key={index} onClick={() => onClick(item.kind)}>
+          {item.name}
         </li>
       ))}
     </div>

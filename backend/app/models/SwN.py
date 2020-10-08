@@ -1,6 +1,7 @@
 from app.models.Port import Port
 from app.models.Component import Component
 from app.database.Component import Component as ComponentCollection
+from app.database.stored.Component import StoredComponent
 from app.database.stored.Lumerical import Lumerical
 
 class SwN(Component):
@@ -28,7 +29,7 @@ class SwN(Component):
 
   @classmethod
   def load(cls, id):
-    swn_db = ComponentCollection.objects(id=id).get()
+    swn_db = StoredComponent.objects(id=id).get()
 
     inputs = []
     for port in swn_db.inputs:
@@ -69,6 +70,15 @@ class SwN(Component):
 
     ComponentCollection.objects(id=self.id).get().delete()
 
+  def save(self):
+    StoredComponent(**self.as_dict()).save()
+
+    for port in self.inputs:
+      port.save()
+
+    for port in self.outputs:
+      port.save()
+      
 
   def as_dict(self):
     return {

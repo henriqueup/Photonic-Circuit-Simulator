@@ -1,6 +1,6 @@
 import { takeEvery, call, put } from "redux-saga/effects";
 import api from "../../api";
-import { createWithID, setCurrent } from "../ducks/circuit";
+import { createWithID, save, setCurrent } from "../ducks/circuit";
 
 function* createCircuitSaga() {
   const post = yield call(api.postCircuit);
@@ -15,9 +15,16 @@ export function* watchCreateCircuit() {
 }
 
 function* saveCircuitSaga() {
-  yield call(api.saveCircuit);
+  const response = yield call(api.saveCircuit);
+
+  const text = yield response.text();
+  if (response.ok) {
+    yield put(save());
+  } else {
+    alert(text);
+  }
 }
 
 export function* watchSaveCircuit() {
-  yield takeEvery("circuit/SAVE", saveCircuitSaga);
+  yield takeEvery("circuit/ATTEMPT_SAVE", saveCircuitSaga);
 }

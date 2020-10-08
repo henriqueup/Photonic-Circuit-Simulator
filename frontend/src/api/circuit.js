@@ -17,8 +17,8 @@ async function postCircuit() {
     });
 
     body = await response.json();
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
   }
   return body;
 }
@@ -39,8 +39,8 @@ async function saveCircuit() {
       },
       body: null,
     });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
   }
   return response;
 }

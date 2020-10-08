@@ -1,9 +1,10 @@
 import { applyDefaultProps, PixiComponent } from "@inlet/react-pixi";
 import { Sprite } from "pixi.js";
 import portPng from "../resources/images/port.png";
+import { componentSizes } from "../utils/componentBehaviour";
 import Line from "./Line";
 
-const PORT_WIDTH = 18;
+export const PORT_WIDTH = 18;
 
 export function onDragStart(event) {
   event.stopPropagation();
@@ -80,8 +81,8 @@ export const Port = PixiComponent("Port", {
   },
 });
 
-const createPort = (y, isInput = true, width = 0) => {
-  let x = isInput ? 0 : width - PORT_WIDTH;
+const createPort = (y, data, kind, isInput = true) => {
+  let x = isInput ? 0 : componentSizes[kind] - PORT_WIDTH;
 
   return {
     image: portPng,
@@ -90,6 +91,10 @@ const createPort = (y, isInput = true, width = 0) => {
     isDragging: false,
     x: x,
     y: y,
+    isInput: isInput,
+    id: data.id,
+    power: data.power,
+    target: data.target,
   };
 };
 

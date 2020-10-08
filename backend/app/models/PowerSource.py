@@ -1,6 +1,7 @@
 from app.models.Port import Port
 from app.models.Component import Component
 from app.database.Component import Component as ComponentCollection
+from app.database.stored.Component import StoredComponent
 
 class PowerSource(Component):
   def __init__(self, outputs, id=None):
@@ -22,7 +23,7 @@ class PowerSource(Component):
 
   @classmethod
   def load(cls, id):
-    power_source_db = ComponentCollection.objects(id=id).get()
+    power_source_db = StoredComponent.objects(id=id).get()
 
     outputs = []
     for port in power_source_db.outputs:
@@ -52,6 +53,15 @@ class PowerSource(Component):
 
     ComponentCollection.objects(id=self.id).get().delete()
 
+  def save(self):
+    StoredComponent(**self.as_dict()).save()
+
+    for port in self.inputs:
+      port.save()
+
+    for port in self.outputs:
+      port.save()
+      
 
   def as_dict(self):
     return {
@@ -64,6 +74,7 @@ class PowerSource(Component):
     return {
       'id': str(self.id),
       'kind': self.kind,
+      'inputs': [],
       'outputs': [x.to_json() for x in self.outputs]
     }
 

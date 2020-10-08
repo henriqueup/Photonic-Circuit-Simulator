@@ -1,26 +1,37 @@
 import createCircuitComponent from "../../models/CircuitComponent";
-import { create as createPort } from "./port";
-import { CIRCUIT_COMPONENT_WIDTH } from "../../models/CircuitComponent";
-import { store } from "../../store";
 
 // Action Types
 export const Types = {
   CREATE: "circuitComponent/CREATE",
+  CREATE_WITH_DATA: "circuitComponent/CREATE_WITH_DATA",
   UPDATE_POS: "circuitComponent/UPDATE_POS",
 };
 
 // Reducer
 const INITIAL_STATE = {
   instances: [],
-  basicKinds: ["Switch N", "Switch P", "Power Source"],
+  basicKinds: [
+    {
+      name: "Switch N",
+      kind: "swn",
+    },
+    {
+      name: "Switch P",
+      kind: "swp",
+    },
+    {
+      name: "Power Source",
+      kind: "power_source",
+    },
+  ],
 };
 
 export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case Types.CREATE:
+    case Types.CREATE_WITH_DATA:
       return {
         ...state,
-        instances: state.instances.concat([createCircuitComponent(action.payload.ports)]),
+        instances: state.instances.concat([createCircuitComponent(action.payload.data)]),
       };
     case Types.UPDATE_POS:
       return {
@@ -41,22 +52,24 @@ export default function reducer(state = INITIAL_STATE, action) {
 }
 
 // Action Creators
-export function create() {
-  store.dispatch(createPort(8));
-  store.dispatch(createPort(8, false, CIRCUIT_COMPONENT_WIDTH));
-
-  let ports = [];
-  let allPorts = store.getState().port.ports;
-  ports.push(allPorts[allPorts.length - 1]);
-  ports.push(allPorts[allPorts.length - 2]);
-
+export function create(kind) {
   return {
     type: Types.CREATE,
     payload: {
-      ports: ports,
+      kind: kind,
     },
   };
 }
+
+export function createWithData(data) {
+  return {
+    type: Types.CREATE_WITH_DATA,
+    payload: {
+      data: data,
+    },
+  };
+}
+
 export function updatePos(x, y) {
   return {
     type: Types.UPDATE_POS,
