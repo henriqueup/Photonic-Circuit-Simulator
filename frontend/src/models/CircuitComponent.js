@@ -1,7 +1,7 @@
 import { applyDefaultProps, PixiComponent } from "@inlet/react-pixi";
 import { Sprite, Texture } from "pixi.js";
 import { store } from "../store";
-import { updatePos } from "../store/ducks/circuitComponent";
+import { select, updatePos } from "../store/ducks/circuitComponent";
 import { basicKinds, snapToGrid } from "../utils/componentBehaviour";
 
 export const STARTING_X = 100;
@@ -11,6 +11,8 @@ export function onDragStart(event) {
   this.data = event.data;
   this.alpha = 0.5;
   this.dragging = true;
+  store.dispatch(select(this.id));
+  console.log(this);
 }
 
 export function onDragEnd() {
