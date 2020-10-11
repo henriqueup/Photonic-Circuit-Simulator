@@ -27,6 +27,11 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.UPDATE_POS:
       return {
         ...state,
+        selected: {
+          ...state.selected,
+          x: action.payload.x,
+          y: action.payload.y,
+        },
         instances: state.instances.map((content) =>
           content.id === action.payload.id
             ? {
@@ -52,7 +57,7 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.SET_SELECTED:
       return {
         ...state,
-        selected: action.payload.id,
+        selected: state.instances.find(instance => instance.id === action.payload.id),
         instances: state.instances.map((content) =>
           content.id === action.payload.id
             ? {

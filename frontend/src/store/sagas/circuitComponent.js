@@ -45,7 +45,7 @@ export function* watchUpdatePos() {
 function* selectSaga(action) {
   const selected = store.getState().circuitComponent.selected;
   if (selected){
-    yield put(deselect(selected));
+    yield put(deselect(selected.id));
   }
 
   yield put(setSelected(action.payload.id));
