@@ -9,7 +9,7 @@ const ComponentsMenu = ({ basicItems, addComponent }) => {
   return (
     <div className="componentsMenu">
       <span className="componentsMenuTitle">Components Menu</span>
-      <Collection items={basicItems} onClick={addComponent} />
+      <Collection items={basicItems} onClick={addComponent} title={"Basic Components"} />
     </div>
   );
 };

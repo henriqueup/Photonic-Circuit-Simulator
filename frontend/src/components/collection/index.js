@@ -1,18 +1,16 @@
 import React from "react";
+import Container from "../container";
 import "./styles.css";
 
-const Collection = ({ items, onClick }) => {
+const Collection = ({ items, onClick, title }) => {
   return (
-    <div className="collectionContainer">
-      <div className="collectionTitle">
-        <span>Basic Components</span>
-      </div>
-      {items.map((item, index) => (
+    <Container title={title}
+      content={items.map((item, index) => (
         <li className="collectionItem" key={index} onClick={() => onClick(item.kind)}>
           {item.name}
         </li>
       ))}
-    </div>
+    />
   );
 };
 

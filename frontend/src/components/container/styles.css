@@ -1,0 +1,14 @@
+.container {
+  border: 1px solid black;
+  text-align: left;
+  margin: 8px;
+  position: relative;
+}
+.title {
+  position: absolute;
+  top: -12px;
+  left: 8px;
+  padding: 0px 4px 0px 2px;
+  background-color: white;
+  z-index: 1;
+}
