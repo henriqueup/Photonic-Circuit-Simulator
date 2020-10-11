@@ -3,10 +3,14 @@ import circuitComponent from "./ducks/circuitComponent";
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "./sagas";
 import circuit from "./ducks/circuit";
+import port from "./ducks/port";
+import connection from "./ducks/connection";
 
 const reducers = combineReducers({
   circuitComponent,
   circuit,
+  port,
+  connection
 });
 
 export default reducers;

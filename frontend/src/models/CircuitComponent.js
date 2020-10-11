@@ -1,9 +1,11 @@
 import { applyDefaultProps, PixiComponent } from "@inlet/react-pixi";
 import { Sprite, Texture } from "pixi.js";
-import componentPng from "../resources/images/component.png";
 import { store } from "../store";
 import { updatePos } from "../store/ducks/circuitComponent";
 import { basicKinds, snapToGrid } from "../utils/componentBehaviour";
+
+export const STARTING_X = 100;
+export const STARTING_Y = 100;
 
 export function onDragStart(event) {
   this.data = event.data;
@@ -21,7 +23,7 @@ export function onDragEnd() {
     this.y = position.y - this.height / 2;
     store.dispatch(updatePos(this.id, this.x, this.y));
   }
-
+  
   // set the interaction data to null
   this.data = null;
 }
@@ -49,8 +51,8 @@ export const CircuitComponent = PixiComponent("CircuitComponent", {
 
 const createCircuitComponent = (data) => {
   return {
-    x: Math.floor(Math.random() * 100) + 100,
-    y: Math.floor(Math.random() * 100) + 100,
+    x: STARTING_X,
+    y: STARTING_Y,
     interactive: true,
     buttonMode: true,
     id: data.id,

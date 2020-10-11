@@ -5,6 +5,7 @@ export const Types = {
   CREATE: "circuitComponent/CREATE",
   CREATE_WITH_DATA: "circuitComponent/CREATE_WITH_DATA",
   UPDATE_POS: "circuitComponent/UPDATE_POS",
+  CONFIRM_CREATION: "circuitComponent/CONFIRM_CREATION",
 };
 
 // Reducer
@@ -32,6 +33,18 @@ export default function reducer(state = INITIAL_STATE, action) {
             : content
         ),
       };
+    case Types.CONFIRM_CREATION:
+      return {
+        ...state,
+        instances: state.instances.map((content) =>
+          content.id === action.payload.id
+            ? {
+                ...content,
+                confirmedCreation: true
+              }
+            : content
+        ),
+      }
     default:
       return state;
   }
@@ -65,4 +78,13 @@ export function updatePos(id, x, y) {
       y: y,
     },
   };
+}
+
+export function confirmCreation(id) {
+  return {
+    type: Types.CONFIRM_CREATION,
+    payload: {
+      id: id
+    }
+  }
 }

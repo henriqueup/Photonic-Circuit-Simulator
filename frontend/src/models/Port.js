@@ -1,8 +1,10 @@
 import { applyDefaultProps, PixiComponent } from "@inlet/react-pixi";
 import { Sprite } from "pixi.js";
 import portPng from "../resources/images/port.png";
+import { store } from "../store";
+import {attemptCreation as attemptConnectionCreation} from "../store/ducks/connection";
 import { componentSizes } from "../utils/componentBehaviour";
-import Line from "./Line";
+import { STARTING_X, STARTING_Y } from "./CircuitComponent";
 
 export const PORT_WIDTH = 18;
 
@@ -44,17 +46,18 @@ export function onDragEnd(event) {
   if (this.connecting) {
     event.stopPropagation();
     this.connecting = false;
+    
+    let points = [
+      this.transform.worldTransform.tx + PORT_WIDTH / 2,
+      this.transform.worldTransform.ty + PORT_WIDTH / 2,
+      this.transform.localTransform.tx + this.mouseX - this.initialMouseX + this.parent.transform.worldTransform.tx + PORT_WIDTH / 2,
+      this.transform.localTransform.ty + this.mouseY - this.initialMouseY + this.parent.transform.worldTransform.ty + PORT_WIDTH / 2,
+    ];
+
+    store.dispatch(attemptConnectionCreation(points, this.id));
   }
 
-  let linePos = [
-    PORT_WIDTH / 2,
-    PORT_WIDTH / 2,
-    this.mouseX - this.initialMouseX + PORT_WIDTH / 2,
-    this.mouseY - this.initialMouseY + PORT_WIDTH / 2,
-  ];
 
-  let line = new Line(linePos, 2);
-  this.addChild(line);
   window.removeEventListener("mousemove", this.updateMouse);
 }
 
@@ -80,21 +83,38 @@ export const Port = PixiComponent("Port", {
   },
 });
 
-const createPort = (y, data, kind, isInput = true) => {
-  let x = isInput ? 0 : componentSizes[kind] - PORT_WIDTH;
+const createPorts = (ports, parentKind, isInput = true) => {
+  if (!ports || !ports.length){
+    return [];
+  }
 
-  return {
-    image: portPng,
-    interactive: true,
-    buttonMode: true,
-    isDragging: false,
-    x: x,
-    y: y,
-    isInput: isInput,
-    id: data.id,
-    power: data.power,
-    target: data.target,
-  };
+  let createdPorts = [];
+  const parentDimension = componentSizes[parentKind];
+
+  const x = isInput ? 0 : parentDimension - PORT_WIDTH;
+  
+  const increment = parentDimension/ports.length;
+  const currentY = 8;
+
+  ports.forEach((port, i) => {
+    const y = currentY + increment*i;
+
+    createdPorts.push({
+      image: portPng,
+      interactive: true,
+      buttonMode: true,
+      isDragging: false,
+      x: x,
+      y: y,
+      worldX: STARTING_X + x,
+      worldY: STARTING_Y + y,
+      isInput: isInput,
+      id: port.id,
+      power: port.power,
+      target: port.target,
+    })
+  });
+  return createdPorts;
 };
 
-export default createPort;
+export default createPorts;

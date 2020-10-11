@@ -1,11 +1,12 @@
-import { takeEvery, call, put } from "redux-saga/effects";
+import { takeEvery, call, put, all } from "redux-saga/effects";
+import { store } from "..";
 import api from "../../api";
-import createPort, { PORT_WIDTH } from "../../models/Port";
 import { addComponent } from "../ducks/circuit";
-import { createWithData } from "../ducks/circuitComponent";
+import { confirmCreation, createWithData } from "../ducks/circuitComponent";
+import {create as createPorts, setWorldTransform} from "../ducks/port";
 
 export function* helloSaga() {
-  console.log("Sagas working!");
+  yield console.log("Sagas working!");
 }
 
 function* createCircuitComponentSaga(action) {
@@ -14,13 +15,29 @@ function* createCircuitComponentSaga(action) {
 
   const data = {
     ...circuitComponent,
-    inputs: circuitComponent.inputs.map((port, i) => createPort(i * PORT_WIDTH * 2, port, circuitComponent.kind, true)),
-    outputs: circuitComponent.outputs.map((port, i) => createPort(i * PORT_WIDTH * 2, port, circuitComponent.kind, false)),
+    inputs: circuitComponent.inputs.map(port => port.id),
+    outputs: circuitComponent.outputs.map(port => port.id),
   };
   yield put(createWithData(data));
   yield put(addComponent(circuitComponent.id));
+
+  yield put(createPorts(circuitComponent.inputs, circuitComponent.kind, true));
+  yield put(createPorts(circuitComponent.outputs, circuitComponent.kind, false));
+
+  yield put(confirmCreation(circuitComponent.id));
 }
 
 export function* watchCreateCircuitComponent() {
   yield takeEvery("circuitComponent/CREATE", createCircuitComponentSaga);
+}
+
+function* updatePosSaga(action) {
+  const circuitComponent = store.getState().circuitComponent.instances.find(instance => instance.id === action.payload.id);
+  
+  yield all(circuitComponent.inputs.map(portID =>  put(setWorldTransform(portID, action.payload.x, action.payload.y))));
+  yield all(circuitComponent.outputs.map(portID =>  put(setWorldTransform(portID, action.payload.x, action.payload.y))));
+}
+
+export function* watchUpdatePos() {
+  yield takeEvery("circuitComponent/UPDATE_POS", updatePosSaga);
 }

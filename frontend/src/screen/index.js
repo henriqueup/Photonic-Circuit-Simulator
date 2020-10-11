@@ -39,16 +39,19 @@ const buttons = [
   },
 ];
 
+export let WORKSPACE_X = 0;
+export let WORKSPACE_Y = 0;
+
 const Layout = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [currentButton, setCurrentButton] = useState(null);
   const [left, setLeft] = useState(0);
 
-  const wrapperRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (showDropdown && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+      if (showDropdown && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         //alert("You clicked outside of me!");
         setShowDropdown(!showDropdown);
       }
@@ -59,7 +62,7 @@ const Layout = () => {
       // Unbind the event listener on clean up
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [wrapperRef, showDropdown]);
+  }, [dropdownRef, showDropdown]);
 
   const onClickMenuButton = () => {
     setShowDropdown(!showDropdown);
@@ -84,12 +87,20 @@ const Layout = () => {
   return (
     <div className="main">
       <MainMenu buttons={buttons} onClick={onClickMenuButton} onMouseEnter={onMouseEnterMenuButton} />
-      <div ref={wrapperRef} className="mainMenuDropdown" style={{ left: left }}>
+      <div ref={dropdownRef} className="mainMenuDropdown" style={{ left: left }}>
         {showDropdown ? <MainMenuDropdown items={currentButton ? currentButton.items : []} /> : null}
       </div>
       <div className="screen">
         <ComponentsMenu basicItems={basicKinds} />
-        <Workspace />
+        <div ref={element => {
+          if (!element) return;
+
+          const rect = element.getBoundingClientRect();
+          WORKSPACE_X = rect.x;
+          WORKSPACE_Y = rect.y;
+        }}>
+          <Workspace />
+        </div>
         <InspectionMenu />
       </div>
     </div>

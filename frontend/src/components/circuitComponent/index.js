@@ -8,9 +8,10 @@ import {
 } from "../../models/CircuitComponent";
 import { onDragStart as portOnDragStart, onDragMove as portOnDragMove, onDragEnd as portOnDragEnd, Port } from "../../models/Port";
 import "./styles.css";
+import { store } from "../../store";
 
 const Component = ({ circuitComponent }) => {
-  return (
+  return circuitComponent.confirmedCreation ? (
     <Container>
       <CircuitComponent
         key={circuitComponent.id}
@@ -25,39 +26,47 @@ const Component = ({ circuitComponent }) => {
         pointerupoutside={circuitComponentOnDragEnd}
         pointermove={circuitComponentOnDragMove}
       >
-        {circuitComponent.inputs.map((port) => (
-          <Port
-            key={port.id}
-            id={port.id}
-            image={port.image}
-            x={port.x}
-            y={port.y}
-            interactive={port.interactive}
-            buttonMode={port.buttonMode}
-            pointerdown={portOnDragStart}
-            pointerup={portOnDragEnd}
-            pointerupoutside={portOnDragEnd}
-            pointermove={portOnDragMove}
-          />
-        ))}
-        {circuitComponent.outputs.map((port) => (
-          <Port
-            key={port.id}
-            id={port.id}
-            image={port.image}
-            x={port.x}
-            y={port.y}
-            interactive={port.interactive}
-            buttonMode={port.buttonMode}
-            pointerdown={portOnDragStart}
-            pointerup={portOnDragEnd}
-            pointerupoutside={portOnDragEnd}
-            pointermove={portOnDragMove}
-          />
-        ))}
+        {circuitComponent.inputs.map((portID) => {
+          const port = store.getState().port.instances.find(port => port.id === portID);
+
+          return (
+            <Port
+              key={port.id}
+              id={port.id}
+              image={port.image}
+              x={port.x}
+              y={port.y}
+              interactive={port.interactive}
+              buttonMode={port.buttonMode}
+              pointerdown={portOnDragStart}
+              pointerup={portOnDragEnd}
+              pointerupoutside={portOnDragEnd}
+              pointermove={portOnDragMove}
+            />
+          );
+        })}
+        {circuitComponent.outputs.map((portID) => {
+          const port = store.getState().port.instances.find(port => port.id === portID);
+
+          return (
+            <Port
+              key={port.id}
+              id={port.id}
+              image={port.image}
+              x={port.x}
+              y={port.y}
+              interactive={port.interactive}
+              buttonMode={port.buttonMode}
+              pointerdown={portOnDragStart}
+              pointerup={portOnDragEnd}
+              pointerupoutside={portOnDragEnd}
+              pointermove={portOnDragMove}
+            />
+          );
+        })}
       </CircuitComponent>
     </Container>
-  );
+  ) : null;
 };
 
 export default Component;

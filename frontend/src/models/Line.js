@@ -4,7 +4,7 @@ export default class Line extends Graphics {
   constructor(points, lineSize, lineColor) {
     super();
 
-    let s = (this.lineWidth = lineSize || 5);
+    let s = (this.lineWidth = lineSize || 2);
     let c = (this.lineColor = lineColor || "0x000000");
 
     this.points = points;
