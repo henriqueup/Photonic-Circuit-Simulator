@@ -28,4 +28,35 @@ async function getAllComponents() {
   return body;
 }
 
-export default { postComponent, getAllComponents };
+async function setOutputs(componentID, originPortID, targetPortID) {
+  let body = null;
+
+  try {
+    const response = await fetch(baseURL + `/data/${componentID}/set_outputs`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        outputs: [
+          {
+            id: originPortID,
+            target: targetPortID
+          }
+        ],
+      }),
+    });
+
+    if (response.ok){
+      body = await response.json();
+    } else {
+      console.log(response.text);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  return body;
+}
+
+export default { postComponent, getAllComponents, setOutputs };
