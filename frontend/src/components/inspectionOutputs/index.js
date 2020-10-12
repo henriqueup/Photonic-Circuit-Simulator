@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { setPower } from '../../store/ducks/circuitComponent';
@@ -9,7 +9,7 @@ const InspectionOutputs = ({selectedComponent, port, setPower}) => {
   const disableEdition = selectedComponent.kind.kind !== "power_source";
 
   const handleChange = (event) => {
-    setPowerState(event.target.value);
+    setPowerState(Number.parseFloat(event.target.value));
   }
 
   const handleKeyDown = (event) => {
@@ -19,12 +19,16 @@ const InspectionOutputs = ({selectedComponent, port, setPower}) => {
     // }
   }
 
+  useEffect(() => {
+    setPowerState(port.power);
+  }, [port])
+
   return (
     <li className="portPowerItem" key={port.id}>
       <input
         className="powerInput"
         disabled={disableEdition}
-        value={power}
+        value={power.toFixed(4)}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         type="number"

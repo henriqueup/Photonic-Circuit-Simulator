@@ -2,7 +2,7 @@ import { takeEvery, put, call } from "redux-saga/effects";
 import { create } from "../ducks/connection";
 import {store} from "../../store";
 import createConnection from "../../models/Connection";
-import { setConnected } from "../ducks/port";
+import { changePower, setConnected } from "../ducks/port";
 import api from "../../api";
 
 function* createConnectionSaga(action) {
@@ -19,6 +19,7 @@ function* createConnectionSaga(action) {
       yield put(create(connection.points, connection.originPortID, connection.targetPortID));
       yield put(setConnected(connection.originPortID, connection.targetPortID));
       yield put(setConnected(connection.targetPortID, connection.originPortID));
+      yield put(changePower(connection.targetPortID, originPort.power));
     } else {
       console.log(response.text);
     }

@@ -1,11 +1,13 @@
 import React from 'react';
 import Container from "../container";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import './styles.css';
 import { store } from '../../store';
 import InspectionOutputs from '../inspectionOutputs';
+import { calculateOutputs } from '../../store/ducks/circuitComponent';
 
-const SelectedComponent = ({selectedComponent}) => {
+const SelectedComponent = ({selectedComponent, calculateOutputs}) => {
   const getPortData = (portID) => {
     return store.getState().port.instances.find(port => port.id === portID);
   }
@@ -25,7 +27,7 @@ const SelectedComponent = ({selectedComponent}) => {
                         const port = getPortData(portID);
                         return (
                           <li className="portPowerItem" key={port.id}>
-                            <span>{port.power}</span>
+                            <span>{port.power.toFixed(4)}</span>
                           </li>
                         )
                       })}
@@ -54,6 +56,7 @@ const SelectedComponent = ({selectedComponent}) => {
                   <span>Y: {selectedComponent.y}</span>
                 </div>
               </div>
+              <button onClick={() => calculateOutputs(selectedComponent.id, selectedComponent.outputs)}>Calculate Outputs</button>
             </div>
           : null
         }
@@ -66,4 +69,8 @@ const mapStateToProps = (state) => ({
   selectedComponent: state.circuitComponent.selected,
 });
 
-export default connect(mapStateToProps, null)(SelectedComponent);
+const mapDispatchToProps = (dispatch) => ({
+  calculateOutputs: bindActionCreators(calculateOutputs, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SelectedComponent);

@@ -10,6 +10,8 @@ export const Types = {
   SELECT: "circuitComponent/SELECT",
   DESELECT: "circuitComponent/DESELECT",
   SET_POWER: "circuitComponent/SET_POWER",
+  CALCULATE_OUTPUTS: "circuitComponent/CALCULATE_OUTPUTS",
+  SET_OUTPUTS_UPTODATE: "circuitComponent/SET_OUTPUTS_UPTODATE",
 };
 
 // Reducer
@@ -86,6 +88,22 @@ export default function reducer(state = INITIAL_STATE, action) {
                   image: content.kind.alternateImage,
                   alternateImage: content.kind.image
                 }
+              }
+            : content
+        ),
+      }
+    case Types.SET_OUTPUTS_UPTODATE:
+      return {
+        ...state,
+        selected: {
+          ...state.selected,
+          outputsUpToDate: action.payload.id === state.selected.id ? action.payload.outputsUpToDate : state.selected.outputsUpToDate
+        },
+        instances: state.instances.map((content) =>
+          content.id === action.payload.id
+            ? {
+                ...content,
+                outputsUpToDate: action.payload.outputsUpToDate
               }
             : content
         ),
@@ -168,6 +186,26 @@ export function setPower(componentID, portID, power) {
       componentID: componentID,
       portID: portID,
       power: power
+    }
+  }
+}
+
+export function calculateOutputs(id, outputIDs) {
+  return {
+    type: Types.CALCULATE_OUTPUTS,
+    payload: {
+      id: id,
+      outputIDs: outputIDs
+    }
+  }
+}
+
+export function setOutputsUpToDate(id, outputsUpToDate) {
+  return {
+    type: Types.SET_OUTPUTS_UPTODATE,
+    payload: {
+      id: id,
+      outputsUpToDate: outputsUpToDate
     }
   }
 }

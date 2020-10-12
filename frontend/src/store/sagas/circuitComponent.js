@@ -2,7 +2,7 @@ import { takeEvery, call, put, all } from "redux-saga/effects";
 import { store } from "..";
 import api from "../../api";
 import { addComponent } from "../ducks/circuit";
-import { confirmCreation, createWithData, deselect, setSelected } from "../ducks/circuitComponent";
+import { confirmCreation, createWithData, deselect, setOutputsUpToDate, setSelected } from "../ducks/circuitComponent";
 import {changePower, create as createPorts, setWorldTransform} from "../ducks/port";
 
 export function* helloSaga() {
@@ -71,4 +71,21 @@ function* setPowerSaga(action) {
 
 export function* watchSetPower() {
   yield takeEvery("circuitComponent/SET_POWER", setPowerSaga);
+}
+
+
+function* calculateOutputsSaga(action) {
+  const body = yield call(api.calculateOutputs, action.payload.id);
+
+  if (body && body.outputs && body.outputs.length){
+    yield all(body.outputs.map((power, i) => put(changePower(action.payload.outputIDs[i], power))));
+    yield put(setOutputsUpToDate(action.payload.id, true));
+  } 
+  else {
+    console.log(`Invalid responseBody: ${body}`);
+  }
+}
+
+export function* watchCalculateOutputs() {
+  yield takeEvery("circuitComponent/CALCULATE_OUTPUTS", calculateOutputsSaga);
 }

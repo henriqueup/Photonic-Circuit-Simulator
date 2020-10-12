@@ -1,8 +1,8 @@
 import { all } from "redux-saga/effects";
 import { watchCreateCircuit, watchSaveCircuit } from "./circuit";
-import { helloSaga, watchCreateCircuitComponent, watchSelect, watchSetPower, watchUpdatePos } from "./circuitComponent";
+import { helloSaga, watchCalculateOutputs, watchCreateCircuitComponent, watchSelect, watchSetPower, watchUpdatePos } from "./circuitComponent";
 import { watchCreateConnection } from "./connection";
-import { watchChangeOutput, watchSetWorldTransform } from "./port";
+import { watchChangePower, watchSetWorldTransform } from "./port";
 
 export default function* rootSaga() {
   yield all([
@@ -15,6 +15,7 @@ export default function* rootSaga() {
     watchSetWorldTransform(),
     watchSelect(),
     watchSetPower(),
-    watchChangeOutput()
+    watchChangePower(),
+    watchCalculateOutputs()
   ]);
 }

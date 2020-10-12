@@ -24,8 +24,13 @@ async function postComponent(kind) {
 
 async function getAllComponents() {
   const response = await fetch(baseURL + "/data");
-  const body = await response.json();
-  return body;
+  if (response.ok){
+    const body = await response.json();
+    return body;
+  } else {
+    const text = await response.text();
+    console.log(`API error: ${text}`);
+  }
 }
 
 async function setOutputs(componentID, originPortID, targetPortID) {
@@ -71,5 +76,15 @@ async function setPower(componentID, power) {
   }
 }
 
+async function calculateOutputs(id){
+  const response = await fetch(baseURL + `/data/${id}/calculate_outputs`);
+  if (response.ok){
+    const body = await response.json();
+    return body;
+  } else {
+    const text = await response.text();
+    console.log(`API error: ${text}`);
+  }
+}
 
-export default { postComponent, getAllComponents, setOutputs, setPower };
+export default { postComponent, getAllComponents, setOutputs, setPower, calculateOutputs };

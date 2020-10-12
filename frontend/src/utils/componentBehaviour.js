@@ -5,7 +5,7 @@ import selectedSwnPNG from "../resources/images/selected_swn.png";
 import selectedSwpPNG from "../resources/images/selected_swp.png";
 import selectedPowerSourcePNG from "../resources/images/selected_power_source.png";
 
-const GRID_SIZE = 18;
+const GRID_SIZE = 20;
 
 export const componentSizes = {
   swn: 80,

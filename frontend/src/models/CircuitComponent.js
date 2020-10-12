@@ -60,6 +60,7 @@ const createCircuitComponent = (data) => {
     inputs: data.inputs,
     outputs: data.outputs,
     kind: basicKinds.find((component) => component.kind === data.kind),
+    outputsUpToDate: true
   };
 };
 

@@ -1,6 +1,7 @@
 import { put, takeEvery } from "redux-saga/effects";
 import { store } from "..";
 import { PORT_WIDTH } from "../../models/Port";
+import { setOutputsUpToDate } from "../ducks/circuitComponent";
 import { updatePos as updateConnectionPos } from "../ducks/connection";
 import { changePower } from "../ducks/port";
 
@@ -18,18 +19,20 @@ export function* watchSetWorldTransform() {
 }
 
 
-function* changeOutputSaga(action) {
+function* changePowerSaga(action) {
+  //port which is changing power
   const originPort = store.getState().port.instances.find(port => port.id === action.payload.id);
+  yield put(setOutputsUpToDate(originPort.parentID, false));
 
   if (originPort.target){
     const targetPort = store.getState().port.instances.find(port => port.id === originPort.target);
 
     if (targetPort.power !== action.payload.power){
-      yield put(changePower(originPort.target, action.payload.power));
+      yield put(changePower(targetPort.id, action.payload.power));
     }
   }
 }
 
-export function* watchChangeOutput() {
-  yield takeEvery("port/CHANGE_POWER", changeOutputSaga);
+export function* watchChangePower() {
+  yield takeEvery("port/CHANGE_POWER", changePowerSaga);
 }
