@@ -5,6 +5,7 @@ export const Types = {
   CREATE: "port/CREATE",
   SET_WORLD_TRANSFORM: "port/SET_WORLD_TRANSFORM",
   SET_CONNECTED: "port/SET_CONNECTED",
+  CHANGE_POWER: "port/CHANGE_POWER",
 };
 
 // Reducer
@@ -44,6 +45,18 @@ export default function reducer(state = INITIAL_STATE, action) {
             : content
         ),
       }
+    case Types.CHANGE_POWER:
+      return {
+        ...state,
+        instances: state.instances.map((content) =>
+          content.id === action.payload.id
+            ? {
+                ...content,
+                power: action.payload.power
+              }
+            : content
+        ),
+      }
     default:
       return state;
   }
@@ -79,6 +92,16 @@ export function setConnected(id, targetPortID){
     payload: {
       id: id,
       targetPortID: targetPortID
+    }
+  }
+}
+
+export function changePower(id, power){
+  return {
+    type: Types.CHANGE_POWER,
+    payload: {
+      id: id,
+      power: power
     }
   }
 }

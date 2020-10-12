@@ -12,7 +12,6 @@ export function onDragStart(event) {
   this.alpha = 0.5;
   this.dragging = true;
   store.dispatch(select(this.id));
-  console.log(this);
 }
 
 export function onDragEnd() {

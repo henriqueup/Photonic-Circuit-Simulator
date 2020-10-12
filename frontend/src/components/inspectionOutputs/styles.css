@@ -1,0 +1,8 @@
+.portPowerItem {
+  margin: 0px 18px;
+  padding: 0;
+  display: flex;
+}
+.powerInput {
+  width: 60px;
+}

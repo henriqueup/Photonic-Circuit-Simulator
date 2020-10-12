@@ -13,11 +13,16 @@ function* createConnectionSaga(action) {
     const connection = connections[0];
 
     const originPort = ports.find(port => port.id === connection.originPortID);
-    yield call(api.setOutputs, originPort.parentID, originPort.id, connection.targetPortID);
+    const response = yield call(api.setOutputs, originPort.parentID, originPort.id, connection.targetPortID);
+    
+    if (response.ok){
+      yield put(create(connection.points, connection.originPortID, connection.targetPortID));
+      yield put(setConnected(connection.originPortID, connection.targetPortID));
+      yield put(setConnected(connection.targetPortID, connection.originPortID));
+    } else {
+      console.log(response.text);
+    }
 
-    yield put(create(connection.points, connection.originPortID, connection.targetPortID));
-    yield put(setConnected(connection.originPortID, connection.targetPortID));
-    yield put(setConnected(connection.targetPortID, connection.originPortID));
   }
 }
 

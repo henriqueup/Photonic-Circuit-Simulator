@@ -29,8 +29,6 @@ async function getAllComponents() {
 }
 
 async function setOutputs(componentID, originPortID, targetPortID) {
-  let body = null;
-
   try {
     const response = await fetch(baseURL + `/data/${componentID}/set_outputs`, {
       method: "PUT",
@@ -48,15 +46,30 @@ async function setOutputs(componentID, originPortID, targetPortID) {
       }),
     });
 
-    if (response.ok){
-      body = await response.json();
-    } else {
-      console.log(response.text);
-    }
+    return response;
   } catch (err) {
     console.log(err);
   }
-  return body;
 }
 
-export default { postComponent, getAllComponents, setOutputs };
+async function setPower(componentID, power) {
+  try {
+    const response = await fetch(baseURL + `/data/${componentID}/set_power`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        power: power
+      }),
+    });
+
+    return response;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+
+export default { postComponent, getAllComponents, setOutputs, setPower };

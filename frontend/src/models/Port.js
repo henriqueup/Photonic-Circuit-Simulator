@@ -18,7 +18,6 @@ export function onDragStart(event) {
   this.mouseY = 0;
   this.initialMouseX = 0;
   this.initialMouseY = 0;
-  console.log(this);
 
   this.updateMouse = (e) => {
     if (!this.mouseX) {

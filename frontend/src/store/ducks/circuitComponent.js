@@ -9,6 +9,7 @@ export const Types = {
   SET_SELECTED: "circuitComponent/SET_SELECTED",
   SELECT: "circuitComponent/SELECT",
   DESELECT: "circuitComponent/DESELECT",
+  SET_POWER: "circuitComponent/SET_POWER",
 };
 
 // Reducer
@@ -156,6 +157,17 @@ export function deselect(id) {
     type: Types.DESELECT,
     payload: {
       id: id
+    }
+  }
+}
+
+export function setPower(componentID, portID, power) {
+  return {
+    type: Types.SET_POWER,
+    payload: {
+      componentID: componentID,
+      portID: portID,
+      power: power
     }
   }
 }
