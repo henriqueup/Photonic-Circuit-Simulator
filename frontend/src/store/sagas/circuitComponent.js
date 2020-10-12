@@ -21,8 +21,8 @@ function* createCircuitComponentSaga(action) {
   yield put(createWithData(data));
   yield put(addComponent(circuitComponent.id));
 
-  yield put(createPorts(circuitComponent.inputs, circuitComponent.kind, true));
-  yield put(createPorts(circuitComponent.outputs, circuitComponent.kind, false));
+  yield put(createPorts(circuitComponent.inputs, circuitComponent.id, circuitComponent.kind, true));
+  yield put(createPorts(circuitComponent.outputs, circuitComponent.id, circuitComponent.kind, false));
 
   yield put(confirmCreation(circuitComponent.id));
 }

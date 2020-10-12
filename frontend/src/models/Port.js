@@ -83,7 +83,7 @@ export const Port = PixiComponent("Port", {
   },
 });
 
-const createPorts = (ports, parentKind, isInput = true) => {
+const createPorts = (ports, parentID, parentKind, isInput = true) => {
   if (!ports || !ports.length){
     return [];
   }
@@ -110,6 +110,7 @@ const createPorts = (ports, parentKind, isInput = true) => {
       worldY: STARTING_Y + y,
       isInput: isInput,
       id: port.id,
+      parentID: parentID,
       power: port.power,
       target: port.target,
     })

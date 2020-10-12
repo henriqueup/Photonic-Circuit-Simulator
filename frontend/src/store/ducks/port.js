@@ -17,7 +17,7 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.CREATE:
       return {
         ...state,
-        instances: state.instances.concat(createPorts(action.payload.ports, action.payload.parentKind, action.payload.isInput)),
+        instances: state.instances.concat(createPorts(action.payload.ports, action.payload.parentID, action.payload.parentKind, action.payload.isInput)),
       };
     case Types.SET_WORLD_TRANSFORM:
       return {
@@ -50,11 +50,12 @@ export default function reducer(state = INITIAL_STATE, action) {
 }
 
 // Action Creators
-export function create(ports, parentKind, isInput = true) {
+export function create(ports, parentID, parentKind, isInput = true) {
   return {
     type: Types.CREATE,
     payload: {
       ports: ports,
+      parentID: parentID,
       parentKind: parentKind,
       isInput: isInput,
     },
