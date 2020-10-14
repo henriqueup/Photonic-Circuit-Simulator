@@ -12,6 +12,14 @@ const InspectionOutputs = ({selectedComponent, port, setPower}) => {
     setPowerState(Number.parseFloat(event.target.value));
   }
 
+  const handleFocus = (event) => {
+    event.target.select();
+  }
+  
+  const handleBlur = (event) => {
+    setPowerState(Number.parseFloat(event.target.value).toFixed(4));
+  }
+
   const handleKeyDown = (event) => {
     //TODO: validate pressed keys
     // if (!Number(event.key) && (event.key !== '.' && event.key !== ',')){
@@ -28,9 +36,11 @@ const InspectionOutputs = ({selectedComponent, port, setPower}) => {
       <input
         className="powerInput"
         disabled={disableEdition}
-        value={power.toFixed(4)}
+        value={power}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         type="number"
       />
       {disableEdition
