@@ -74,8 +74,8 @@ class Lumerical(gj.Document):
     return curr
 
   def calculate(col, control, input):
-    x = float(control)
-    y = float(input)
+    x = float(input)
+    y = float(control)
 
     degree = 4
     betas = Lumerical.objects(Q(kind=col) & Q(degree=degree)).get().betas
