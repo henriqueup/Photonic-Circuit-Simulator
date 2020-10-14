@@ -7,35 +7,50 @@ import { basicKinds, snapToGrid } from "../utils/componentBehaviour";
 export const STARTING_X = 100;
 export const STARTING_Y = 100;
 
+const startMoveDelay = (component) => {
+  console.log(component.movable);
+  setTimeout(() => {
+    if (component.dragging){
+      component.movable = true;
+    }
+  }, 50);
+}
+
 export function onDragStart(event) {
   this.data = event.data;
   this.alpha = 0.5;
   this.dragging = true;
+  this.moved = false;
   store.dispatch(select(this.id));
+
+  startMoveDelay(this);
 }
 
 export function onDragEnd() {
   this.alpha = 1;
   this.dragging = false;
+  this.movable = false;
 
-  if (this.data) {
+  if (this.data && this.moved) {
     const position = snapToGrid(this.data.getLocalPosition(this.parent));
     this.x = position.x - this.width / 2;
     this.y = position.y - this.height / 2;
     store.dispatch(updatePos(this.id, this.x, this.y));
   }
   
-  // set the interaction data to null
+  this.moved = false;
   this.data = null;
 }
 
 export function onDragMove() {
-  if (this.dragging) {
+  if (this.movable) {
     if (this.data) {
       let newPosition = this.data.getLocalPosition(this.parent);
 
       this.x = newPosition.x - this.width / 2;
       this.y = newPosition.y - this.height / 2;
+
+      this.moved = true;
     }
   }
 }
