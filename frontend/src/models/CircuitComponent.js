@@ -8,7 +8,6 @@ export const STARTING_X = 100;
 export const STARTING_Y = 100;
 
 const startMoveDelay = (component) => {
-  console.log(component.movable);
   setTimeout(() => {
     if (component.dragging){
       component.movable = true;

@@ -7,3 +7,8 @@
   cursor: pointer;
   background-color: antiquewhite;
 }
+.stubItem {
+  text-indent: 4px;
+  padding: 4px;
+  list-style-type: none;
+}

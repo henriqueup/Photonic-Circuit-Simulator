@@ -1,16 +1,31 @@
 import swnPNG from "../resources/images/swn.png";
 import swpPNG from "../resources/images/swp.png";
 import powerSourcePNG from "../resources/images/power_source.png";
+import outputReaderPNG from "../resources/images/output_reader.png";
 import selectedSwnPNG from "../resources/images/selected_swn.png";
 import selectedSwpPNG from "../resources/images/selected_swp.png";
 import selectedPowerSourcePNG from "../resources/images/selected_power_source.png";
+import selectedOutputReaderSourcePNG from "../resources/images/selected_output_reader.png";
 
 const GRID_SIZE = 20;
 
 export const componentSizes = {
-  swn: 80,
-  swp: 80,
-  power_source: 40,
+  swn: {
+    height: 80,
+    width: 80,
+  },
+  swp: {
+    height: 80,
+    width: 80,
+  },
+  power_source: {
+    height: 40,
+    width: 40,
+  },
+  output_reader: {
+    height: 20,
+    width: 80,
+  },
 };
 
 export const basicKinds = [
@@ -18,19 +33,25 @@ export const basicKinds = [
     name: "Switch N",
     kind: "swn",
     image: swnPNG,
-    alternateImage: selectedSwnPNG
+    alternateImage: selectedSwnPNG,
   },
   {
     name: "Switch P",
     kind: "swp",
     image: swpPNG,
-    alternateImage: selectedSwpPNG
+    alternateImage: selectedSwpPNG,
   },
   {
     name: "Power Source",
     kind: "power_source",
     image: powerSourcePNG,
-    alternateImage: selectedPowerSourcePNG
+    alternateImage: selectedPowerSourcePNG,
+  },
+  {
+    name: "Output Reader",
+    kind: "output_reader",
+    image: outputReaderPNG,
+    alternateImage: selectedOutputReaderSourcePNG,
   },
 ];
 

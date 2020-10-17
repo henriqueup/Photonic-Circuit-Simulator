@@ -2,7 +2,7 @@ import { applyDefaultProps, PixiComponent } from "@inlet/react-pixi";
 import { Sprite } from "pixi.js";
 import portPng from "../resources/images/port.png";
 import { store } from "../store";
-import {attemptCreation as attemptConnectionCreation} from "../store/ducks/connection";
+import { attemptCreation as attemptConnectionCreation } from "../store/ducks/connection";
 import { componentSizes } from "../utils/componentBehaviour";
 import { STARTING_X, STARTING_Y } from "./CircuitComponent";
 
@@ -45,7 +45,7 @@ export function onDragEnd(event) {
   if (this.connecting) {
     event.stopPropagation();
     this.connecting = false;
-    
+
     let points = [
       this.transform.worldTransform.tx + PORT_WIDTH / 2,
       this.transform.worldTransform.ty + PORT_WIDTH / 2,
@@ -55,7 +55,6 @@ export function onDragEnd(event) {
 
     store.dispatch(attemptConnectionCreation(points, this.id));
   }
-
 
   window.removeEventListener("mousemove", this.updateMouse);
 }
@@ -83,20 +82,20 @@ export const Port = PixiComponent("Port", {
 });
 
 const createPorts = (ports, parentID, parentKind, isInput = true) => {
-  if (!ports || !ports.length){
+  if (!ports || !ports.length) {
     return [];
   }
 
   let createdPorts = [];
-  const parentDimension = componentSizes[parentKind];
+  const parentDimension = componentSizes[parentKind].height;
 
   const x = isInput ? 0 : parentDimension - PORT_WIDTH;
-  
-  const increment = parentDimension/ports.length;
-  const currentY = 8;
+
+  const increment = parentDimension / ports.length;
+  const currentY = parentKind === "output_reader" ? 1 : 8;
 
   ports.forEach((port, i) => {
-    const y = currentY + increment*i;
+    const y = currentY + increment * i;
 
     createdPorts.push({
       image: portPng,
@@ -112,7 +111,7 @@ const createPorts = (ports, parentID, parentKind, isInput = true) => {
       parentID: parentID,
       power: port.power,
       target: port.target,
-    })
+    });
   });
   return createdPorts;
 };

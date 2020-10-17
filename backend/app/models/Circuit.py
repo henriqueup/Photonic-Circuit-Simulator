@@ -5,6 +5,7 @@ from app.models.Component import Component
 from app.models.SwN import SwN
 from app.models.SwP import SwP
 from app.models.PowerSource import PowerSource
+from app.models.OutputReader import OutputReader
 
 class Circuit():
   def __init__(self, label, components, ports, id=None):
@@ -42,6 +43,8 @@ class Circuit():
         components.append(SwP.load(component.id))
       elif (component.kind == 'power_source'):
         components.append(PowerSource.load(component.id))
+      elif (component.kind == 'output_reader'):
+        components.append(OutputReader.load(component.id))
       else:
         raise TypeError
 
@@ -100,6 +103,8 @@ class Circuit():
       component = PowerSource.create()
     elif (kind == 'swp'):
       component = SwP.create()
+    elif (kind == 'output_reader'):
+      component = OutputReader.create()
     else:
       raise TypeError("Kind \'" + kind + "\' doesn't exist.")
 

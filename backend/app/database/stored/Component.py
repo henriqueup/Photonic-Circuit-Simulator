@@ -5,5 +5,5 @@ from app.database.stored.Port import StoredPort
 class StoredComponent(gj.Document):
   kind = db.StringField()
   inputs = db.ListField(db.LazyReferenceField(StoredPort))
-  outputs = db.ListField(db.LazyReferenceField(StoredPort), required=True)
+  outputs = db.ListField(db.LazyReferenceField(StoredPort))
   label = db.StringField()

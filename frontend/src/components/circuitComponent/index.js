@@ -9,6 +9,7 @@ import {
 import { onDragStart as portOnDragStart, onDragMove as portOnDragMove, onDragEnd as portOnDragEnd, Port } from "../../models/Port";
 import "./styles.css";
 import { store } from "../../store";
+import { SpriteLabel } from "../../models/SpriteLabel";
 
 const Component = ({ circuitComponent }) => {
   return circuitComponent.confirmedCreation ? (
@@ -27,7 +28,7 @@ const Component = ({ circuitComponent }) => {
         pointermove={circuitComponentOnDragMove}
       >
         {circuitComponent.inputs.map((portID) => {
-          const port = store.getState().port.instances.find(port => port.id === portID);
+          const port = store.getState().port.instances.find((port) => port.id === portID);
 
           return (
             <Port
@@ -46,7 +47,7 @@ const Component = ({ circuitComponent }) => {
           );
         })}
         {circuitComponent.outputs.map((portID) => {
-          const port = store.getState().port.instances.find(port => port.id === portID);
+          const port = store.getState().port.instances.find((port) => port.id === portID);
 
           return (
             <Port
@@ -64,6 +65,19 @@ const Component = ({ circuitComponent }) => {
             />
           );
         })}
+        {circuitComponent.kind.kind === "output_reader" ? (
+          <SpriteLabel
+            kind={"output_reader"}
+            text={store
+              .getState()
+              .port.instances.find((port) => port.id === circuitComponent.inputs[0])
+              .power.toFixed(2)}
+            style={{
+              fontSize: 14,
+              align: "center",
+            }}
+          />
+        ) : null}
       </CircuitComponent>
     </Container>
   ) : null;

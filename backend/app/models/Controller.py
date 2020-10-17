@@ -1,10 +1,4 @@
 from mongoengine import NotUniqueError
-from app.models.SwN import SwN
-from app.models.PowerSource import PowerSource
-from app.models.Port import Port
-from app.models.SwP import SwP
-from app.database.Component import Component as ComponentCollection
-from app.database.Port import Port as PortCollection
 from app.models.Circuit import Circuit
 from app.database.Circuit import Circuit as CircuitCollection
 
@@ -15,7 +9,8 @@ class Controller:
 
   def start(self):
     for circuit in CircuitCollection.objects:
-      self.circuit_ids.append(str(circuit.id))
+      # self.circuit_ids.append(str(circuit.id))
+      circuit.delete()
 
   def load_circuit(self, circuit_id):
     if (str(circuit_id) not in self.circuit_ids):
