@@ -26,6 +26,10 @@ export const componentSizes = {
     height: 20,
     width: 80,
   },
+  port: {
+    height: 18,
+    width: 18,
+  },
 };
 
 export const basicKinds = [
