@@ -7,3 +7,7 @@
   display: block;
   margin: 8px 0px 0px 0px;
 }
+.simulateButton {
+  padding: 8px 18px;
+  font-size: 18px;
+}

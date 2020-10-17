@@ -8,6 +8,7 @@ export const Types = {
   SAVE: "circuit/SAVE",
   ATTEMPT_SAVE: "circuit/ATTEMPT_SAVE",
   ADD_COMPONENT: "circuit/ADD_COMPONENT",
+  SIMULATE: "circuit/SIMULATE",
 };
 
 // Reducer
@@ -107,5 +108,12 @@ export function addComponent(component_id) {
     payload: {
       component_id: component_id,
     },
+  };
+}
+
+export function simulate() {
+  return {
+    type: Types.SIMULATE,
+    payload: {},
   };
 }
