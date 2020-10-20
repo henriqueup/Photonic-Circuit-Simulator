@@ -2,7 +2,7 @@ import { takeEvery, call, put, all, actionChannel, take } from "redux-saga/effec
 import { store } from "..";
 import api from "../../api";
 import { addComponent } from "../ducks/circuit";
-import { confirmCreation, createWithData, deselect, setOutputsUpToDate, setSelected } from "../ducks/circuitComponent";
+import { confirmCreation, confirmSelectedDelete, createWithData, deselect, setOutputsUpToDate, setSelected } from "../ducks/circuitComponent";
 import { changePower, create as createPorts, setWorldTransform } from "../ducks/port";
 
 export function* helloSaga() {
@@ -87,4 +87,22 @@ export function* watchCalculateOutputs() {
     const action = yield take(channel);
     yield call(calculateOutputsSaga, action);
   }
+}
+
+function* deleteSelectedSaga() {
+  const id = store.getState().circuitComponent.selected.id;
+  if (id === null) return;
+
+  const response = yield call(api.deleteComponent, id);
+
+  if (response.ok) {
+    yield put(confirmSelectedDelete());
+  } else {
+    const responseText = yield response.text();
+    console.log(`API error: ${responseText}`);
+  }
+}
+
+export function* watchDeleteSelected() {
+  yield takeEvery("circuitComponent/DELETE_SELECTED", deleteSelectedSaga);
 }

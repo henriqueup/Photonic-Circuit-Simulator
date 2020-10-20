@@ -24,7 +24,7 @@ async function postComponent(kind) {
 
 async function getAllComponents() {
   const response = await fetch(baseURL + "/data");
-  if (response.ok){
+  if (response.ok) {
     const body = await response.json();
     return body;
   } else {
@@ -45,8 +45,8 @@ async function setOutputs(componentID, originPortID, targetPortID) {
         outputs: [
           {
             id: originPortID,
-            target: targetPortID
-          }
+            target: targetPortID,
+          },
         ],
       }),
     });
@@ -66,7 +66,7 @@ async function setPower(componentID, power) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        power: power
+        power: power,
       }),
     });
 
@@ -76,9 +76,9 @@ async function setPower(componentID, power) {
   }
 }
 
-async function calculateOutputs(id){
+async function calculateOutputs(id) {
   const response = await fetch(baseURL + `/data/${id}/calculate_outputs`);
-  if (response.ok){
+  if (response.ok) {
     const body = await response.json();
     return body;
   } else {
@@ -87,4 +87,13 @@ async function calculateOutputs(id){
   }
 }
 
-export default { postComponent, getAllComponents, setOutputs, setPower, calculateOutputs };
+async function deleteComponent(id) {
+  try {
+    const response = await fetch(baseURL + `/data/${id}`, { method: "DELETE" });
+    return response;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export default { postComponent, getAllComponents, setOutputs, setPower, calculateOutputs, deleteComponent };

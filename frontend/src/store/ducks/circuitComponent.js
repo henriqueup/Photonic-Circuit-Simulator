@@ -12,12 +12,14 @@ export const Types = {
   SET_POWER: "circuitComponent/SET_POWER",
   CALCULATE_OUTPUTS: "circuitComponent/CALCULATE_OUTPUTS",
   SET_OUTPUTS_UPTODATE: "circuitComponent/SET_OUTPUTS_UPTODATE",
+  DELETE_SELECTED: "circuitComponent/DELETE_SELECTED",
+  CONFIRM_DELETE_SELECTED: "circuitComponent/CONFIRM_DELETE_SELECTED",
 };
 
 // Reducer
 const INITIAL_STATE = {
   instances: [],
-  selected: null
+  selected: null,
 };
 
 export default function reducer(state = INITIAL_STATE, action) {
@@ -52,15 +54,15 @@ export default function reducer(state = INITIAL_STATE, action) {
           content.id === action.payload.id
             ? {
                 ...content,
-                confirmedCreation: true
+                confirmedCreation: true,
               }
             : content
         ),
-      }
+      };
     case Types.SET_SELECTED:
       return {
         ...state,
-        selected: state.instances.find(instance => instance.id === action.payload.id),
+        selected: state.instances.find((instance) => instance.id === action.payload.id),
         instances: state.instances.map((content) =>
           content.id === action.payload.id
             ? {
@@ -69,12 +71,12 @@ export default function reducer(state = INITIAL_STATE, action) {
                 kind: {
                   ...content.kind,
                   image: content.kind.alternateImage,
-                  alternateImage: content.kind.image
-                }
+                  alternateImage: content.kind.image,
+                },
               }
             : content
         ),
-      }
+      };
     case Types.DESELECT:
       return {
         ...state,
@@ -86,28 +88,34 @@ export default function reducer(state = INITIAL_STATE, action) {
                 kind: {
                   ...content.kind,
                   image: content.kind.alternateImage,
-                  alternateImage: content.kind.image
-                }
+                  alternateImage: content.kind.image,
+                },
               }
             : content
         ),
-      }
+      };
     case Types.SET_OUTPUTS_UPTODATE:
       return {
         ...state,
         selected: {
           ...state.selected,
-          outputsUpToDate: action.payload.id === state.selected.id ? action.payload.outputsUpToDate : state.selected.outputsUpToDate
+          outputsUpToDate: action.payload.id === state.selected.id ? action.payload.outputsUpToDate : state.selected.outputsUpToDate,
         },
         instances: state.instances.map((content) =>
           content.id === action.payload.id
             ? {
                 ...content,
-                outputsUpToDate: action.payload.outputsUpToDate
+                outputsUpToDate: action.payload.outputsUpToDate,
               }
             : content
         ),
-      }
+      };
+    case Types.CONFIRM_DELETE_SELECTED:
+      return {
+        ...state,
+        selected: null,
+        instances: state.instances.filter((content) => content.id !== state.selected.id),
+      };
     default:
       return state;
   }
@@ -147,36 +155,36 @@ export function confirmCreation(id) {
   return {
     type: Types.CONFIRM_CREATION,
     payload: {
-      id: id
-    }
-  }
+      id: id,
+    },
+  };
 }
 
 export function setSelected(id) {
   return {
     type: Types.SET_SELECTED,
     payload: {
-      id: id
-    }
-  }
+      id: id,
+    },
+  };
 }
 
 export function select(id) {
   return {
     type: Types.SELECT,
     payload: {
-      id: id
-    }
-  }
+      id: id,
+    },
+  };
 }
 
 export function deselect(id) {
   return {
     type: Types.DESELECT,
     payload: {
-      id: id
-    }
-  }
+      id: id,
+    },
+  };
 }
 
 export function setPower(componentID, portID, power) {
@@ -185,9 +193,9 @@ export function setPower(componentID, portID, power) {
     payload: {
       componentID: componentID,
       portID: portID,
-      power: power
-    }
-  }
+      power: power,
+    },
+  };
 }
 
 export function calculateOutputs(id, outputIDs) {
@@ -195,9 +203,9 @@ export function calculateOutputs(id, outputIDs) {
     type: Types.CALCULATE_OUTPUTS,
     payload: {
       id: id,
-      outputIDs: outputIDs
-    }
-  }
+      outputIDs: outputIDs,
+    },
+  };
 }
 
 export function setOutputsUpToDate(id, outputsUpToDate) {
@@ -205,7 +213,21 @@ export function setOutputsUpToDate(id, outputsUpToDate) {
     type: Types.SET_OUTPUTS_UPTODATE,
     payload: {
       id: id,
-      outputsUpToDate: outputsUpToDate
-    }
-  }
+      outputsUpToDate: outputsUpToDate,
+    },
+  };
+}
+
+export function deleteSelected() {
+  return {
+    type: Types.DELETE_SELECTED,
+    payload: {},
+  };
+}
+
+export function confirmSelectedDelete() {
+  return {
+    type: Types.CONFIRM_DELETE_SELECTED,
+    payload: {},
+  };
 }

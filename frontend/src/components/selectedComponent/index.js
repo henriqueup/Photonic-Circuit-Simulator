@@ -5,9 +5,10 @@ import { bindActionCreators } from "redux";
 import "./styles.css";
 import { store } from "../../store";
 import InspectionOutputs from "../inspectionOutputs";
-import { calculateOutputs } from "../../store/ducks/circuitComponent";
+import { calculateOutputs, deleteSelected } from "../../store/ducks/circuitComponent";
+import { FaTrashAlt } from "react-icons/fa";
 
-const SelectedComponent = ({ selectedComponent, calculateOutputs }) => {
+const SelectedComponent = ({ selectedComponent, calculateOutputs, deleteComponent }) => {
   const getPortData = (portID) => {
     return store.getState().port.instances.find((port) => port.id === portID);
   };
@@ -19,7 +20,13 @@ const SelectedComponent = ({ selectedComponent, calculateOutputs }) => {
         content={
           selectedComponent != null ? (
             <div className="selectedData">
-              <span className="selectedKind">Kind: {selectedComponent.kind.name}</span>
+              <div className="selectedHeader">
+                <span className="selectedKind">Kind: {selectedComponent.kind.name}</span>
+                <div className="selectedDelete" onClick={deleteComponent}>
+                  <FaTrashAlt />
+                </div>
+              </div>
+              <i className="fas fa-trash-alt"></i>
               <div className="selectedPorts">
                 {selectedComponent.inputs && selectedComponent.inputs.length ? (
                   <div className="selectedPortsValues">
@@ -69,6 +76,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   calculateOutputs: bindActionCreators(calculateOutputs, dispatch),
+  deleteComponent: bindActionCreators(deleteSelected, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectedComponent);

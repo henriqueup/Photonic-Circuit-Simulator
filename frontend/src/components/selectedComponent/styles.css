@@ -1,3 +1,14 @@
+.selectedHeader {
+  display: flex;
+  justify-content: space-between;
+}
+.selectedDelete {
+  margin: 6px 6px 0px 6px;
+  padding: 2px 2px 0px 2px;
+}
+.selectedDelete:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
 .selectedData {
   margin: 8px 4px;
   display: flex;
