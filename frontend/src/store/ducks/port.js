@@ -6,6 +6,7 @@ export const Types = {
   SET_WORLD_TRANSFORM: "port/SET_WORLD_TRANSFORM",
   SET_CONNECTED: "port/SET_CONNECTED",
   CHANGE_POWER: "port/CHANGE_POWER",
+  DELETE: "port/DELETE",
 };
 
 // Reducer
@@ -18,7 +19,9 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.CREATE:
       return {
         ...state,
-        instances: state.instances.concat(createPorts(action.payload.ports, action.payload.parentID, action.payload.parentKind, action.payload.isInput)),
+        instances: state.instances.concat(
+          createPorts(action.payload.ports, action.payload.parentID, action.payload.parentKind, action.payload.isInput)
+        ),
       };
     case Types.SET_WORLD_TRANSFORM:
       return {
@@ -28,11 +31,11 @@ export default function reducer(state = INITIAL_STATE, action) {
             ? {
                 ...content,
                 worldX: content.x + action.payload.parentX,
-                worldY: content.y + action.payload.parentY
+                worldY: content.y + action.payload.parentY,
               }
             : content
         ),
-      }
+      };
     case Types.SET_CONNECTED:
       return {
         ...state,
@@ -40,11 +43,11 @@ export default function reducer(state = INITIAL_STATE, action) {
           content.id === action.payload.id
             ? {
                 ...content,
-                target: action.payload.targetPortID
+                target: action.payload.targetPortID,
               }
             : content
         ),
-      }
+      };
     case Types.CHANGE_POWER:
       return {
         ...state,
@@ -52,11 +55,16 @@ export default function reducer(state = INITIAL_STATE, action) {
           content.id === action.payload.id
             ? {
                 ...content,
-                power: action.payload.power
+                power: action.payload.power,
               }
             : content
         ),
-      }
+      };
+    case Types.DELETE:
+      return {
+        ...state,
+        instances: state.instances.filter((instance) => instance.id !== action.payload.id),
+      };
     default:
       return state;
   }
@@ -75,33 +83,42 @@ export function create(ports, parentID, parentKind, isInput = true) {
   };
 }
 
-export function setWorldTransform(id, parentX, parentY){
+export function setWorldTransform(id, parentX, parentY) {
   return {
     type: Types.SET_WORLD_TRANSFORM,
     payload: {
       id: id,
       parentX: parentX,
-      parentY: parentY
-    }
-  }
+      parentY: parentY,
+    },
+  };
 }
 
-export function setConnected(id, targetPortID){
+export function setConnected(id, targetPortID) {
   return {
     type: Types.SET_CONNECTED,
     payload: {
       id: id,
-      targetPortID: targetPortID
-    }
-  }
+      targetPortID: targetPortID,
+    },
+  };
 }
 
-export function changePower(id, power){
+export function changePower(id, power) {
   return {
     type: Types.CHANGE_POWER,
     payload: {
       id: id,
-      power: power
-    }
-  }
+      power: power,
+    },
+  };
+}
+
+export function deletePort(id) {
+  return {
+    type: Types.DELETE,
+    payload: {
+      id: id,
+    },
+  };
 }

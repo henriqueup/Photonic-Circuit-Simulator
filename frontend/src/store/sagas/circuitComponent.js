@@ -3,7 +3,8 @@ import { store } from "..";
 import api from "../../api";
 import { addComponent } from "../ducks/circuit";
 import { confirmCreation, confirmSelectedDelete, createWithData, deselect, setOutputsUpToDate, setSelected } from "../ducks/circuitComponent";
-import { changePower, create as createPorts, setWorldTransform } from "../ducks/port";
+import { deleteConnection } from "../ducks/connection";
+import { changePower, create as createPorts, deletePort, setWorldTransform } from "../ducks/port";
 
 export function* helloSaga() {
   yield console.log("Sagas working!");
@@ -90,13 +91,23 @@ export function* watchCalculateOutputs() {
 }
 
 function* deleteSelectedSaga() {
-  const id = store.getState().circuitComponent.selected.id;
-  if (id === null) return;
+  const selected = store.getState().circuitComponent.selected;
+  if (selected === null) return;
 
-  const response = yield call(api.deleteComponent, id);
+  const response = yield call(api.deleteComponent, selected.id);
 
   if (response.ok) {
     yield put(confirmSelectedDelete());
+
+    for (const portID of selected.inputs) {
+      yield put(deleteConnection(portID));
+      yield put(deletePort(portID));
+    }
+
+    for (const portID of selected.outputs) {
+      yield put(deleteConnection(portID));
+      yield put(deletePort(portID));
+    }
   } else {
     const responseText = yield response.text();
     console.log(`API error: ${responseText}`);

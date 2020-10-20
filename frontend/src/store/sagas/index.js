@@ -9,7 +9,7 @@ import {
   watchSetPower,
   watchUpdatePos,
 } from "./circuitComponent";
-import { watchCreateConnection } from "./connection";
+import { watchCreateConnection, watchDeleteConnection } from "./connection";
 import { watchChangePower, watchSetWorldTransform } from "./port";
 
 export default function* rootSaga() {
@@ -27,5 +27,6 @@ export default function* rootSaga() {
     watchCalculateOutputs(),
     watchSimulate(),
     watchDeleteSelected(),
+    watchDeleteConnection(),
   ]);
 }

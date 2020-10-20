@@ -99,7 +99,8 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         selected: {
           ...state.selected,
-          outputsUpToDate: action.payload.id === state.selected.id ? action.payload.outputsUpToDate : state.selected.outputsUpToDate,
+          outputsUpToDate:
+            action.payload.id === state.selected.id ? action.payload.outputsUpToDate : state.selected ? state.selected.outputsUpToDate : false,
         },
         instances: state.instances.map((content) =>
           content.id === action.payload.id
