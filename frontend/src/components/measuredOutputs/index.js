@@ -1,43 +1,51 @@
-import React, { useMemo } from "react";
-import { Chart } from "react-charts";
+import React from "react";
+import { Line } from "react-chartjs-2";
 import "./styles.css";
 
 const MeasuredOutputs = ({ outputs }) => {
-  const data = outputs.map((output, i) => {
-    return {
-      label: `Output ${i + 1}`,
-      data: [
-        [0, output.power],
-        [1, output.power],
-      ],
-    };
-  });
+  const labels = ["", "", "", "", "", "", "", "", "", "", "", "", ""];
+  const baseDataset = {
+    fill: false,
+    backgroundColor: "#000",
+    borderColor: "#000",
+    pointBackgroundColor: "#000",
+    pointBorderWidth: 1,
+    pointHoverRadius: 1,
+    pointRadius: 1,
+    pointHitRadius: 10,
+  };
 
-  const series = React.useMemo(
-    () => ({
-      showPoints: false,
+  const data = {
+    labels: labels,
+    datasets: outputs.map((output, i) => {
+      return {
+        ...baseDataset,
+        label: `Reader ${i + 1}`,
+        data: labels.map((_) => output.power),
+      };
     }),
-    []
-  );
+  };
 
-  const axes = useMemo(
-    () => [
-      { primary: true, type: "linear", position: "bottom", hardMin: 0, show: false },
-      { type: "linear", position: "left", hardMin: 0 },
-    ],
-    []
-  );
+  const legendOpts = {
+    display: false,
+  };
+
+  const options = {
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+    },
+  };
+
   return (
     <div className="measuredOutputs">
       <span>Measured Outputs</span>
-      <div
-        style={{
-          width: "250px",
-          height: "200px",
-        }}
-      >
-        <Chart data={data} axes={axes} series={series} />
-      </div>
+      <Line data={data} height={300} legend={legendOpts} options={options} />
     </div>
   );
 };
