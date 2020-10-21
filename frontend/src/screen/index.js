@@ -9,6 +9,8 @@ import api from "../api";
 import { store } from "../store";
 import { attemptSave, create as createCircuit } from "../store/ducks/circuit";
 import { basicKinds } from "../utils/componentBehaviour";
+import Tabs from "../components/tabs";
+import { connect } from "react-redux";
 
 const buttons = [
   {
@@ -42,7 +44,7 @@ const buttons = [
 export let WORKSPACE_X = 0;
 export let WORKSPACE_Y = 0;
 
-const Layout = () => {
+const Layout = ({ circuits }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [currentButton, setCurrentButton] = useState(null);
   const [left, setLeft] = useState(0);
@@ -92,19 +94,31 @@ const Layout = () => {
       </div>
       <div className="screen">
         <ComponentsMenu basicItems={basicKinds} />
-        <div ref={element => {
-          if (!element) return;
+        <Tabs>
+          {circuits.map((circuit) => (
+            <div
+              label={"workspace 1"}
+              key={"workspace 1"}
+              ref={(element) => {
+                if (!element) return;
 
-          const rect = element.getBoundingClientRect();
-          WORKSPACE_X = rect.x;
-          WORKSPACE_Y = rect.y;
-        }}>
-          <Workspace />
-        </div>
+                const rect = element.getBoundingClientRect();
+                WORKSPACE_X = rect.x;
+                WORKSPACE_Y = rect.y;
+              }}
+            >
+              <Workspace heightOffset={WORKSPACE_Y} />
+            </div>
+          ))}
+        </Tabs>
         <InspectionMenu />
       </div>
     </div>
   );
 };
 
-export default Layout;
+const mapStateToProps = (state) => ({
+  circuits: state.circuit.instances,
+});
+
+export default connect(mapStateToProps, null)(Layout);
