@@ -179,11 +179,9 @@ class Circuit():
   def reset(self):
     for component in self.components:
       component.delete()
-      del self.components[self.components.index(component)]
 
-    for port in self.ports:
-      del self.ports[self.ports.index(port)]
-
+    self.components = []
+    self.ports = []
     self.update_data()
 
   def delete(self):
