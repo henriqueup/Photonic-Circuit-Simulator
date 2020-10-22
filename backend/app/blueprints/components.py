@@ -73,6 +73,21 @@ def set_power(id):
 
   return jsonify(component.to_json()), 200
 
+@components_bp.route('/data/<id>/set_position', methods=['PUT'])
+def set_position(id):
+  body = request.get_json()
+  if (not 'x' in body or not isinstance(body['x'], int)):
+    return "Request doesn\'t have an \'x\' int field.", 400
+  if (not 'y' in body or not isinstance(body['y'], int)):
+    return "Request doesn\'t have an \'y\' int field.", 400
+
+  response, component = controller.set_position(id, body['x'], body['y'])
+
+  if (component == None):
+    return response, 400
+
+  return jsonify(component.to_json()), 200
+
 @components_bp.route('/data/reset', methods=['GET'])
 def reset():
   controller.reset()

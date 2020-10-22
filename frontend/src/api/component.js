@@ -89,4 +89,24 @@ async function deleteComponent(id) {
   }
 }
 
-export default { postComponent, getAllComponents, setOutputs, setPower, calculateOutputs, deleteComponent };
+async function setPosition(componentID, x, y) {
+  try {
+    const response = await fetch(baseURL + `/data/${componentID}/set_position`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        x: x,
+        y: y,
+      }),
+    });
+
+    return validateResponse(response);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export default { postComponent, getAllComponents, setOutputs, setPower, calculateOutputs, deleteComponent, setPosition };

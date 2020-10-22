@@ -47,6 +47,10 @@ class Controller:
     # if (self.current_circuit is None):
     return self.current_circuit.set_power(id, power)
     
+  def set_position(self, id, x, y):
+    # if (self.current_circuit is None):
+    return self.current_circuit.set_position(id, x, y)
+    
   def delete_component(self, id):
     # if (self.current_circuit is None):
     return self.current_circuit.delete_component(id)

@@ -4,10 +4,12 @@ from app.database.Component import Component as ComponentCollection
 from app.database.stored.Component import StoredComponent
 
 class OutputReader(Component):
-  def __init__(self, inputs, id=None):
+  def __init__(self, inputs, x, y, id=None):
     self.kind = "output_reader"
     self.inputs = inputs
     self.outputs = []
+    self.x = x
+    self.y = y
     self.id = id
 
   @classmethod
@@ -15,7 +17,10 @@ class OutputReader(Component):
     inputs = []
     inputs.append(Port.create())
 
-    output_reader = cls(inputs)
+    x = 100
+    y = 100
+
+    output_reader = cls(inputs, x, y)
     output_reader_db = ComponentCollection(**output_reader.as_dict()).save()
 
     output_reader.id = output_reader_db.id
@@ -29,7 +34,10 @@ class OutputReader(Component):
     for port in output_reader_db.inputs:
       inputs.append(Port.load(port.id))
 
-    output_reader = cls(inputs, id)
+    x = output_reader_db.x
+    y = output_reader_db.y
+
+    output_reader = cls(inputs, x, y, id)
     return output_reader
 
 
@@ -66,7 +74,9 @@ class OutputReader(Component):
     return {
       'kind': self.kind,
       'inputs': [port.id for port in self.inputs],
-      'outputs': [port.id for port in self.outputs]
+      'outputs': [port.id for port in self.outputs],
+      'x': self.x,
+      'y': self.y,
     }
 
   def to_json(self):
@@ -74,5 +84,7 @@ class OutputReader(Component):
       'id': str(self.id),
       'kind': self.kind,
       'inputs': [x.to_json() for x in self.inputs],
-      'outputs': []
+      'outputs': [],
+      'x': self.x,
+      'y': self.y,
     }

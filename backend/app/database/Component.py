@@ -7,3 +7,5 @@ class Component(gj.Document):
   inputs = db.ListField(db.LazyReferenceField(Port))
   outputs = db.ListField(db.LazyReferenceField(Port))
   label = db.StringField()
+  x = db.IntField()
+  y = db.IntField()

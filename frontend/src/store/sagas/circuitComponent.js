@@ -37,10 +37,14 @@ export function* watchCreateCircuitComponent() {
 }
 
 function* updatePosSaga(action) {
-  const circuitComponent = store.getState().circuitComponent.instances.find((instance) => instance.id === action.payload.id);
+  const response = yield call(api.setPosition, action.payload.id, action.payload.x, action.payload.y);
 
-  yield all(circuitComponent.inputs.map((portID) => put(setWorldTransform(portID, action.payload.x, action.payload.y))));
-  yield all(circuitComponent.outputs.map((portID) => put(setWorldTransform(portID, action.payload.x, action.payload.y))));
+  if (response.ok) {
+    const circuitComponent = store.getState().circuitComponent.instances.find((instance) => instance.id === action.payload.id);
+
+    yield all(circuitComponent.inputs.map((portID) => put(setWorldTransform(portID, action.payload.x, action.payload.y))));
+    yield all(circuitComponent.outputs.map((portID) => put(setWorldTransform(portID, action.payload.x, action.payload.y))));
+  }
 }
 
 export function* watchUpdatePos() {

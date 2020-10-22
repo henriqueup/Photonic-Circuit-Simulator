@@ -5,10 +5,12 @@ from app.database.stored.Component import StoredComponent
 from app.database.stored.Lumerical import Lumerical
 
 class SwN(Component):
-  def __init__(self, inputs, outputs, id=None):
+  def __init__(self, inputs, outputs, x, y, id=None):
     self.kind = "swn"
     self.inputs = inputs
     self.outputs = outputs
+    self.x = x
+    self.y = y
     self.id = id
 
   @classmethod
@@ -21,7 +23,10 @@ class SwN(Component):
     outputs.append(Port.create())
     outputs.append(Port.create())
 
-    swn = cls(inputs, outputs)
+    x = 100
+    y = 100
+
+    swn = cls(inputs, outputs, x, y)
     swn_db = ComponentCollection(**swn.as_dict()).save()
 
     swn.id = swn_db.id
@@ -39,7 +44,10 @@ class SwN(Component):
     for port in swn_db.outputs:
       outputs.append(Port.load(port.id))
 
-    swn = cls(inputs, outputs, id)
+    x = swn_db.x
+    y = swn_db.y
+
+    swn = cls(inputs, outputs, x, y, id)
     return swn
 
 
@@ -85,6 +93,8 @@ class SwN(Component):
       'kind': self.kind,
       'inputs': [port.id for port in self.inputs],
       'outputs': [port.id for port in self.outputs],
+      'x': self.x,
+      'y': self.y,
     }
 
   def to_json(self):
@@ -92,7 +102,9 @@ class SwN(Component):
       'id': str(self.id),
       'kind': self.kind,
       'inputs': [x.to_json() for x in self.inputs],
-      'outputs': [x.to_json() for x in self.outputs]
+      'outputs': [x.to_json() for x in self.outputs],
+      'x': self.x,
+      'y': self.y,
     }
 
 

@@ -4,10 +4,12 @@ from app.database.Component import Component as ComponentCollection
 from app.database.stored.Component import StoredComponent
 
 class PowerSource(Component):
-  def __init__(self, outputs, id=None):
+  def __init__(self, outputs, x, y, id=None):
     self.kind = "power_source"
     self.inputs = []
     self.outputs = outputs
+    self.x = x
+    self.y = y
     self.id = id
 
   @classmethod
@@ -15,7 +17,10 @@ class PowerSource(Component):
     outputs = []
     outputs.append(Port.create())
 
-    power_source = cls(outputs)
+    x = 100
+    y = 100
+
+    power_source = cls(outputs, x, y)
     power_source_db = ComponentCollection(**power_source.as_dict()).save()
 
     power_source.id = power_source_db.id
@@ -29,7 +34,10 @@ class PowerSource(Component):
     for port in power_source_db.outputs:
       outputs.append(Port.load(port.id))
 
-    power_source = cls(outputs, id)
+    x = power_source_db.x
+    y = power_source_db.y
+
+    power_source = cls(outputs, x, y, id)
     return power_source
 
 
@@ -67,7 +75,9 @@ class PowerSource(Component):
     return {
       'kind': self.kind,
       'inputs': [port.id for port in self.inputs],
-      'outputs': [port.id for port in self.outputs]
+      'outputs': [port.id for port in self.outputs],
+      'x': self.x,
+      'y': self.y,
     }
 
   def to_json(self):
@@ -75,7 +85,9 @@ class PowerSource(Component):
       'id': str(self.id),
       'kind': self.kind,
       'inputs': [],
-      'outputs': [x.to_json() for x in self.outputs]
+      'outputs': [x.to_json() for x in self.outputs],
+      'x': self.x,
+      'y': self.y,
     }
 
 

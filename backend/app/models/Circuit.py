@@ -154,6 +154,14 @@ class Circuit():
 
     component.set_powers([power])
     return "Success", component
+    
+  def set_position(self, id, x, y):
+    component = self.get_component(id)
+    if (component == None):
+      return "Component with id: " + str(id) + " doesn\'t exist.", None
+
+    component.set_position(x, y)
+    return "Success", component
 
   def delete_component(self, id):
     component = self.get_component(id)
