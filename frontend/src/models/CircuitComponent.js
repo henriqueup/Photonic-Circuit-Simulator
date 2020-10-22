@@ -9,11 +9,11 @@ export const STARTING_Y = 100;
 
 const startMoveDelay = (component) => {
   setTimeout(() => {
-    if (component.dragging){
+    if (component.dragging) {
       component.movable = true;
     }
   }, 50);
-}
+};
 
 export function onDragStart(event) {
   this.data = event.data;
@@ -36,7 +36,7 @@ export function onDragEnd() {
     this.y = position.y - this.height / 2;
     store.dispatch(updatePos(this.id, this.x, this.y));
   }
-  
+
   this.moved = false;
   this.data = null;
 }
@@ -74,7 +74,7 @@ const createCircuitComponent = (data) => {
     inputs: data.inputs,
     outputs: data.outputs,
     kind: basicKinds.find((component) => component.kind === data.kind),
-    outputsUpToDate: true
+    outputsUpToDate: true,
   };
 };
 

@@ -11,21 +11,25 @@ export function* helloSaga() {
 }
 
 function* createCircuitComponentSaga(action) {
-  const circuitComponent = yield call(api.postComponent, action.payload.kind);
-  console.log(circuitComponent);
+  const response = yield call(api.postComponent, action.payload.kind);
 
-  const data = {
-    ...circuitComponent,
-    inputs: circuitComponent.inputs.map((port) => port.id),
-    outputs: circuitComponent.outputs.map((port) => port.id),
-  };
-  yield put(createWithData(data));
-  yield put(addComponent(circuitComponent.id));
+  if (response.ok) {
+    const circuitComponent = response.body;
 
-  yield put(createPorts(circuitComponent.inputs, circuitComponent.id, circuitComponent.kind, true));
-  yield put(createPorts(circuitComponent.outputs, circuitComponent.id, circuitComponent.kind, false));
+    const data = {
+      ...circuitComponent,
+      inputs: circuitComponent.inputs.map((port) => port.id),
+      outputs: circuitComponent.outputs.map((port) => port.id),
+    };
 
-  yield put(confirmCreation(circuitComponent.id));
+    yield put(createWithData(data));
+    yield put(addComponent(circuitComponent.id));
+
+    yield put(createPorts(circuitComponent.inputs, circuitComponent.id, circuitComponent.kind, true));
+    yield put(createPorts(circuitComponent.outputs, circuitComponent.id, circuitComponent.kind, false));
+
+    yield put(confirmCreation(circuitComponent.id));
+  }
 }
 
 export function* watchCreateCircuitComponent() {
@@ -61,9 +65,6 @@ function* setPowerSaga(action) {
 
   if (response.ok) {
     yield put(changePower(action.payload.portID, action.payload.power));
-  } else {
-    const responseText = yield response.text();
-    console.log(`API error: ${responseText}`);
   }
 }
 
@@ -72,13 +73,17 @@ export function* watchSetPower() {
 }
 
 function* calculateOutputsSaga(action) {
-  const body = yield call(api.calculateOutputs, action.payload.id);
+  const response = yield call(api.calculateOutputs, action.payload.id);
 
-  if (body && body.outputs && body.outputs.length) {
-    yield all(body.outputs.map((power, i) => put(changePower(action.payload.outputIDs[i], power))));
-    yield put(setOutputsUpToDate(action.payload.id, true));
-  } else {
-    console.log(`Invalid responseBody: ${body}`);
+  if (response.ok) {
+    const body = response.body;
+
+    if (body && body.outputs && body.outputs.length) {
+      yield all(body.outputs.map((power, i) => put(changePower(action.payload.outputIDs[i], power))));
+      yield put(setOutputsUpToDate(action.payload.id, true));
+    } else {
+      console.log(`Invalid responseBody: ${body}`);
+    }
   }
 }
 
@@ -108,9 +113,6 @@ function* deleteSelectedSaga() {
       yield put(deleteConnection(portID));
       yield put(deletePort(portID));
     }
-  } else {
-    const responseText = yield response.text();
-    console.log(`API error: ${responseText}`);
   }
 }
 

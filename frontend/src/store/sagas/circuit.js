@@ -5,11 +5,14 @@ import { store } from "..";
 import { calculateOutputs } from "../ducks/circuitComponent";
 
 function* createCircuitSaga() {
-  const post = yield call(api.postCircuit);
-  console.log(post);
+  const response = yield call(api.postCircuit);
 
-  yield put(createWithID(post.id));
-  yield put(setCurrent(post.id));
+  if (response.ok) {
+    const body = response.body;
+
+    yield put(createWithID(body.id));
+    yield put(setCurrent(body.id));
+  }
 }
 
 export function* watchCreateCircuit() {
@@ -19,11 +22,8 @@ export function* watchCreateCircuit() {
 function* saveCircuitSaga() {
   const response = yield call(api.saveCircuit);
 
-  const text = yield response.text();
   if (response.ok) {
     yield put(save());
-  } else {
-    alert(text);
   }
 }
 

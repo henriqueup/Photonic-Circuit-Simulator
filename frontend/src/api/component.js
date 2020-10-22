@@ -1,8 +1,6 @@
-import { baseURL } from "./index";
+import { baseURL, validateResponse } from "./index";
 
 async function postComponent(kind) {
-  let body = null;
-
   try {
     const response = await fetch(baseURL + "/data", {
       method: "POST",
@@ -15,21 +13,18 @@ async function postComponent(kind) {
       }),
     });
 
-    body = await response.json();
-  } catch (err) {
-    console.log(err);
+    return validateResponse(response);
+  } catch (error) {
+    console.log(error);
   }
-  return body;
 }
 
 async function getAllComponents() {
-  const response = await fetch(baseURL + "/data");
-  if (response.ok) {
-    const body = await response.json();
-    return body;
-  } else {
-    const text = await response.text();
-    console.log(`API error: ${text}`);
+  try {
+    const response = await fetch(baseURL + "/data");
+    return validateResponse(response);
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -51,9 +46,9 @@ async function setOutputs(componentID, originPortID, targetPortID) {
       }),
     });
 
-    return response;
-  } catch (err) {
-    console.log(err);
+    return validateResponse(response);
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -70,29 +65,27 @@ async function setPower(componentID, power) {
       }),
     });
 
-    return response;
-  } catch (err) {
-    console.log(err);
+    return validateResponse(response);
+  } catch (error) {
+    console.log(error);
   }
 }
 
 async function calculateOutputs(id) {
-  const response = await fetch(baseURL + `/data/${id}/calculate_outputs`);
-  if (response.ok) {
-    const body = await response.json();
-    return body;
-  } else {
-    const text = await response.text();
-    console.log(`API error: ${text}`);
+  try {
+    const response = await fetch(baseURL + `/data/${id}/calculate_outputs`);
+    return validateResponse(response);
+  } catch (error) {
+    console.log(error);
   }
 }
 
 async function deleteComponent(id) {
   try {
     const response = await fetch(baseURL + `/data/${id}`, { method: "DELETE" });
-    return response;
-  } catch (err) {
-    console.log(err);
+    return validateResponse(response);
+  } catch (error) {
+    console.log(error);
   }
 }
 

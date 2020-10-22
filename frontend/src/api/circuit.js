@@ -1,9 +1,7 @@
 import { DEFAULT_LABEL } from "../models/Circuit";
-import { baseURL } from "./index";
+import { baseURL, validateResponse } from "./index";
 
 async function postCircuit() {
-  let body = null;
-
   try {
     const response = await fetch(baseURL + "/circuits/", {
       method: "POST",
@@ -16,22 +14,24 @@ async function postCircuit() {
       }),
     });
 
-    body = await response.json();
+    return validateResponse(response);
   } catch (error) {
     console.log(error);
   }
-  return body;
 }
 
 async function deleteCircuit() {
-  return await fetch(baseURL + "/circuits/", { method: "DELETE" });
+  try {
+    const response = await fetch(baseURL + "/circuits/", { method: "DELETE" });
+    return validateResponse(response);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 async function saveCircuit() {
-  let response = null;
-
   try {
-    response = await fetch(baseURL + "/circuits/save", {
+    const response = await fetch(baseURL + "/circuits/save", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -39,10 +39,11 @@ async function saveCircuit() {
       },
       body: null,
     });
+
+    return validateResponse(response);
   } catch (error) {
     console.log(error);
   }
-  return response;
 }
 
 export default { postCircuit, deleteCircuit, saveCircuit };
