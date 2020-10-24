@@ -20,6 +20,9 @@ export async function validateResponse(response) {
   } else {
     const text = await response.text();
     console.log(`API error: ${text}`);
+    return {
+      ok: false,
+    };
   }
 }
 
