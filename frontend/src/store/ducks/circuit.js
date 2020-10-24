@@ -11,6 +11,7 @@ export const Types = {
   SIMULATE: "circuit/SIMULATE",
   SET_LABEL: "circuit/SET_LABEL",
   ATTEMPT_SET_LABEL: "circuit/ATTEMPT_SET_LABEL",
+  SET_SAVED: "circuit/SET_SAVED",
 };
 
 // Reducer
@@ -63,6 +64,18 @@ export default function reducer(state = INITIAL_STATE, action) {
             ? {
                 ...content,
                 label: action.payload.label,
+              }
+            : content
+        ),
+      };
+    case Types.SET_SAVED:
+      return {
+        ...state,
+        instances: state.instances.map((content) =>
+          content.id === state.current
+            ? {
+                ...content,
+                isSaved: action.payload.saved,
               }
             : content
         ),
@@ -147,6 +160,15 @@ export function attemptSetLabel(label) {
     type: Types.ATTEMPT_SET_LABEL,
     payload: {
       label: label,
+    },
+  };
+}
+
+export function setSaved(saved) {
+  return {
+    type: Types.SET_SAVED,
+    payload: {
+      saved: saved,
     },
   };
 }

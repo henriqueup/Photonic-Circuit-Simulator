@@ -1,7 +1,7 @@
 import { takeEvery, call, put, all, actionChannel, take } from "redux-saga/effects";
 import { store } from "..";
 import api from "../../api";
-import { addComponent } from "../ducks/circuit";
+import { addComponent, setSaved } from "../ducks/circuit";
 import { confirmCreation, confirmSelectedDelete, createWithData, deselect, setOutputsUpToDate, setSelected } from "../ducks/circuitComponent";
 import { deleteConnection } from "../ducks/connection";
 import { changePower, create as createPorts, deletePort, setWorldTransform } from "../ducks/port";
@@ -29,6 +29,7 @@ function* createCircuitComponentSaga(action) {
     yield put(createPorts(circuitComponent.outputs, circuitComponent.id, circuitComponent.kind, false));
 
     yield put(confirmCreation(circuitComponent.id));
+    yield put(setSaved(false));
   }
 }
 
@@ -44,6 +45,8 @@ function* updatePosSaga(action) {
 
     yield all(circuitComponent.inputs.map((portID) => put(setWorldTransform(portID, action.payload.x, action.payload.y))));
     yield all(circuitComponent.outputs.map((portID) => put(setWorldTransform(portID, action.payload.x, action.payload.y))));
+
+    yield put(setSaved(false));
   }
 }
 
