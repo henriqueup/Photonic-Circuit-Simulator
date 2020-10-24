@@ -9,6 +9,7 @@ export const Types = {
   ATTEMPT_SAVE: "circuit/ATTEMPT_SAVE",
   ADD_COMPONENT: "circuit/ADD_COMPONENT",
   SIMULATE: "circuit/SIMULATE",
+  SET_LABEL: "circuit/SET_LABEL",
 };
 
 // Reducer
@@ -27,7 +28,7 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.SET_CURRENT:
       return {
         ...state,
-        current: action.payload.id,
+        current: action.payload.label ? state.instances.find((instance) => instance.label === action.payload.label).id : action.payload.id,
       };
     case Types.SAVE:
       return {
@@ -49,6 +50,18 @@ export default function reducer(state = INITIAL_STATE, action) {
             ? {
                 ...content,
                 components: content.components.concat([action.payload.component_id]),
+              }
+            : content
+        ),
+      };
+    case Types.SET_LABEL:
+      return {
+        ...state,
+        instances: state.instances.map((content) =>
+          content.id === state.current
+            ? {
+                ...content,
+                label: action.payload.label,
               }
             : content
         ),
@@ -79,11 +92,12 @@ export function createWithID(id) {
   };
 }
 
-export function setCurrent(id) {
+export function setCurrent(id = null, label = null) {
   return {
     type: Types.SET_CURRENT,
     payload: {
       id: id,
+      label: label,
     },
   };
 }
@@ -115,5 +129,14 @@ export function simulate() {
   return {
     type: Types.SIMULATE,
     payload: {},
+  };
+}
+
+export function setLabel(label) {
+  return {
+    type: Types.SET_LABEL,
+    payload: {
+      label: label,
+    },
   };
 }

@@ -1,13 +1,59 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import "./styles.css";
 
-const Tab = ({ activeTab, label, onClick }) => {
-  const className = "tab-list-item" + (activeTab === label ? " tab-list-active" : "");
+const Tab = ({ activeTab, id, label, isSaved, onClick, setTitle }) => {
+  const className = "tab-list-item" + (activeTab === id ? " tab-list-active" : "");
+  const [disabled, setDisabled] = useState(true);
+  const [value, setValue] = useState(label);
+  const [dirty, setDirty] = useState(false);
+
+  let timer = 0;
+  let delay = 200;
+  let prevent = false;
+
+  const handleClick = (tab) => {
+    timer = setTimeout(function () {
+      if (!prevent) {
+        onClick(tab);
+      }
+      prevent = false;
+    }, delay);
+  };
+
+  const handleDoubleClick = (event) => {
+    clearTimeout(timer);
+    prevent = true;
+
+    setDisabled(false);
+    event.target.select();
+  };
+
+  const handleBlur = () => {
+    setDisabled(true);
+
+    if (dirty) {
+      setTitle(value);
+      setDirty(false);
+    }
+  };
+
+  const handleChange = (event) => {
+    setValue(event.target.value);
+    setDirty(true);
+  };
+
+  const handleKeyDown = (event) => {
+    const escapeKeys = ["Escape", "Enter"];
+    if (escapeKeys.includes(event.key)) {
+      handleBlur();
+    }
+  };
 
   return (
-    <li className={className} onClick={() => onClick(label)}>
-      {label}
+    <li className={className} onClick={() => handleClick(value)} onDoubleClick={handleDoubleClick}>
+      <input className="tabTitle" readOnly={disabled} onBlur={handleBlur} value={value} onChange={handleChange} onKeyDown={handleKeyDown} />
+      {isSaved ? null : <span> *</span>}
     </li>
   );
 };

@@ -3,30 +3,32 @@ import PropTypes from "prop-types";
 import Tab from "../tab";
 import "./styles.css";
 
-const Tabs = ({ children }) => {
+const Tabs = ({ children, setTitle, doClickAction }) => {
   const [activeTab, setActiveTab] = useState("");
 
   useEffect(() => {
     if (children && children.length && !activeTab) {
-      setActiveTab(children[0].props.label);
+      setActiveTab(children[0].props.id);
     }
   }, [children, activeTab]);
 
-  const onClickTabItem = (tab) => {
-    setActiveTab(tab);
+  const handleClick = (tab) => {
+    doClickAction(tab);
+    const childTab = children.find((child) => child.props.label === tab);
+    setActiveTab(childTab.props.id);
   };
 
   return (
     <div className="tabs">
       <ol className="tab-list">
         {children.map((child) => {
-          const { label } = child.props;
-          return <Tab activeTab={activeTab} key={label} label={label} onClick={onClickTabItem} />;
+          const { label, isSaved, id } = child.props;
+          return <Tab activeTab={activeTab} key={id} id={id} label={label} isSaved={isSaved} onClick={handleClick} setTitle={setTitle} />;
         })}
       </ol>
       <div className="tab-content">
         {children.map((child) => {
-          if (child.props.label !== activeTab) return undefined;
+          if (child.props.id !== activeTab) return undefined;
           return child.props.children;
         })}
       </div>

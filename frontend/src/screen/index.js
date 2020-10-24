@@ -7,10 +7,11 @@ import MainMenuDropdown from "../components/mainMenuDropdown";
 import "./styles.css";
 import api from "../api";
 import { store } from "../store";
-import { attemptSave, create as createCircuit } from "../store/ducks/circuit";
+import { attemptSave, create as createCircuit, setLabel as setCircuitLabel, setCurrent as setCurrentCircuit } from "../store/ducks/circuit";
 import { basicKinds } from "../utils/componentBehaviour";
 import Tabs from "../components/tabs";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
 const buttons = [
   {
@@ -44,7 +45,7 @@ const buttons = [
 export let WORKSPACE_X = 0;
 export let WORKSPACE_Y = 0;
 
-const Layout = ({ circuits }) => {
+const Layout = ({ circuits, setCircuitLabel }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [currentButton, setCurrentButton] = useState(null);
   const [left, setLeft] = useState(0);
@@ -82,7 +83,6 @@ const Layout = ({ circuits }) => {
       store.dispatch(createCircuit());
     }
 
-    console.log("using effect");
     startConnection();
   }, []);
 
@@ -94,11 +94,13 @@ const Layout = ({ circuits }) => {
       </div>
       <div className="screen">
         <ComponentsMenu basicItems={basicKinds} />
-        <Tabs>
+        <Tabs doClickAction={(label) => setCurrentCircuit(null, label)} setTitle={setCircuitLabel}>
           {circuits.map((circuit) => (
             <div
-              label={"workspace 1"}
-              key={"workspace 1"}
+              id={circuit.id}
+              label={circuit.label}
+              isSaved={circuit.isSaved}
+              key={circuit.id}
               ref={(element) => {
                 if (!element) return;
 
@@ -121,4 +123,9 @@ const mapStateToProps = (state) => ({
   circuits: state.circuit.instances,
 });
 
-export default connect(mapStateToProps, null)(Layout);
+const mapDispatchToProps = (dispatch) => ({
+  setCircuitLabel: bindActionCreators(setCircuitLabel, dispatch),
+  setCurrentCircuit: bindActionCreators(setCurrentCircuit, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Layout);
