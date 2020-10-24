@@ -10,6 +10,7 @@ export const Types = {
   ADD_COMPONENT: "circuit/ADD_COMPONENT",
   SIMULATE: "circuit/SIMULATE",
   SET_LABEL: "circuit/SET_LABEL",
+  ATTEMPT_SET_LABEL: "circuit/ATTEMPT_SET_LABEL",
 };
 
 // Reducer
@@ -135,6 +136,15 @@ export function simulate() {
 export function setLabel(label) {
   return {
     type: Types.SET_LABEL,
+    payload: {
+      label: label,
+    },
+  };
+}
+
+export function attemptSetLabel(label) {
+  return {
+    type: Types.ATTEMPT_SET_LABEL,
     payload: {
       label: label,
     },

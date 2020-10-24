@@ -46,4 +46,23 @@ async function saveCircuit() {
   }
 }
 
-export default { postCircuit, deleteCircuit, saveCircuit };
+async function setCircuitLabel(label) {
+  try {
+    const response = await fetch(baseURL + "/circuits/set_label", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        label: label,
+      }),
+    });
+
+    return validateResponse(response);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export default { postCircuit, deleteCircuit, saveCircuit, setCircuitLabel };

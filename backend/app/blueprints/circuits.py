@@ -39,4 +39,17 @@ def save():
     return response, 400
 
   return "OK", 200
+  
+@circuits_bp.route('/set_label', methods=['POST'])
+def set_label():
+  label = request.get_json().get('label')
+  if (label is None):
+    return "Bad Request", 400
+  
+  response, saved = controller.set_label(label)
+
+  if (not saved):
+    return response, 400
+
+  return "OK", 200
 

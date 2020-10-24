@@ -1,6 +1,6 @@
 import { takeEvery, call, put } from "redux-saga/effects";
 import api from "../../api";
-import { createWithID, save, setCurrent } from "../ducks/circuit";
+import { createWithID, save, setCurrent, setLabel } from "../ducks/circuit";
 import { store } from "..";
 import { calculateOutputs } from "../ducks/circuitComponent";
 
@@ -68,4 +68,16 @@ function* simulateSaga() {
 
 export function* watchSimulate() {
   yield takeEvery("circuit/SIMULATE", simulateSaga);
+}
+
+function* setCircuitLabelSaga(action) {
+  const response = yield call(api.setCircuitLabel, action.payload.label);
+
+  if (response.ok) {
+    yield put(setLabel(action.payload.label));
+  }
+}
+
+export function* watchSetCircuitLabel() {
+  yield takeEvery("circuit/ATTEMPT_SET_LABEL", setCircuitLabelSaga);
 }

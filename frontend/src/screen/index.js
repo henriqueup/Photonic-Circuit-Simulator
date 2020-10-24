@@ -7,7 +7,7 @@ import MainMenuDropdown from "../components/mainMenuDropdown";
 import "./styles.css";
 import api from "../api";
 import { store } from "../store";
-import { attemptSave, create as createCircuit, setLabel as setCircuitLabel, setCurrent as setCurrentCircuit } from "../store/ducks/circuit";
+import { attemptSave, create as createCircuit, attemptSetLabel as setCircuitLabel, setCurrent as setCurrentCircuit } from "../store/ducks/circuit";
 import { basicKinds } from "../utils/componentBehaviour";
 import Tabs from "../components/tabs";
 import { connect } from "react-redux";
