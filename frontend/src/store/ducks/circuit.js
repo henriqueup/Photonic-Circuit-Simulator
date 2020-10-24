@@ -12,6 +12,8 @@ export const Types = {
   SET_LABEL: "circuit/SET_LABEL",
   ATTEMPT_SET_LABEL: "circuit/ATTEMPT_SET_LABEL",
   SET_SAVED: "circuit/SET_SAVED",
+  ADD_CONNECTION: "circuit/ADD_CONNECTION",
+  DELETE_CONNECTION: "circuit/DELETE_CONNECTION",
 };
 
 // Reducer
@@ -30,7 +32,7 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.SET_CURRENT:
       return {
         ...state,
-        current: action.payload.label ? state.instances.find((instance) => instance.label === action.payload.label).id : action.payload.id,
+        current: action.payload.id,
       };
     case Types.SAVE:
       return {
@@ -76,6 +78,32 @@ export default function reducer(state = INITIAL_STATE, action) {
             ? {
                 ...content,
                 isSaved: action.payload.saved,
+              }
+            : content
+        ),
+      };
+    case Types.ADD_CONNECTION:
+      return {
+        ...state,
+        instances: state.instances.map((content) =>
+          content.id === state.current
+            ? {
+                ...content,
+                connections: content.connections.concat([action.payload.connection]),
+              }
+            : content
+        ),
+      };
+    case Types.DELETE_CONNECTION:
+      return {
+        ...state,
+        instances: state.instances.map((content) =>
+          content.id === state.current
+            ? {
+                ...content,
+                connections: content.connections.filter(
+                  (connection) => connection.targetPortID !== action.payload.portID && connection.originPortID !== action.payload.portID
+                ),
               }
             : content
         ),
@@ -169,6 +197,24 @@ export function setSaved(saved) {
     type: Types.SET_SAVED,
     payload: {
       saved: saved,
+    },
+  };
+}
+
+export function addConnection(connection) {
+  return {
+    type: Types.ADD_CONNECTION,
+    payload: {
+      connection: connection,
+    },
+  };
+}
+
+export function deleteConnection(portID) {
+  return {
+    type: Types.DELETE_CONNECTION,
+    payload: {
+      portID: portID,
     },
   };
 }

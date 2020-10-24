@@ -1,6 +1,5 @@
 import React from "react";
 import { Stage, Container } from "@inlet/react-pixi";
-import { connect } from "react-redux";
 import CircuitComponent from "../circuitComponent";
 import "./styles.css";
 import { Connection } from "../../models/Connection";
@@ -22,9 +21,4 @@ const Workspace = ({ circuitComponents, connections, heightOffset }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  circuitComponents: state.circuitComponent.instances,
-  connections: state.connection.instances,
-});
-
-export default connect(mapStateToProps, null)(Workspace);
+export default Workspace;

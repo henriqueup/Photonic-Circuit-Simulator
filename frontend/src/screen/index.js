@@ -7,7 +7,13 @@ import MainMenuDropdown from "../components/mainMenuDropdown";
 import "./styles.css";
 import api from "../api";
 import { store } from "../store";
-import { attemptSave, create as createCircuit, attemptSetLabel as setCircuitLabel, setCurrent as setCurrentCircuit } from "../store/ducks/circuit";
+import {
+  attemptSave,
+  create as createCircuit,
+  attemptSetLabel as setCircuitLabel,
+  setCurrent as setCurrentCircuit,
+  simulate,
+} from "../store/ducks/circuit";
 import { basicKinds } from "../utils/componentBehaviour";
 import Tabs from "../components/tabs";
 import { connect } from "react-redux";
@@ -19,7 +25,7 @@ const buttons = [
     items: [
       {
         name: "New Circuit",
-        onClick: () => console.log(store.getState().circuit), //implement when workspace tabs
+        onClick: () => store.dispatch(createCircuit()), //implement when workspace tabs
       },
       {
         name: "Save Circuit",
@@ -45,10 +51,12 @@ const buttons = [
 export let WORKSPACE_X = 0;
 export let WORKSPACE_Y = 0;
 
-const Layout = ({ circuits, setCircuitLabel }) => {
+const Layout = ({ circuits, setCircuitLabel, currentCircuitID, setCurrentCircuit, createCircuit, circuitComponents, ports, simulate }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [currentButton, setCurrentButton] = useState(null);
   const [left, setLeft] = useState(0);
+  const [currentComponents, setCurrentComponents] = useState([]);
+  const [currentConnections, setCurrentConnections] = useState([]);
 
   const dropdownRef = useRef(null);
 
@@ -80,11 +88,19 @@ const Layout = ({ circuits, setCircuitLabel }) => {
   useEffect(() => {
     async function startConnection() {
       await api.deleteCircuit();
-      store.dispatch(createCircuit());
+      createCircuit();
     }
 
     startConnection();
-  }, []);
+  }, [createCircuit]);
+
+  useEffect(() => {
+    const currentCircuit = circuits.find((circuit) => circuit.id === currentCircuitID);
+    if (currentCircuit) {
+      setCurrentComponents(circuitComponents.filter((component) => currentCircuit.components.includes(component.id)));
+      setCurrentConnections(currentCircuit.connections);
+    }
+  }, [currentCircuitID, circuits, circuitComponents]);
 
   return (
     <div className="main">
@@ -94,7 +110,7 @@ const Layout = ({ circuits, setCircuitLabel }) => {
       </div>
       <div className="screen">
         <ComponentsMenu basicItems={basicKinds} />
-        <Tabs doClickAction={(label) => setCurrentCircuit(null, label)} setTitle={setCircuitLabel}>
+        <Tabs activeTab={currentCircuitID} setActiveTab={(id) => setCurrentCircuit(id)} setTitle={setCircuitLabel}>
           {circuits.map((circuit) => (
             <div
               id={circuit.id}
@@ -109,11 +125,15 @@ const Layout = ({ circuits, setCircuitLabel }) => {
                 WORKSPACE_Y = rect.y;
               }}
             >
-              <Workspace heightOffset={WORKSPACE_Y} />
+              <Workspace circuitComponents={currentComponents} connections={currentConnections} heightOffset={WORKSPACE_Y} />
             </div>
           ))}
         </Tabs>
-        <InspectionMenu />
+        <InspectionMenu
+          outputReaders={currentComponents.filter((component) => component.kind.kind === "output_reader")}
+          ports={ports}
+          simulate={simulate}
+        />
       </div>
     </div>
   );
@@ -121,11 +141,16 @@ const Layout = ({ circuits, setCircuitLabel }) => {
 
 const mapStateToProps = (state) => ({
   circuits: state.circuit.instances,
+  currentCircuitID: state.circuit.current,
+  circuitComponents: state.circuitComponent.instances,
+  ports: state.port.instances,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setCircuitLabel: bindActionCreators(setCircuitLabel, dispatch),
   setCurrentCircuit: bindActionCreators(setCurrentCircuit, dispatch),
+  createCircuit: bindActionCreators(createCircuit, dispatch),
+  simulate: bindActionCreators(simulate, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Layout);

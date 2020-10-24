@@ -12,10 +12,10 @@ const Tab = ({ activeTab, id, label, isSaved, onClick, setTitle }) => {
   let delay = 200;
   let prevent = false;
 
-  const handleClick = (tab) => {
+  const handleClick = () => {
     timer = setTimeout(function () {
       if (!prevent) {
-        onClick(tab);
+        onClick(id);
       }
       prevent = false;
     }, delay);
@@ -51,7 +51,7 @@ const Tab = ({ activeTab, id, label, isSaved, onClick, setTitle }) => {
   };
 
   return (
-    <li className={className} onClick={() => handleClick(value)} onDoubleClick={handleDoubleClick}>
+    <li className={className} onClick={handleClick} onDoubleClick={handleDoubleClick}>
       <input className="tabTitle" readOnly={disabled} onBlur={handleBlur} value={value} onChange={handleChange} onKeyDown={handleKeyDown} />
       {isSaved ? null : <span> *</span>}
     </li>
@@ -59,7 +59,7 @@ const Tab = ({ activeTab, id, label, isSaved, onClick, setTitle }) => {
 };
 
 Tab.propTypes = {
-  activeTab: PropTypes.string.isRequired,
+  // activeTab: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
 };

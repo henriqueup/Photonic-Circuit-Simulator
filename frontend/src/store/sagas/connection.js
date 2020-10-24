@@ -4,14 +4,13 @@ import { store } from "../../store";
 import createConnection from "../../models/Connection";
 import { changePower, setConnected } from "../ducks/port";
 import api from "../../api";
+import { addConnection, deleteConnection } from "../ducks/circuit";
 
 function* createConnectionSaga(action) {
   const ports = store.getState().port.instances;
-  const connections = createConnection(ports, action.payload.points, action.payload.originPortID);
+  const connection = createConnection(ports, action.payload.points, action.payload.originPortID);
 
-  if (connections && connections.length) {
-    const connection = connections[0];
-
+  if (connection) {
     const originPort = ports.find((port) => port.id === connection.originPortID);
     const response = yield call(api.setOutputs, originPort.parentID, originPort.id, connection.targetPortID);
 
@@ -20,9 +19,7 @@ function* createConnectionSaga(action) {
       yield put(setConnected(connection.originPortID, connection.targetPortID));
       yield put(setConnected(connection.targetPortID, connection.originPortID));
       yield put(changePower(connection.targetPortID, originPort.power));
-    } else {
-      const responseText = yield response.text();
-      console.log(responseText);
+      yield put(addConnection(connection));
     }
   }
 }
@@ -38,6 +35,7 @@ function* deleteConnectionSaga(action) {
     yield put(setConnected(port.target, null));
   }
   yield put(confirmConnectionDelete(action.payload.portID));
+  yield put(deleteConnection(action.payload.portID));
 }
 
 export function* watchDeleteConnection() {

@@ -1,21 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import Tab from "../tab";
 import "./styles.css";
 
-const Tabs = ({ children, setTitle, doClickAction }) => {
-  const [activeTab, setActiveTab] = useState("");
-
-  useEffect(() => {
-    if (children && children.length && !activeTab) {
-      setActiveTab(children[0].props.id);
-    }
-  }, [children, activeTab]);
-
-  const handleClick = (tab) => {
-    doClickAction(tab);
-    const childTab = children.find((child) => child.props.label === tab);
-    setActiveTab(childTab.props.id);
+const Tabs = ({ children, activeTab, setActiveTab, setTitle }) => {
+  const handleClick = (id) => {
+    setActiveTab(id);
   };
 
   return (
