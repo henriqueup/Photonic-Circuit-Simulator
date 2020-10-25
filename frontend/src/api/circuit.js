@@ -3,7 +3,7 @@ import { baseURL, validateResponse } from "./index";
 
 async function postCircuit() {
   try {
-    const response = await fetch(baseURL + "/circuits/", {
+    const response = await fetch(baseURL + "/circuits", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -65,4 +65,13 @@ async function setCircuitLabel(label) {
   }
 }
 
-export default { postCircuit, resetCircuits, saveCircuit, setCircuitLabel };
+async function listCircuits() {
+  try {
+    const response = await fetch(baseURL + "/circuits", { method: "GET" });
+    return validateResponse(response);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export default { postCircuit, resetCircuits, saveCircuit, setCircuitLabel, listCircuits };

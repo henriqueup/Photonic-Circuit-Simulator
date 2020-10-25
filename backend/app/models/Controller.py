@@ -8,11 +8,11 @@ class Controller:
     self.current_circuit = None
 
   def load_circuit(self, circuit_id):
-    if (str(circuit_id) not in [str(x.id) for x in self.circuits]):
+    if (str(circuit_id) not in [str(x.id) for x in CircuitCollection.objects]):
       return "The circuit with id " + str(circuit_id) + " doesn\'t exist.", None
     
     self.current_circuit = Circuit.load(circuit_id)
-    return "Success", self.current_circuit.to_json()
+    return "Success", self.current_circuit
 
   def add_circuit(self, label):
     circuit = Circuit.create(label)

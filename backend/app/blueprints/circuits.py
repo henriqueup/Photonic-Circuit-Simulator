@@ -24,12 +24,12 @@ def reset():
 
 @circuits_bp.route('/<id>')
 def load_circuit(id):
-  response, loaded = controller.load_circuit(id)
+  response, circuit = controller.load_circuit(id)
 
-  if (loaded is None):
+  if (circuit is None):
     return response, 400
 
-  return loaded, 200
+  return circuit.to_json(), 200
 
 @circuits_bp.route('/save', methods=['POST'])
 def save():
