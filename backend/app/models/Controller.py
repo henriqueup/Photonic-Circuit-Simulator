@@ -1,19 +1,13 @@
 from mongoengine import NotUniqueError
 from app.models.Circuit import Circuit
-from app.database.Circuit import Circuit as CircuitCollection
 
 class Controller:
   def __init__(self):
-    self.circuit_ids = []
+    self.circuits = []
     self.current_circuit = None
 
-  def start(self):
-    for circuit in CircuitCollection.objects:
-      # self.circuit_ids.append(str(circuit.id))
-      circuit.delete()
-
   def load_circuit(self, circuit_id):
-    if (str(circuit_id) not in self.circuit_ids):
+    if (str(circuit_id) not in [str(x.id) for x in self.circuits]):
       return "The circuit with id " + str(circuit_id) + " doesn\'t exist.", None
     
     self.current_circuit = Circuit.load(circuit_id)
@@ -22,7 +16,7 @@ class Controller:
   def add_circuit(self, label):
     circuit = Circuit.create(label)
 
-    self.circuit_ids.append(str(circuit.id))
+    self.circuits.append(circuit)
     self.current_circuit = circuit
 
     return circuit
@@ -56,14 +50,11 @@ class Controller:
     return self.current_circuit.delete_component(id)
 
   def reset(self):
-    # if (self.current_circuit is None):
-    self.current_circuit.reset()
-
-  def clear(self):
     if (self.current_circuit is not None):
       self.current_circuit.reset()
       
     self.current_circuit = None
+    self.circuits = []
 
   def save(self):
     if (self.current_circuit is None):

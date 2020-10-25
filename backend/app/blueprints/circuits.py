@@ -17,9 +17,9 @@ def create():
   circuit = controller.add_circuit(label)
   return jsonify(circuit.to_json()), 200
 
-@circuits_bp.route('/', methods=['DELETE'])
-def clear():
-  controller.clear()
+@circuits_bp.route('/reset', methods=['DELETE'])
+def reset():
+  controller.reset()
   return "OK", 200
 
 @circuits_bp.route('/<id>')

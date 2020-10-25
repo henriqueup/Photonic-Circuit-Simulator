@@ -87,7 +87,7 @@ const Layout = ({ circuits, setCircuitLabel, currentCircuitID, setCurrentCircuit
 
   useEffect(() => {
     async function startConnection() {
-      await api.deleteCircuit();
+      await api.resetCircuits();
       createCircuit();
     }
 

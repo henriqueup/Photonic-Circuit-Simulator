@@ -20,9 +20,9 @@ async function postCircuit() {
   }
 }
 
-async function deleteCircuit() {
+async function resetCircuits() {
   try {
-    const response = await fetch(baseURL + "/circuits/", { method: "DELETE" });
+    const response = await fetch(baseURL + "/circuits/reset", { method: "DELETE" });
     return validateResponse(response);
   } catch (error) {
     console.log(error);
@@ -65,4 +65,4 @@ async function setCircuitLabel(label) {
   }
 }
 
-export default { postCircuit, deleteCircuit, saveCircuit, setCircuitLabel };
+export default { postCircuit, resetCircuits, saveCircuit, setCircuitLabel };
