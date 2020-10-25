@@ -3,12 +3,12 @@ from app.resources.controller import controller
 
 circuits_bp = Blueprint('circuits', __name__, url_prefix='/circuits')
 
-@circuits_bp.route('/')
+@circuits_bp.route('')
 def index():
-  circuits = [str(id) for id in controller.circuit_ids]
+  circuits = controller.list_circuits()
   return jsonify(circuits), 200
 
-@circuits_bp.route('/', methods=['POST'])
+@circuits_bp.route('', methods=['POST'])
 def create():
   label = request.get_json().get('label')
   if (label is None):

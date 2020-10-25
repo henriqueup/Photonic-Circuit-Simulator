@@ -1,5 +1,6 @@
 from mongoengine import NotUniqueError
 from app.models.Circuit import Circuit
+from app.database.Circuit import Circuit as CircuitCollection
 
 class Controller:
   def __init__(self):
@@ -72,3 +73,10 @@ class Controller:
 
     self.current_circuit.label = label
     return "", True
+
+  def list_circuits(self):
+    circuits = []
+    for circuit in CircuitCollection.objects:
+      circuits.append({'id': str(circuit.id), 'label': circuit.label})
+
+    return circuits
