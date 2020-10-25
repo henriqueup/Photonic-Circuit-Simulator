@@ -1,8 +1,8 @@
 from app.models.Port import Port
 from app.models.Component import Component
 from app.database.Component import Component as ComponentCollection
-from app.database.stored.Component import StoredComponent
-from app.database.stored.Lumerical import Lumerical
+from app.database.Lumerical import Lumerical
+from app.database.db import get_objectid
 
 class SwP(Component):
   def __init__(self, inputs, outputs, x, y, id=None):
@@ -27,14 +27,13 @@ class SwP(Component):
     y = 100
 
     swp = cls(inputs, outputs, x, y)
-    swp_db = ComponentCollection(**swp.as_dict()).save()
 
-    swp.id = swp_db.id
+    swp.id = get_objectid()
     return swp
 
   @classmethod
   def load(cls, id):
-    swp_db = StoredComponent.objects(id=id).get()
+    swp_db = ComponentCollection.objects(id=id).get()
 
     inputs = []
     for port in swp_db.inputs:
@@ -76,10 +75,8 @@ class SwP(Component):
     for port in self.outputs:
       port.delete()
 
-    ComponentCollection.objects(id=self.id).get().delete()
-
   def save(self):
-    StoredComponent(**self.as_dict()).save()
+    ComponentCollection(**self.as_dict()).save()
 
     for port in self.inputs:
       port.save()

@@ -1,7 +1,7 @@
 from app.models.Port import Port
 from app.models.Component import Component
 from app.database.Component import Component as ComponentCollection
-from app.database.stored.Component import StoredComponent
+from app.database.db import get_objectid
 
 class OutputReader(Component):
   def __init__(self, inputs, x, y, id=None):
@@ -21,14 +21,13 @@ class OutputReader(Component):
     y = 100
 
     output_reader = cls(inputs, x, y)
-    output_reader_db = ComponentCollection(**output_reader.as_dict()).save()
 
-    output_reader.id = output_reader_db.id
+    output_reader.id = get_objectid()
     return output_reader
 
   @classmethod
   def load(cls, id):
-    output_reader_db = StoredComponent.objects(id=id).get()
+    output_reader_db = ComponentCollection.objects(id=id).get()
 
     inputs = []
     for port in output_reader_db.inputs:
@@ -58,10 +57,8 @@ class OutputReader(Component):
     for port in self.outputs:
       port.delete()
 
-    ComponentCollection.objects(id=self.id).get().delete()
-
   def save(self):
-    StoredComponent(**self.as_dict()).save()
+    ComponentCollection(**self.as_dict()).save()
 
     for port in self.inputs:
       port.save()

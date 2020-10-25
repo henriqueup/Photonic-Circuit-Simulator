@@ -1,5 +1,5 @@
 from app.database.Port import Port as PortCollection
-from app.database.stored.Port import StoredPort
+from app.database.db import get_objectid
 
 class Port():
   def __init__(self, target, power, id=None):
@@ -14,8 +14,6 @@ class Port():
   @power.setter
   def power(self, power):
     self._power = power
-    if (hasattr(self, 'id')):
-      self.update_data()
 
     if (self.target is not None and hasattr(self.target, 'power') and self.target.power != power):
       self.target.power = power
@@ -26,8 +24,6 @@ class Port():
   @target.setter
   def target(self, target):
     self._target = target
-    if (hasattr(self, 'id')):
-      self.update_data()
   #endregion
 
   @classmethod
@@ -36,14 +32,13 @@ class Port():
     power = 0
 
     port = cls(target, power)
-    port_db = PortCollection(**port.as_dict()).save()
 
-    port.id = port_db.id
+    port.id = get_objectid()
     return port
 
   @classmethod
   def load(cls, id):
-    port_db = StoredPort.objects(id=id).get()
+    port_db = PortCollection.objects(id=id).get()
 
     if (port_db.target != None):
       target = port_db.target.id
@@ -65,19 +60,15 @@ class Port():
       'power': float(self.power)
     }
 
-  def update_data(self):
-    PortCollection.objects.get(id=self.id).update(**self.as_dict())
-
   def delete(self):
     if (self.target):
       target_port = self.target
       target_port.target = None
-      target_port.update_data()
       
     PortCollection.objects(id=self.id).get().delete()
 
   def save(self):
-    StoredPort(**self.as_dict()).save()
+    PortCollection(**self.as_dict()).save()
 
 
   def calculate_outputs(self):

@@ -1,11 +1,11 @@
 from app.database.Component import Component as ComponentCollection
 from app.database.Circuit import Circuit as CircuitCollection
-from app.database.stored.Circuit import StoredCircuit
 from app.models.Component import Component
 from app.models.SwN import SwN
 from app.models.SwP import SwP
 from app.models.PowerSource import PowerSource
 from app.models.OutputReader import OutputReader
+from app.database.db import get_objectid
 
 class Circuit():
   def __init__(self, label, components, ports, id=None):
@@ -21,14 +21,13 @@ class Circuit():
     label = label
 
     circuit = cls(label, components, ports)
-    circuit_db = CircuitCollection(**circuit.as_dict()).save()
 
-    circuit.id = circuit_db.id
+    circuit.id = get_objectid()
     return circuit
 
   @classmethod
   def load(cls, id):
-    circuit_db = StoredCircuit.objects(id=id).get()
+    circuit_db = CircuitCollection.objects(id=id).get()
 
     label = circuit_db.label
     components = []
@@ -65,8 +64,6 @@ class Circuit():
 
     return circuit
 
-  def update_data(self):
-    CircuitCollection.objects.get(id=self.id).update(**self.as_dict())
 
   def as_dict(self):
     return {
@@ -114,7 +111,6 @@ class Circuit():
     for port in component.outputs:
       self.ports.append(port)
 
-    self.update_data()
     return component
 
   def calculate_outputs(self, id):
@@ -180,7 +176,6 @@ class Circuit():
          del self.ports[self.ports.index(port)]
 
     del self.components[self.components.index(component)]
-    self.update_data()
     
     return None
 
@@ -190,15 +185,9 @@ class Circuit():
 
     self.components = []
     self.ports = []
-    self.update_data()
-
-  def delete(self):
-    self.reset()
-
-    CircuitCollection.objects(id=self.id).get().delete()
 
   def save(self):
-    StoredCircuit(**self.as_dict()).save()
+    CircuitCollection(**self.as_dict()).save()
 
     for component in self.components:
       component.save()

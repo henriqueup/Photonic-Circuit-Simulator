@@ -61,7 +61,7 @@ class Controller:
 
   def clear(self):
     if (self.current_circuit is not None):
-      self.current_circuit.delete()
+      self.current_circuit.reset()
       
     self.current_circuit = None
 
