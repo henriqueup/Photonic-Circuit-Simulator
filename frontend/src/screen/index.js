@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import ComponentsMenu from "../components/componentsMenu";
 import InspectionMenu from "../components/inspectionMenu";
 import MainMenu from "../components/mainMenu";
 import Workspace from "../components/workspace";
-import MainMenuDropdown from "../components/mainMenuDropdown";
 import "./styles.css";
 import api from "../api";
 import { store } from "../store";
@@ -18,6 +17,7 @@ import { basicKinds } from "../utils/componentBehaviour";
 import Tabs from "../components/tabs";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import DropdownMenu from "../components/dropdownMenu";
 
 const buttons = [
   {
@@ -58,23 +58,6 @@ const Layout = ({ circuits, setCircuitLabel, currentCircuitID, setCurrentCircuit
   const [currentComponents, setCurrentComponents] = useState([]);
   const [currentConnections, setCurrentConnections] = useState([]);
 
-  const dropdownRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (showDropdown && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        //alert("You clicked outside of me!");
-        setShowDropdown(!showDropdown);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      // Unbind the event listener on clean up
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownRef, showDropdown]);
-
   const onClickMenuButton = () => {
     setShowDropdown(!showDropdown);
   };
@@ -105,11 +88,7 @@ const Layout = ({ circuits, setCircuitLabel, currentCircuitID, setCurrentCircuit
   return (
     <div className="main">
       <MainMenu buttons={buttons} onClick={onClickMenuButton} onMouseEnter={onMouseEnterMenuButton} />
-      {showDropdown ? (
-        <div ref={dropdownRef} className="mainMenuDropdown" style={{ left: left }}>
-          <MainMenuDropdown items={currentButton ? currentButton.items : []} />
-        </div>
-      ) : null}
+      <DropdownMenu showDropdown={showDropdown} setShowDropdown={setShowDropdown} items={currentButton ? currentButton.items : []} left={left} />
       <div className="screen">
         <ComponentsMenu basicItems={basicKinds} />
         <Tabs activeTab={currentCircuitID} setActiveTab={(id) => setCurrentCircuit(id)} setTitle={setCircuitLabel}>

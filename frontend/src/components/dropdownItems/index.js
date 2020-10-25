@@ -1,7 +1,7 @@
 import React from "react";
 import "./styles.css";
 
-const MainMenuDropdown = ({ items }) => {
+const DropdownItems = ({ items }) => {
   return (
     <div>
       {items.map((item, index) => (
@@ -13,4 +13,4 @@ const MainMenuDropdown = ({ items }) => {
   );
 };
 
-export default MainMenuDropdown;
+export default DropdownItems;
