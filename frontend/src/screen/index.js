@@ -105,9 +105,11 @@ const Layout = ({ circuits, setCircuitLabel, currentCircuitID, setCurrentCircuit
   return (
     <div className="main">
       <MainMenu buttons={buttons} onClick={onClickMenuButton} onMouseEnter={onMouseEnterMenuButton} />
-      <div ref={dropdownRef} className="mainMenuDropdown" style={{ left: left }}>
-        {showDropdown ? <MainMenuDropdown items={currentButton ? currentButton.items : []} /> : null}
-      </div>
+      {showDropdown ? (
+        <div ref={dropdownRef} className="mainMenuDropdown" style={{ left: left }}>
+          <MainMenuDropdown items={currentButton ? currentButton.items : []} />
+        </div>
+      ) : null}
       <div className="screen">
         <ComponentsMenu basicItems={basicKinds} />
         <Tabs activeTab={currentCircuitID} setActiveTab={(id) => setCurrentCircuit(id)} setTitle={setCircuitLabel}>
