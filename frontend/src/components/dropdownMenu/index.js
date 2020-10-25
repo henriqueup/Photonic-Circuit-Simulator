@@ -23,7 +23,7 @@ const DropdownMenu = ({ showDropdown, setShowDropdown, items, left, top }) => {
   return (
     <div>
       {showDropdown ? (
-        <div ref={ref} className="dropdownMenu" style={{ left: left }}>
+        <div ref={ref} className="dropdownMenu" style={{ left: left, top: top ? top : "29px" }}>
           <DropdownItems items={items} />
         </div>
       ) : null}
