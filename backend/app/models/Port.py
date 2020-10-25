@@ -51,7 +51,11 @@ class Port():
 
 
   def as_dict(self):
-    return {'target': str(self.target.id) if self.target else None, 'power': self.power}
+    return {
+      'id': str(self.id),
+      'target': str(self.target.id) if self.target else None,
+      'power': self.power
+    }
   
   def to_json(self):
     return {
@@ -64,8 +68,6 @@ class Port():
     if (self.target):
       target_port = self.target
       target_port.target = None
-      
-    PortCollection.objects(id=self.id).get().delete()
 
   def save(self):
     PortCollection(**self.as_dict()).save()

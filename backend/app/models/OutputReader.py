@@ -69,6 +69,7 @@ class OutputReader(Component):
 
   def as_dict(self):
     return {
+      'id': str(self.id),
       'kind': self.kind,
       'inputs': [port.id for port in self.inputs],
       'outputs': [port.id for port in self.outputs],

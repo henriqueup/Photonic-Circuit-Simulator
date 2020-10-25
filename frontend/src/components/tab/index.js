@@ -13,7 +13,7 @@ const Tab = ({ activeTab, id, label, isSaved, onClick, setTitle }) => {
   let prevent = false;
 
   const handleClick = () => {
-    timer = setTimeout(function () {
+    timer = setTimeout(() => {
       if (!prevent) {
         onClick(id);
       }

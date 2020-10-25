@@ -12,6 +12,7 @@ import {
   attemptSetLabel as setCircuitLabel,
   setCurrent as setCurrentCircuit,
   simulate,
+  load as loadCircuit,
 } from "../store/ducks/circuit";
 import { basicKinds } from "../utils/componentBehaviour";
 import Tabs from "../components/tabs";
@@ -25,13 +26,27 @@ const buttons = [
     items: [
       {
         name: "New Circuit",
-        onClick: () => store.dispatch(createCircuit()), //implement when workspace tabs
+        onClick: () => store.dispatch(createCircuit()),
       },
       {
         name: "Save Circuit",
         onClick: () => {
           if (!store.getState().circuit.current.isSaved) {
             store.dispatch(attemptSave());
+          }
+        },
+      },
+      {
+        name: "Load Circuit",
+        onClick: () => null,
+        composite: true,
+        setItems: async () => {
+          const response = await api.listCircuits();
+          if (response.ok) {
+            const circuits = response.body;
+            return circuits.map((circuit) => (circuit = { name: circuit.label, id: circuit.id, onClick: (id) => store.dispatch(loadCircuit(id)) }));
+          } else {
+            return [];
           }
         },
       },
@@ -70,8 +85,10 @@ const Layout = ({ circuits, setCircuitLabel, currentCircuitID, setCurrentCircuit
 
   useEffect(() => {
     async function startConnection() {
-      await api.resetCircuits();
-      createCircuit();
+      const response = await api.resetCircuits();
+      if (response.ok) {
+        createCircuit();
+      }
     }
 
     startConnection();

@@ -66,8 +66,8 @@ export const CircuitComponent = PixiComponent("CircuitComponent", {
 
 const createCircuitComponent = (data) => {
   return {
-    x: STARTING_X,
-    y: STARTING_Y,
+    x: data.x,
+    y: data.y,
     interactive: true,
     buttonMode: true,
     id: data.id,

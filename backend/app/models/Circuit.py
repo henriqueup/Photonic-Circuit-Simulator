@@ -67,6 +67,7 @@ class Circuit():
 
   def as_dict(self):
     return {
+      'id': str(self.id),
       'label': self.label,
       'components': [component.id for component in self.components]
     }

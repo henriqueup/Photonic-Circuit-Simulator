@@ -74,4 +74,13 @@ async function listCircuits() {
   }
 }
 
-export default { postCircuit, resetCircuits, saveCircuit, setCircuitLabel, listCircuits };
+async function loadCircuit(id) {
+  try {
+    const response = await fetch(baseURL + `/circuits/${id}`, { method: "GET" });
+    return validateResponse(response);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export default { postCircuit, resetCircuits, saveCircuit, setCircuitLabel, listCircuits, loadCircuit };

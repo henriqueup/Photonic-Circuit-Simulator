@@ -3,6 +3,7 @@ import mongoengine_goodjson as gj
 from app.database.Port import Port
 
 class Component(gj.Document):
+  id = db.ObjectIdField(primary_key=True)
   kind = db.StringField()
   inputs = db.ListField(db.LazyReferenceField(Port))
   outputs = db.ListField(db.LazyReferenceField(Port))

@@ -14,6 +14,9 @@ export const Types = {
   SET_SAVED: "circuit/SET_SAVED",
   ADD_CONNECTION: "circuit/ADD_CONNECTION",
   DELETE_CONNECTION: "circuit/DELETE_CONNECTION",
+  LOAD: "circuit/LOAD",
+  CREATE_WITH_DATA: "circuit/CREATE_WITH_DATA",
+  UPDATE_CONNECTION_POS: "circuit/UPDATE_CONNECTION_POS",
 };
 
 // Reducer
@@ -103,6 +106,36 @@ export default function reducer(state = INITIAL_STATE, action) {
                 ...content,
                 connections: content.connections.filter(
                   (connection) => connection.targetPortID !== action.payload.portID && connection.originPortID !== action.payload.portID
+                ),
+              }
+            : content
+        ),
+      };
+    case Types.CREATE_WITH_DATA:
+      return {
+        ...state,
+        instances: state.instances.concat([action.payload.data]),
+        current: action.payload.data.id,
+      };
+    case Types.UPDATE_CONNECTION_POS:
+      return {
+        ...state,
+        instances: state.instances.map((content) =>
+          content.id === state.current
+            ? {
+                ...content,
+                connections: content.connections.map((connection) =>
+                  connection.originPortID === action.payload.portID
+                    ? {
+                        ...connection,
+                        points: [action.payload.newX, action.payload.newY, connection.points[2], connection.points[3]],
+                      }
+                    : connection.targetPortID === action.payload.portID
+                    ? {
+                        ...connection,
+                        points: [connection.points[0], connection.points[1], action.payload.newX, action.payload.newY],
+                      }
+                    : connection
                 ),
               }
             : content
@@ -215,6 +248,35 @@ export function deleteConnection(portID) {
     type: Types.DELETE_CONNECTION,
     payload: {
       portID: portID,
+    },
+  };
+}
+
+export function load(id) {
+  return {
+    type: Types.LOAD,
+    payload: {
+      id: id,
+    },
+  };
+}
+
+export function createWithData(data) {
+  return {
+    type: Types.CREATE_WITH_DATA,
+    payload: {
+      data: data,
+    },
+  };
+}
+
+export function updateConnectionPos(portID, newX, newY) {
+  return {
+    type: Types.UPDATE_CONNECTION_POS,
+    payload: {
+      portID: portID,
+      newX: newX,
+      newY: newY,
     },
   };
 }

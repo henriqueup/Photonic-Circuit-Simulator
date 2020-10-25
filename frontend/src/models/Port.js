@@ -81,7 +81,7 @@ export const Port = PixiComponent("Port", {
   },
 });
 
-const createPorts = (ports, parentID, parentKind, isInput = true) => {
+const createPorts = (ports, parentID, parentKind, isInput = true, parentX = STARTING_X, parentY = STARTING_Y) => {
   if (!ports || !ports.length) {
     return [];
   }
@@ -104,8 +104,8 @@ const createPorts = (ports, parentID, parentKind, isInput = true) => {
       isDragging: false,
       x: x,
       y: y,
-      worldX: STARTING_X + x,
-      worldY: STARTING_Y + y,
+      worldX: parentX + x,
+      worldY: parentY + y,
       isInput: isInput,
       id: port.id,
       parentID: parentID,
