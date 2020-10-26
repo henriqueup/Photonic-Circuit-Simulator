@@ -26,7 +26,9 @@ const Tab = ({ activeTab, id, label, isSaved, onClick, setTitle }) => {
     prevent = true;
 
     setDisabled(false);
-    event.target.select();
+    if (event.target.select) {
+      event.target.select();
+    }
   };
 
   const handleBlur = () => {
