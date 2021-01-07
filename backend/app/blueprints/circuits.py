@@ -53,3 +53,11 @@ def set_label():
 
   return "OK", 200
 
+@circuits_bp.route('/current/<id>', methods=['PUT'])
+def set_current_circuit(id):
+  error = controller.set_current_circuit(id)
+
+  if (error is not None):
+    return error, 400
+
+  return "OK", 200

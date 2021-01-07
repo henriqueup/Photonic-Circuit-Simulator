@@ -1,5 +1,5 @@
 import { all } from "redux-saga/effects";
-import { watchCreateCircuit, watchLoadCircuit, watchSaveCircuit, watchSetCircuitLabel, watchSimulate } from "./circuit";
+import { watchAttemptChangeCurrentCircuit, watchCreateCircuit, watchLoadCircuit, watchSaveCircuit, watchSetCircuitLabel, watchSimulate } from "./circuit";
 import {
   helloSaga,
   watchCalculateOutputs,
@@ -30,5 +30,6 @@ export default function* rootSaga() {
     watchDeleteConnection(),
     watchSetCircuitLabel(),
     watchLoadCircuit(),
+    watchAttemptChangeCurrentCircuit(),
   ]);
 }

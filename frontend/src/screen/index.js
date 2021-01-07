@@ -5,73 +5,44 @@ import MainMenu from "../components/mainMenu";
 import Workspace from "../components/workspace";
 import "./styles.css";
 import api from "../api";
-import { store } from "../store";
 import {
-  attemptSave,
   create as createCircuit,
   attemptSetLabel as setCircuitLabel,
-  setCurrent as setCurrentCircuit,
+  attemptChangeCurrent as attemptChangeCurrentCircuit,
   simulate,
-  load as loadCircuit,
 } from "../store/ducks/circuit";
 import { basicKinds } from "../utils/componentBehaviour";
 import Tabs from "../components/tabs";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import DropdownMenu from "../components/dropdownMenu";
+import { FileButton, EditButton } from './MainMenuButtons';
 
 const buttons = [
-  {
-    name: "File",
-    items: [
-      {
-        name: "New Circuit",
-        onClick: () => store.dispatch(createCircuit()),
-      },
-      {
-        name: "Save Circuit",
-        onClick: () => {
-          if (!store.getState().circuit.current.isSaved) {
-            store.dispatch(attemptSave());
-          }
-        },
-      },
-      {
-        name: "Load Circuit",
-        onClick: () => null,
-        composite: true,
-        setItems: async () => {
-          const response = await api.listCircuits();
-          if (response.ok) {
-            const circuits = response.body;
-            return circuits.map((circuit) => (circuit = { name: circuit.label, id: circuit.id, onClick: (id) => store.dispatch(loadCircuit(id)) }));
-          } else {
-            return [];
-          }
-        },
-      },
-    ],
-  },
-  {
-    name: "Edit",
-    items: [
-      {
-        name: "Remove Component",
-        onClick: () => console.log("Delete selected component"),
-      },
-    ],
-  },
+  FileButton,
+  EditButton
 ];
 
 export let WORKSPACE_X = 0;
 export let WORKSPACE_Y = 0;
 
-const Layout = ({ circuits, setCircuitLabel, currentCircuitID, setCurrentCircuit, createCircuit, circuitComponents, ports, simulate }) => {
+const Layout = ({
+  circuits,
+  setCircuitLabel,
+  currentCircuitID,
+  attemptChangeCurrentCircuit,
+  createCircuit,
+  circuitComponents,
+  ports,
+  simulate,
+}) => {
+
   const [showDropdown, setShowDropdown] = useState(false);
   const [currentButton, setCurrentButton] = useState(null);
   const [left, setLeft] = useState(0);
   const [currentComponents, setCurrentComponents] = useState([]);
   const [currentConnections, setCurrentConnections] = useState([]);
+  const [customComponents, setCustomComponents] = useState([]);
 
   const onClickMenuButton = () => {
     setShowDropdown(!showDropdown);
@@ -107,8 +78,8 @@ const Layout = ({ circuits, setCircuitLabel, currentCircuitID, setCurrentCircuit
       <MainMenu buttons={buttons} onClick={onClickMenuButton} onMouseEnter={onMouseEnterMenuButton} />
       <DropdownMenu showDropdown={showDropdown} setShowDropdown={setShowDropdown} items={currentButton ? currentButton.items : []} left={left} />
       <div className="screen">
-        <ComponentsMenu basicItems={basicKinds} />
-        <Tabs activeTab={currentCircuitID} setActiveTab={(id) => setCurrentCircuit(id)} setTitle={setCircuitLabel}>
+        <ComponentsMenu basicItems={basicKinds} customItems={customComponents} />
+        <Tabs activeTab={currentCircuitID} setActiveTab={(id) => attemptChangeCurrentCircuit(id)} setTitle={setCircuitLabel}>
           {circuits.map((circuit) => (
             <div
               id={circuit.id}
@@ -146,7 +117,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   setCircuitLabel: bindActionCreators(setCircuitLabel, dispatch),
-  setCurrentCircuit: bindActionCreators(setCurrentCircuit, dispatch),
+  attemptChangeCurrentCircuit: bindActionCreators(attemptChangeCurrentCircuit, dispatch),
   createCircuit: bindActionCreators(createCircuit, dispatch),
   simulate: bindActionCreators(simulate, dispatch),
 });

@@ -5,6 +5,7 @@ export const Types = {
   CREATE: "circuit/CREATE",
   CREATE_WITH_ID: "circuit/CREATE_WITH_ID",
   SET_CURRENT: "circuit/SET_CURRENT",
+  ATTEMPT_CHANGE_CURRENT: "circuit/ATTEMPT_CHANGE_CURRENT",
   SAVE: "circuit/SAVE",
   ATTEMPT_SAVE: "circuit/ATTEMPT_SAVE",
   ADD_COMPONENT: "circuit/ADD_COMPONENT",
@@ -167,12 +168,20 @@ export function createWithID(id) {
   };
 }
 
-export function setCurrent(id = null, label = null) {
+export function setCurrent(id) {
   return {
     type: Types.SET_CURRENT,
     payload: {
       id: id,
-      label: label,
+    },
+  };
+}
+
+export function attemptChangeCurrent(id) {
+  return {
+    type: Types.ATTEMPT_CHANGE_CURRENT,
+    payload: {
+      id: id,
     },
   };
 }

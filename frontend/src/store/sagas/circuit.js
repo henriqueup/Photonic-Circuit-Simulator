@@ -59,13 +59,18 @@ function* simulateComponent(currentComponent, components, ports, coverageMap) {
 
 function* simulateSaga() {
   const switchKinds = ["swn", "swp"];
-  const components = store.getState().circuitComponent.instances.filter((instance) => switchKinds.includes(instance.kind.kind));
-  const ports = store.getState().port.instances;
-  const coverageMap = components.map((i) => false);
+  const currentStoreState = store.getState();
+
+  const components = currentStoreState.circuitComponent.instances.filter((instance) => switchKinds.includes(instance.kind.kind));
+  const currentCircuit = currentStoreState.circuit.instances.find((instance) => instance.id === currentStoreState.circuit.current);
+  const currentCircuitComponents = components.filter((component) => currentCircuit.components.includes(component.id));
+
+  const ports = currentStoreState.port.instances;
+  const coverageMap = currentCircuitComponents.map((i) => false);
 
   while (coverageMap.includes(false)) {
-    let currentComponent = components[coverageMap.indexOf(false)];
-    yield* simulateComponent(currentComponent, components, ports, coverageMap);
+    let currentComponent = currentCircuitComponents[coverageMap.indexOf(false)];
+    yield* simulateComponent(currentComponent, currentCircuitComponents, ports, coverageMap);
   }
 }
 
@@ -138,4 +143,16 @@ function* loadCircuitSaga(action) {
 
 export function* watchLoadCircuit() {
   yield takeEvery("circuit/LOAD", loadCircuitSaga);
+}
+
+function* attemptChangeCurrentSaga(action) {
+  const response = yield call(api.setCurrentCircuit, action.payload.id);
+
+  if (response.ok) {
+    yield put(setCurrent(action.payload.id));
+  }
+}
+
+export function* watchAttemptChangeCurrentCircuit() {
+  yield takeEvery("circuit/ATTEMPT_CHANGE_CURRENT", attemptChangeCurrentSaga);
 }

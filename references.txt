@@ -9,3 +9,4 @@ https://blog.rocketseat.com.br/estrutura-redux-escalavel-com-ducks/
 https://redux.js.org/basics/example
 https://react-icons.github.io/react-icons/icons?name=fa
 https://react-charts.tanstack.com/docs/api
+image maker: https://vectr.com/new

@@ -7,11 +7,22 @@ class Controller:
     self.circuits = []
     self.current_circuit = None
 
+  def get_circuit(self, circuit_id):
+    return next((x for x in self.circuits if str(x.id) == str(circuit_id)), None)
+
   def load_circuit(self, circuit_id):
+    circuit = self.get_circuit(circuit_id)
+
+    self.current_circuit = circuit
+    if (circuit is not None):
+      return "Success", circuit
+
     if (str(circuit_id) not in [str(x.id) for x in CircuitCollection.objects]):
       return "The circuit with id " + str(circuit_id) + " doesn\'t exist.", None
     
     self.current_circuit = Circuit.load(circuit_id)
+    
+    self.circuits.append(self.current_circuit)
     return "Success", self.current_circuit
 
   def add_circuit(self, label):
@@ -80,3 +91,12 @@ class Controller:
       circuits.append({'id': str(circuit.id), 'label': circuit.label})
 
     return circuits
+
+  def set_current_circuit(self, circuit_id):
+    circuit = self.get_circuit(circuit_id)
+
+    if (circuit is None):
+      return f"The circuit with id \'{circuit_id}\' doesn\'t exist."
+
+    self.current_circuit = circuit
+    return None
