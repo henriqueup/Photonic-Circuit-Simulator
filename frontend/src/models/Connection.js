@@ -6,7 +6,7 @@ const CONNECTION_PADDING = 4;
 
 export const Connection = PixiComponent("Connection", {
   create() {
-    return new Line([]);
+    return new Line([], 2);
   },
   applyProps(instance, oldProps, newProps) {
     instance.updatePoints(newProps.points);

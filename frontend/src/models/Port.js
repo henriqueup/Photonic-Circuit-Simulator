@@ -81,6 +81,17 @@ export const Port = PixiComponent("Port", {
   },
 });
 
+const calculatePortsYValues = (portCount, parentHeight, portHeight) => {
+  const spaceBetween = (parentHeight - portCount*portHeight)/(portCount+1);
+
+  let yValues = [];
+  for (let i = 0; i < portCount; i++){
+    yValues.push(spaceBetween*(i+1) + i*portHeight);
+  }
+
+  return yValues;
+}
+
 const createPorts = (ports, parentID, parentKind, isInput = true, parentX = STARTING_X, parentY = STARTING_Y) => {
   if (!ports || !ports.length) {
     return [];
@@ -91,11 +102,10 @@ const createPorts = (ports, parentID, parentKind, isInput = true, parentX = STAR
 
   const x = isInput ? 0 : parentDimension - PORT_WIDTH;
 
-  const increment = parentDimension / ports.length;
-  const currentY = parentKind === "output_reader" ? 1 : 8;
+  const yValues = calculatePortsYValues(ports.length, parentDimension, PORT_WIDTH);
 
   ports.forEach((port, i) => {
-    const y = currentY + increment * i;
+    const y = yValues[i];
 
     createdPorts.push({
       image: portPng,

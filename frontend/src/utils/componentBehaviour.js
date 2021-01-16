@@ -11,7 +11,7 @@ import selectedOutputReaderSourcePNG from "../resources/images/selected_output_r
 import selectedYJunctionPNG from "../resources/images/selected_y_junction.png";
 import selectedYSplitPNG from "../resources/images/selected_y_split.png";
 
-const GRID_SIZE = 20;
+export const GRID_SIZE = 20;
 
 export const componentSizes = {
   swn: {
@@ -90,8 +90,17 @@ export const snapToGrid = (position) => {
   let remainderX = x % GRID_SIZE;
   let remainderY = y % GRID_SIZE;
 
-  position.x = x - remainderX;
-  position.y = y - remainderY;
+  if (remainderX > 10) {
+    position.x = x + (GRID_SIZE - remainderX);
+  } else {
+    position.x = x - remainderX;
+  }
+
+  if (remainderY > 10) {
+    position.y = y + (GRID_SIZE - remainderY);
+  } else {
+    position.y = y - remainderY;
+  }
 
   return position;
 };
