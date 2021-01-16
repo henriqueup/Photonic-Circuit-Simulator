@@ -78,7 +78,7 @@ const Layout = ({
       <MainMenu buttons={buttons} onClick={onClickMenuButton} onMouseEnter={onMouseEnterMenuButton} />
       <DropdownMenu showDropdown={showDropdown} setShowDropdown={setShowDropdown} items={currentButton ? currentButton.items : []} left={left} />
       <div className="screen">
-        <ComponentsMenu basicItems={basicKinds} customItems={customComponents} />
+        <ComponentsMenu basicComponents={basicKinds} customComponents={customComponents} />
         <Tabs activeTab={currentCircuitID} setActiveTab={(id) => attemptChangeCurrentCircuit(id)} setTitle={setCircuitLabel}>
           {circuits.map((circuit) => (
             <div

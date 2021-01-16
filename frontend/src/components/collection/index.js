@@ -2,7 +2,7 @@ import React from "react";
 import Container from "../container";
 import "./styles.css";
 
-const Collection = ({ items, onClick, title }) => {
+const Collection = ({ items, onClick, title, scrollable }) => {
   const stub = <li className="stubItem" key={-1} />;
 
   return (
@@ -15,6 +15,7 @@ const Collection = ({ items, onClick, title }) => {
           </li>
         ))
       )}
+      scrollable
     />
   );
 };

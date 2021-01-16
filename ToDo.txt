@@ -1,11 +1,3 @@
--to_json method in classes DONE
--PUT request DONE
--Create PowerSources DONE
--Lumerical values collection? DONE
--calculateOutputs with aprox DONE
--circuits: PUT, DELETE, reset
--format request outputs ({error:"", message: ""}, status)
--implement try catch on requests, create BadRequestError (differentiate from internal server error)
--pesquisar ABC
--change outputs
+-refactor menu components into one component
+-add tab close feature
 -temas sass ou less (pre processador CSS)

@@ -73,7 +73,7 @@ class Lumerical(gj.Document):
     
     return curr
 
-  def calculate(col, input, control):
+  def calculate(col, control, input):
     x = float(input)
     y = float(control)
 

@@ -2,10 +2,14 @@ import swnPNG from "../resources/images/swn.png";
 import swpPNG from "../resources/images/swp.png";
 import powerSourcePNG from "../resources/images/power_source.png";
 import outputReaderPNG from "../resources/images/output_reader.png";
+import yJunctionPNG from "../resources/images/y_junction.png";
+import ySplitPNG from "../resources/images/y_split.png";
 import selectedSwnPNG from "../resources/images/selected_swn.png";
 import selectedSwpPNG from "../resources/images/selected_swp.png";
 import selectedPowerSourcePNG from "../resources/images/selected_power_source.png";
 import selectedOutputReaderSourcePNG from "../resources/images/selected_output_reader.png";
+import selectedYJunctionPNG from "../resources/images/selected_y_junction.png";
+import selectedYSplitPNG from "../resources/images/selected_y_split.png";
 
 const GRID_SIZE = 20;
 
@@ -29,6 +33,14 @@ export const componentSizes = {
   port: {
     height: 18,
     width: 18,
+  },
+  y_junction: {
+    height: 80,
+    width: 80,
+  },
+  y_split: {
+    height: 80,
+    width: 80,
   },
 };
 
@@ -56,6 +68,18 @@ export const basicKinds = [
     kind: "output_reader",
     image: outputReaderPNG,
     alternateImage: selectedOutputReaderSourcePNG,
+  },
+  {
+    name: "Y Junction",
+    kind: "y_junction",
+    image: yJunctionPNG,
+    alternateImage: selectedYJunctionPNG,
+  },
+  {
+    name: "Y Split",
+    kind: "y_split",
+    image: ySplitPNG,
+    alternateImage: selectedYSplitPNG,
   },
 ];
 

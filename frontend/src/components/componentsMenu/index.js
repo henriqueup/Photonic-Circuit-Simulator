@@ -5,12 +5,12 @@ import "./styles.css";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
-const ComponentsMenu = ({ basicItems, customItems, addComponent }) => {
+const ComponentsMenu = ({ basicComponents, customComponents, addComponent }) => {
   return (
     <div className="componentsMenu">
       <span className="componentsMenuTitle">Components Menu</span>
-      <Collection items={basicItems} onClick={addComponent} title={"Basic Components"} />
-      <Collection items={customItems} onClick={addComponent} title={"Custom Components"} />
+      <Collection items={basicComponents} onClick={addComponent} title={"Basic Components"} scrollable />
+      <Collection items={customComponents} onClick={addComponent} title={"Custom Components"} scrollable />
     </div>
   );
 };

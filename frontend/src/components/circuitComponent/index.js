@@ -3,6 +3,8 @@ import "./styles.css";
 import Switch from "../switch";
 import OutputReader from "../outputReader";
 import PowerSource from "../powerSource";
+import YJunction from "../yJunction";
+import YSplit from "../ySplit";
 
 const Component = ({ circuitComponent }) => {
   const selectComponent = () => {
@@ -15,6 +17,10 @@ const Component = ({ circuitComponent }) => {
         return <PowerSource circuitComponent={circuitComponent} />;
       case "output_reader":
         return <OutputReader circuitComponent={circuitComponent} />;
+      case "y_junction":
+        return <YJunction circuitComponent={circuitComponent} />;
+      case "y_split":
+        return <YSplit circuitComponent={circuitComponent} />;
       default:
         return null;
     }

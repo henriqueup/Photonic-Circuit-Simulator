@@ -5,6 +5,8 @@ from app.models.SwN import SwN
 from app.models.SwP import SwP
 from app.models.PowerSource import PowerSource
 from app.models.OutputReader import OutputReader
+from app.models.YJunction import YJunction
+from app.models.YSplit import YSplit
 from app.database.db import get_objectid
 
 class Circuit():
@@ -44,6 +46,10 @@ class Circuit():
         components.append(PowerSource.load(component.id))
       elif (component.kind == 'output_reader'):
         components.append(OutputReader.load(component.id))
+      elif (component.kind == 'y_junction'):
+        components.append(YJunction.load(component.id))
+      elif (component.kind == 'y_split'):
+        components.append(YSplit.load(component.id))
       else:
         raise TypeError
 
@@ -103,6 +109,10 @@ class Circuit():
       component = SwP.create()
     elif (kind == 'output_reader'):
       component = OutputReader.create()
+    elif (kind == 'y_junction'):
+      component = YJunction.create()
+    elif (kind == 'y_split'):
+      component = YSplit.create()
     else:
       raise TypeError("Kind \'" + kind + "\' doesn't exist.")
 
