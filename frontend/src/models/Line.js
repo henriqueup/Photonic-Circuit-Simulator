@@ -11,7 +11,6 @@ export default class Line extends Graphics {
     this.points = points;
 
     this.lineStyle(s, c, a);
-    console.log(this.lineWidth);
 
     this.moveTo(points[0], points[1]);
     this.lineTo(points[2], points[3]);

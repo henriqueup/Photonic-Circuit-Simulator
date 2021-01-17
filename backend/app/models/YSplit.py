@@ -106,10 +106,10 @@ class YSplit(Component):
 
 
   def calculate_outputs(self):
-    col = self.kind + "_output"
-    self.outputs[0].power = Lumerical.calculate(col, self.inputs[0].power, self.inputs[1].power)
+    col = self.kind + "_output_1"
+    self.outputs[0].power = Lumerical.calculate(col, 0, self.inputs[0].power)
 
-    col = self.kind + "_drain"
-    self.outputs[1].power = Lumerical.calculate(col, self.inputs[0].power, self.inputs[1].power)
+    col = self.kind + "_output_2"
+    self.outputs[1].power = Lumerical.calculate(col, 0, self.inputs[0].power)
 
     return [self.outputs[0].power, self.outputs[1].power]

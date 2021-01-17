@@ -10,11 +10,16 @@ from sympy import Symbol
 from mongoengine.queryset.visitor import Q
 
 class Lumerical(gj.Document):
-  cols = {
+  switch_cols = {
     "swn_output": 2,
     "swn_drain": 3,
     "swp_output": 4,
     "swp_drain": 5
+  }
+  y_connector_cols = {
+    "y_split_output_1": 2,
+    "y_split_output_2": 3,
+    "y_junction_output": 4
   }
 
   #list of polynomial variables, indexed by degree-1
@@ -24,16 +29,37 @@ class Lumerical(gj.Document):
   degree = db.IntField()
   betas = db.ListField(db.DecimalField(precision=10))
 
-  df = pd.read_csv('app/resources/LumericalValues/allValues.csv')
+  df = None
+  df_switch = pd.read_csv('app/resources/LumericalValues/switchValues.csv')
+  df_y_connector = pd.read_csv('app/resources/LumericalValues/yConnectorValues.csv')
+
+  def set_df(col):
+    if col in Lumerical.switch_cols:
+      Lumerical.df = Lumerical.df_switch
+    elif col in Lumerical.y_connector_cols:
+      Lumerical.df = Lumerical.df_y_connector
 
   def initialize():
     for degree in range(1, 5):
       Lumerical.variables.append(Lumerical.generateVariables(degree))
 
     if (Lumerical.objects.count() == 0):
-      for key in Lumerical.cols:
+      Lumerical.df = Lumerical.df_switch
+      for key in Lumerical.switch_cols:
         for degree in range(1, 5):
-          betas = Lumerical.polynomialRegression(Lumerical.cols[key], degree)
+          betas = Lumerical.polynomialRegression(Lumerical.switch_cols[key], degree)
+
+          doc = {
+            'kind': key,
+            'degree': degree,
+            'betas': betas
+          }
+          Lumerical(**doc).save()
+
+      Lumerical.df = Lumerical.df_y_connector
+      for key in Lumerical.y_connector_cols:
+        for degree in range(1, 5):
+          betas = Lumerical.polynomialRegression(Lumerical.y_connector_cols[key], degree)
 
           doc = {
             'kind': key,
@@ -76,6 +102,10 @@ class Lumerical(gj.Document):
   def calculate(col, control, input):
     x = float(input)
     y = float(control)
+    Lumerical.set_df(col)
+
+    if Lumerical.df is None:
+      return None
 
     degree = 4 if input >= 0 and input <= 60 and control >= 0 and control <= 60 else 2
     betas = Lumerical.objects(Q(kind=col) & Q(degree=degree)).get().betas

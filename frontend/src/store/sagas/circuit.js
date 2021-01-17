@@ -58,10 +58,10 @@ function* simulateComponent(currentComponent, components, ports, coverageMap) {
 }
 
 function* simulateSaga() {
-  const switchKinds = ["swn", "swp"];
+  const kinds = ["swn", "swp", "y_junction", "y_split"];
   const currentStoreState = store.getState();
 
-  const components = currentStoreState.circuitComponent.instances.filter((instance) => switchKinds.includes(instance.kind.kind));
+  const components = currentStoreState.circuitComponent.instances.filter((instance) => kinds.includes(instance.kind.kind));
   const currentCircuit = currentStoreState.circuit.instances.find((instance) => instance.id === currentStoreState.circuit.current);
   const currentCircuitComponents = components.filter((component) => currentCircuit.components.includes(component.id));
 
