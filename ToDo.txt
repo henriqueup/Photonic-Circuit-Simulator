@@ -1,3 +1,8 @@
 -refactor menu components into one component
 -add tab close feature
 -temas sass ou less (pre processador CSS)
+-grafico:
+  -todos inputs e outputs, com cores diferentes, talvez traços diferentes
+  -eixo constante (0-70 talvez)
+  -habilitar e desabilitar valores
+  -incluir conexões (clicando)

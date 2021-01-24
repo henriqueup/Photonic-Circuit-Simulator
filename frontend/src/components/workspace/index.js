@@ -5,8 +5,8 @@ import "./styles.css";
 import { Connection } from "../../models/Connection";
 import Grid from "../grid";
 
-const STAGE_WIDTH = window.innerWidth - (window.innerWidth * 3) / 10;
-let STAGE_HEIGHT = window.innerHeight;
+const STAGE_WIDTH = (window.innerWidth * 7) / 10;
+let STAGE_HEIGHT = (window.innerHeight * 65) / 100;
 
 const Workspace = ({ circuitComponents, connections, heightOffset }) => {
   useEffect(() => {

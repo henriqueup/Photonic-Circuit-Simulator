@@ -3,6 +3,7 @@ import ComponentsMenu from "../components/componentsMenu";
 import InspectionMenu from "../components/inspectionMenu";
 import MainMenu from "../components/mainMenu";
 import Workspace from "../components/workspace";
+import AnalyticsMenu from "../components/analyticsMenu";
 import "./styles.css";
 import api from "../api";
 import {
@@ -16,27 +17,14 @@ import Tabs from "../components/tabs";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import DropdownMenu from "../components/dropdownMenu";
-import { FileButton, EditButton } from './MainMenuButtons';
+import { FileButton, EditButton } from "./MainMenuButtons";
 
-const buttons = [
-  FileButton,
-  EditButton
-];
+const buttons = [FileButton, EditButton];
 
 export let WORKSPACE_X = 0;
 export let WORKSPACE_Y = 0;
 
-const Layout = ({
-  circuits,
-  setCircuitLabel,
-  currentCircuitID,
-  attemptChangeCurrentCircuit,
-  createCircuit,
-  circuitComponents,
-  ports,
-  simulate,
-}) => {
-
+const Layout = ({ circuits, setCircuitLabel, currentCircuitID, attemptChangeCurrentCircuit, createCircuit, circuitComponents, ports, simulate }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [currentButton, setCurrentButton] = useState(null);
   const [left, setLeft] = useState(0);
@@ -79,30 +67,29 @@ const Layout = ({
       <DropdownMenu showDropdown={showDropdown} setShowDropdown={setShowDropdown} items={currentButton ? currentButton.items : []} left={left} />
       <div className="screen">
         <ComponentsMenu basicComponents={basicKinds} customComponents={customComponents} />
-        <Tabs activeTab={currentCircuitID} setActiveTab={(id) => attemptChangeCurrentCircuit(id)} setTitle={setCircuitLabel}>
-          {circuits.map((circuit) => (
-            <div
-              id={circuit.id}
-              label={circuit.label}
-              isSaved={circuit.isSaved}
-              key={circuit.id}
-              ref={(element) => {
-                if (!element) return;
+        <div className="centerContainer">
+          <Tabs activeTab={currentCircuitID} setActiveTab={(id) => attemptChangeCurrentCircuit(id)} setTitle={setCircuitLabel}>
+            {circuits.map((circuit) => (
+              <div
+                id={circuit.id}
+                label={circuit.label}
+                isSaved={circuit.isSaved}
+                key={circuit.id}
+                ref={(element) => {
+                  if (!element) return;
 
-                const rect = element.getBoundingClientRect();
-                WORKSPACE_X = rect.x;
-                WORKSPACE_Y = rect.y;
-              }}
-            >
-              <Workspace circuitComponents={currentComponents} connections={currentConnections} heightOffset={WORKSPACE_Y} />
-            </div>
-          ))}
-        </Tabs>
-        <InspectionMenu
-          outputReaders={currentComponents.filter((component) => component.kind.kind === "output_reader")}
-          ports={ports}
-          simulate={simulate}
-        />
+                  const rect = element.getBoundingClientRect();
+                  WORKSPACE_X = rect.x;
+                  WORKSPACE_Y = rect.y;
+                }}
+              >
+                <Workspace circuitComponents={currentComponents} connections={currentConnections} heightOffset={WORKSPACE_Y} />
+              </div>
+            ))}
+          </Tabs>
+          <AnalyticsMenu outputReaders={currentComponents.filter((component) => component.kind.kind === "output_reader")} ports={ports} />
+        </div>
+        <InspectionMenu simulate={simulate} />
       </div>
     </div>
   );

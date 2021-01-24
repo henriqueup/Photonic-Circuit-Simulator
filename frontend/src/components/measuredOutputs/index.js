@@ -36,16 +36,19 @@ const MeasuredOutputs = ({ outputs }) => {
         {
           ticks: {
             beginAtZero: true,
+            min: 0,
+            max: 70,
           },
         },
       ],
     },
+    maintainAspectRatio: false,
   };
 
   return (
     <div className="measuredOutputs">
       <span>Measured Outputs</span>
-      <Line data={data} height={300} legend={legendOpts} options={options} />
+      <Line data={data} legend={legendOpts} options={options} />
     </div>
   );
 };

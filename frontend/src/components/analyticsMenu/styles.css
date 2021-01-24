@@ -1,0 +1,9 @@
+.analyticsMenu {
+  height: 35%;
+  border-top: 2px solid;
+  text-align: center;
+}
+.analyticsMenuTitle {
+  display: block;
+  margin: 8px 0px 0px 0px;
+}
