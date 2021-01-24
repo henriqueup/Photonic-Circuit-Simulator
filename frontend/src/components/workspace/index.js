@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 import { Stage, Container } from "@inlet/react-pixi";
 import CircuitComponent from "../circuitComponent";
 import "./styles.css";
-import { Connection } from "../../models/Connection";
 import Grid from "../grid";
+import GenericLine from "../genericLine";
+import { generateColorFromID } from "../../models/Connection";
 
 const STAGE_WIDTH = (window.innerWidth * 7) / 10;
 let STAGE_HEIGHT = (window.innerHeight * 65) / 100;
@@ -20,8 +21,13 @@ const Workspace = ({ circuitComponents, connections, heightOffset }) => {
         {circuitComponents.map((component) => (
           <CircuitComponent circuitComponent={component} key={component.id} />
         ))}
-        {connections.map((connection, i) => (
-          <Connection points={connection.points} key={i} />
+        {connections.map((connection) => (
+          <GenericLine
+            key={connection.originPortID}
+            points={connection.points}
+            lineWidth={2}
+            lineColor={generateColorFromID(connection.originPortID)}
+          />
         ))}
       </Container>
     </Stage>

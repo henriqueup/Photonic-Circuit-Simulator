@@ -1,14 +1,12 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
+import { generateColorFromID } from "../../models/Connection";
 import "./styles.css";
 
 const MeasuredOutputs = ({ outputs }) => {
   const labels = ["", "", "", "", "", "", "", "", "", "", "", "", ""];
   const baseDataset = {
     fill: false,
-    backgroundColor: "#000",
-    borderColor: "#000",
-    pointBackgroundColor: "#000",
     pointBorderWidth: 1,
     pointHoverRadius: 1,
     pointRadius: 1,
@@ -20,6 +18,9 @@ const MeasuredOutputs = ({ outputs }) => {
     datasets: outputs.map((output, i) => {
       return {
         ...baseDataset,
+        backgroundColor: generateColorFromID(output.target),
+        pointBackgroundColor: generateColorFromID(output.target),
+        borderColor: generateColorFromID(output.target),
         label: `Reader ${i + 1}`,
         data: labels.map((_) => output.power),
       };

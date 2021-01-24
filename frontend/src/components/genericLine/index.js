@@ -9,11 +9,12 @@ const GenericLine = PixiComponent("GenericLine", {
     applyDefaultProps(instance, oldProps, newProps);
     instance.clear();
 
-    instance.lineStyle(newProps.lineWidth, newProps.lineColor, newProps.lineAlpha);
+    const color = parseInt(newProps.lineColor.substring(1), 16);
+    instance.lineStyle(newProps.lineWidth, color, newProps.lineAlpha);
 
     const points = newProps.points;
-    instance.moveTo(points[0], points[1]);
-    instance.lineTo(points[2], points[3]);
+    this.moveTo(points[0], points[1]);
+    this.lineTo(points[2], points[3]);
   },
 });
 

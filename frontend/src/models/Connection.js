@@ -1,18 +1,22 @@
-import { applyDefaultProps, PixiComponent } from "@inlet/react-pixi";
-import Line from "./Line";
 import { PORT_WIDTH } from "./Port";
 
 const CONNECTION_PADDING = 4;
 
-export const Connection = PixiComponent("Connection", {
-  create() {
-    return new Line([], 2);
-  },
-  applyProps(instance, oldProps, newProps) {
-    instance.updatePoints(newProps.points);
-    applyDefaultProps(instance, oldProps, newProps);
-  },
-});
+//returns hexadecimal color without #
+export const generateColorFromID = (id) => {
+  const base = parseInt("ffffff", 16);
+  const firstValue = parseInt(id.substring(0, 6), 16);
+  const secondValue = parseInt(id.substring(6, 12), 16);
+  const thirdValue = parseInt(id.substring(12, 18), 16);
+  const fourthValue = parseInt(id.substring(18), 16);
+
+  let resultString = ((((((firstValue * secondValue) % base) * thirdValue) % base) * fourthValue) % base).toString(16);
+  while (resultString.length < 6) {
+    resultString = "0" + resultString;
+  } // Zero pad.
+
+  return "#" + resultString;
+};
 
 const createConnection = (ports, points, originPortID) => {
   const targetX = points[2];
