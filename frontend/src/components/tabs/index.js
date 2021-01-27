@@ -3,7 +3,13 @@ import PropTypes from "prop-types";
 import Tab from "../tab";
 import "./styles.css";
 
-const Tabs = ({ children, activeTab, setActiveTab, setTitle }) => {
+const Tabs = ({
+  children,
+  activeTab,
+  setActiveTab,
+  setTitle,
+  handleCloseTab,
+}) => {
   const handleClick = (id) => {
     setActiveTab(id);
   };
@@ -13,7 +19,18 @@ const Tabs = ({ children, activeTab, setActiveTab, setTitle }) => {
       <ol className="tab-list">
         {children.map((child) => {
           const { label, isSaved, id } = child.props;
-          return <Tab activeTab={activeTab} key={id} id={id} label={label} isSaved={isSaved} onClick={handleClick} setTitle={setTitle} />;
+          return (
+            <Tab
+              activeTab={activeTab}
+              key={id}
+              id={id}
+              label={label}
+              isSaved={isSaved}
+              onClick={handleClick}
+              setTitle={setTitle}
+              handleCloseClick={handleCloseTab}
+            />
+          );
         })}
       </ol>
       <div className="tab-content">

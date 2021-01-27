@@ -22,7 +22,9 @@ async function postCircuit() {
 
 async function resetCircuits() {
   try {
-    const response = await fetch(baseURL + "/circuits/reset", { method: "DELETE" });
+    const response = await fetch(baseURL + "/circuits/reset", {
+      method: "DELETE",
+    });
     return validateResponse(response);
   } catch (error) {
     console.log(error);
@@ -76,7 +78,9 @@ async function listCircuits() {
 
 async function loadCircuit(id) {
   try {
-    const response = await fetch(baseURL + `/circuits/${id}`, { method: "GET" });
+    const response = await fetch(baseURL + `/circuits/${id}`, {
+      method: "GET",
+    });
     return validateResponse(response);
   } catch (error) {
     console.log(error);
@@ -85,11 +89,33 @@ async function loadCircuit(id) {
 
 async function setCurrentCircuit(id) {
   try {
-    const response = await fetch(baseURL + `/circuits/current/${id}`, { method: "PUT"});
+    const response = await fetch(baseURL + `/circuits/current/${id}`, {
+      method: "PUT",
+    });
     return validateResponse(response);
   } catch (error) {
     console.log(error);
   }
 }
 
-export default { postCircuit, resetCircuits, saveCircuit, setCircuitLabel, listCircuits, loadCircuit, setCurrentCircuit };
+async function closeCircuitTab(id) {
+  try {
+    const response = await fetch(baseURL + `/circuits/${id}/close`, {
+      method: "PUT",
+    });
+    return validateResponse(response, ["INEXISTENT_CIRCUIT_ERROR"]);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export default {
+  postCircuit,
+  resetCircuits,
+  saveCircuit,
+  setCircuitLabel,
+  listCircuits,
+  loadCircuit,
+  setCurrentCircuit,
+  closeCircuitTab,
+};

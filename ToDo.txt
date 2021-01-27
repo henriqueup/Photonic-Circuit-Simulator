@@ -1,4 +1,5 @@
--refactor menu components into one component
+-[FRONT] refactor menu components into one component
+-[BACK] refactor errors 
 -add tab close feature
 -temas sass ou less (pre processador CSS)
 -grafico:

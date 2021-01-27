@@ -61,3 +61,12 @@ def set_current_circuit(id):
     return error, 400
 
   return "OK", 200
+
+@circuits_bp.route('/<id>/close', methods=['PUT'])
+def close_circuit(id):
+  error = controller.close_circuit(id)
+
+  if (error is not None):
+    return error.__dict__, 400
+
+  return "OK", 200

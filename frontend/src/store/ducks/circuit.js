@@ -18,6 +18,7 @@ export const Types = {
   LOAD: "circuit/LOAD",
   CREATE_WITH_DATA: "circuit/CREATE_WITH_DATA",
   UPDATE_CONNECTION_POS: "circuit/UPDATE_CONNECTION_POS",
+  DELETE: "circuit/DELETE",
 };
 
 // Reducer
@@ -31,7 +32,9 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.CREATE_WITH_ID:
       return {
         ...state,
-        instances: state.instances.concat([createCircuit(action.payload.id, action.payload.label)]),
+        instances: state.instances.concat([
+          createCircuit(action.payload.id, action.payload.label),
+        ]),
       };
     case Types.SET_CURRENT:
       return {
@@ -57,7 +60,9 @@ export default function reducer(state = INITIAL_STATE, action) {
           content.id === state.current
             ? {
                 ...content,
-                components: content.components.concat([action.payload.component_id]),
+                components: content.components.concat([
+                  action.payload.component_id,
+                ]),
               }
             : content
         ),
@@ -93,7 +98,9 @@ export default function reducer(state = INITIAL_STATE, action) {
           content.id === state.current
             ? {
                 ...content,
-                connections: content.connections.concat([action.payload.connection]),
+                connections: content.connections.concat([
+                  action.payload.connection,
+                ]),
               }
             : content
         ),
@@ -106,7 +113,9 @@ export default function reducer(state = INITIAL_STATE, action) {
             ? {
                 ...content,
                 connections: content.connections.filter(
-                  (connection) => connection.targetPortID !== action.payload.portID && connection.originPortID !== action.payload.portID
+                  (connection) =>
+                    connection.targetPortID !== action.payload.portID &&
+                    connection.originPortID !== action.payload.portID
                 ),
               }
             : content
@@ -129,17 +138,34 @@ export default function reducer(state = INITIAL_STATE, action) {
                   connection.originPortID === action.payload.portID
                     ? {
                         ...connection,
-                        points: [action.payload.newX, action.payload.newY, connection.points[2], connection.points[3]],
+                        points: [
+                          action.payload.newX,
+                          action.payload.newY,
+                          connection.points[2],
+                          connection.points[3],
+                        ],
                       }
                     : connection.targetPortID === action.payload.portID
                     ? {
                         ...connection,
-                        points: [connection.points[0], connection.points[1], action.payload.newX, action.payload.newY],
+                        points: [
+                          connection.points[0],
+                          connection.points[1],
+                          action.payload.newX,
+                          action.payload.newY,
+                        ],
                       }
                     : connection
                 ),
               }
             : content
+        ),
+      };
+    case Types.DELETE:
+      return {
+        ...state,
+        instances: state.instances.filter(
+          (instance) => instance.id !== action.payload.id
         ),
       };
     default:
@@ -286,6 +312,15 @@ export function updateConnectionPos(portID, newX, newY) {
       portID: portID,
       newX: newX,
       newY: newY,
+    },
+  };
+}
+
+export function deleteCircuit(id) {
+  return {
+    type: Types.DELETE,
+    payload: {
+      id: id,
     },
   };
 }

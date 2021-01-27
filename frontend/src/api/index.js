@@ -3,7 +3,7 @@ import componentApi from "./component";
 
 export const baseURL = "http://localhost:5000";
 
-export async function validateResponse(response) {
+export async function validateResponse(response, expectedErrorCodes = null) {
   if (response.ok) {
     let body = {};
     try {
@@ -18,11 +18,26 @@ export async function validateResponse(response) {
       ok: true,
     };
   } else {
-    const text = await response.text();
-    console.log(`API error: ${text}`);
-    return {
-      ok: false,
-    };
+    if (expectedErrorCodes !== null) {
+      let body = {};
+      try {
+        body = await response.json();
+      } catch (error) {
+        if (!/SyntaxError: JSON.parse/i.test(error)) {
+          throw error;
+        }
+      }
+
+      return {
+        ok: expectedErrorCodes.includes(body.code),
+      };
+    } else {
+      const text = await response.text();
+      console.log(`API error: ${text}`);
+      return {
+        ok: false,
+      };
+    }
   }
 }
 

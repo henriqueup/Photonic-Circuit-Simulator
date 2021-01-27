@@ -8,3 +8,12 @@
 .tabTitle:focus {
   outline: none;
 }
+.tabContainer {
+  display: flex;
+}
+.closeIcon {
+  align-self: center;
+}
+.closeIcon:hover {
+  color: rgb(95, 95, 95);
+}

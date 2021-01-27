@@ -1,6 +1,7 @@
 from mongoengine import NotUniqueError
 from app.models.Circuit import Circuit
 from app.database.Circuit import Circuit as CircuitCollection
+from app.resources.errors import Error
 
 class Controller:
   def __init__(self):
@@ -99,4 +100,13 @@ class Controller:
       return f"The circuit with id \'{circuit_id}\' doesn\'t exist."
 
     self.current_circuit = circuit
+    return None
+
+  def close_circuit(self, circuit_id):
+    circuit = self.get_circuit(circuit_id)
+
+    if (circuit is None):
+      return Error.inexistent_circuit_error(circuit_id)
+
+    del self.circuits[self.circuits.index(circuit)]
     return None
