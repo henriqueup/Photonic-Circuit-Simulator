@@ -4,6 +4,8 @@ const CONNECTION_PADDING = 4;
 
 //returns hexadecimal color without #
 export const generateColorFromID = (id) => {
+  if (!id) return "";
+
   const base = parseInt("ffffff", 16);
   const firstValue = parseInt(id.substring(0, 6), 16);
   const secondValue = parseInt(id.substring(6, 12), 16);

@@ -45,17 +45,13 @@ const Tab = ({
     setDisabled(true);
 
     if (dirty) {
-      const tabName = isSaved ? value : value.substring(value.length - 2);
-      setTitle(tabName);
+      setTitle(value);
       setDirty(false);
     }
   };
 
   const handleChange = (event) => {
-    const tabName = isSaved
-      ? event.target.value
-      : event.target.value.substring(value.length - 2);
-    setValue(tabName);
+    setValue(event.target.value);
     setDirty(true);
   };
 
@@ -77,10 +73,11 @@ const Tab = ({
           className="tabTitle"
           readOnly={disabled}
           onBlur={handleBlur}
-          value={isSaved ? value : value + " *"}
+          value={value}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
         />
+        {!isSaved && <span> *</span>}
         <XCircle
           size={16}
           className="closeIcon"

@@ -5,6 +5,7 @@ import { bindActionCreators } from "redux";
 import "./styles.css";
 import { store } from "../../store";
 import InspectionOutputs from "../inspectionOutputs";
+import PowerSourceInspectionOutputs from "../powerSourceInspectionOutputs";
 import { calculateOutputs, deleteSelected } from "../../store/ducks/circuitComponent";
 import { FaTrashAlt } from "react-icons/fa";
 
@@ -46,7 +47,11 @@ const SelectedComponent = ({ selectedComponent, calculateOutputs, deleteComponen
                     <span>Outputs:</span>
                     {selectedComponent.outputs.map((portID) => {
                       const port = getPortData(portID);
-                      return <InspectionOutputs key={port.id} selectedComponent={selectedComponent} port={port} />;
+                      if (selectedComponent.kind.kind !== "power_source") {
+                        return <InspectionOutputs key={port.id} port={port} />;
+                      } else {
+                        return <PowerSourceInspectionOutputs key={port.id} selectedComponent={selectedComponent} port={port} />
+                      }
                     })}
                   </div>
                 ) : null}
