@@ -1,82 +1,136 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { setPower } from '../../store/ducks/circuitComponent';
-import './styles.css';
+import { getPlannedOutput, getPortData } from "../../store";
+import { savePlannedOutputs } from "../../store/ducks/powerSourcePlannedOutputs";
+import "./styles.css";
 
 const createPlannedOutput = (power, time) => {
-    return {
-        power: power,
-        time: time
+  return {
+    power: power,
+    time: time,
+  };
+};
+
+const PowerSourceInspectionOutuputs = ({
+  selectedComponent,
+  savePlannedOutputs,
+}) => {
+  const port = getPortData(selectedComponent.outputs[0]);
+  const [plannedOutputs, setPlannedOutputs] = useState([
+    createPlannedOutput(port.power, 0),
+  ]);
+
+  useEffect(() => {
+    const savedPlannedOutput = getPlannedOutput(selectedComponent.id);
+    if (savedPlannedOutput) {
+      setPlannedOutputs(savedPlannedOutput);
+    } else {
+      setPlannedOutputs([createPlannedOutput(port.power, 0)]);
     }
-}
+  }, [selectedComponent, port]);
 
-const PowerSourceInspectionOutuputs = ({ selectedComponent, port, setPower }) => {
-    const [power, setPowerState] = useState(port.power);
-    const [plannedOutputs, setPlannedOutputs] = useState([createPlannedOutput(port.power, 0)]);
-
-    const handleChange = (event) => {
-        setPowerState(Number.parseFloat(event.target.value));
-    }
-
-    const handleFocus = (event) => {
-        event.target.select();
-    }
-
-    const handleBlur = (event) => {
-        setPowerState(Number.parseFloat(event.target.value).toFixed(4));
-    }
-
-    const handleSaveClick = () => {
-        setPower(selectedComponent.id, port.id, Number.parseFloat(power));
-    }
-
-    const handleKeyDown = (event) => {
-        if (event.key === "Enter") {
-            handleSaveClick();
+  const handleChangeOutput = (event, index) => {
+    setPlannedOutputs(
+      plannedOutputs.map((output, i) => {
+        if (i === index) {
+          return {
+            ...output,
+            power: event.target.value,
+          };
         }
-        //TODO: validate pressed keys to create mask
-        // if (!Number(event.key) && (event.key !== '.' && event.key !== ',')){
-        //   event.preventDefault();
-        // }
-    }
-
-    const handleAddClick = () => {
-        setPlannedOutputs(plannedOutputs.concat([createPlannedOutput(port.power, 0)]));
-    }
-
-    useEffect(() => {
-        setPowerState(port.power);
-    }, [port])
-
-    return (
-        <>
-            {plannedOutputs.map(plannedOutput =>
-                <div className="portPowerItem">
-                    <input
-                        className="powerInput"
-                        value={plannedOutput.power}
-                        onChange={handleChange}
-                        onKeyDown={handleKeyDown}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                        type="number"
-                    />
-                    <input
-                        className="powerInput"
-                        value={plannedOutput.time}
-                        type="number"
-                    />
-                    <button onClick={handleSaveClick}>Save</button>
-                </div>
-            )}
-            <button onClick={handleAddClick}>Add Output Value</button>
-        </>
+        return output;
+      })
     );
-}
+  };
+
+  const handleChangeTime = (event, index) => {
+    setPlannedOutputs(
+      plannedOutputs.map((output, i) => {
+        if (i === index) {
+          return {
+            ...output,
+            time: event.target.value,
+          };
+        }
+        return output;
+      })
+    );
+  };
+
+  const handleFocus = (event) => {
+    event.target.select();
+  };
+
+  const handleBlur = (event) => {
+    // setPowerState(Number.parseFloat(event.target.value).toFixed(4));
+  };
+
+  const handleSaveClick = () => {
+    savePlannedOutputs(selectedComponent.id, plannedOutputs);
+  };
+
+  const handleKeyDown = (event) => {
+    //TODO: navigation enhancements
+    // if (event.key === "Enter") {
+    //   handleSaveClick();
+    // }
+    //TODO: validate pressed keys to create mask
+    // if (!Number(event.key) && (event.key !== '.' && event.key !== ',')){
+    //   event.preventDefault();
+    // }
+  };
+
+  const handleAddClick = () => {
+    setPlannedOutputs(
+      plannedOutputs.concat([createPlannedOutput(port.power, 0)])
+    );
+  };
+
+  return (
+    <div className="powerSourceInspectionContainer">
+      <div className="powerSourceOutputs">
+        <span>Outputs:</span>
+        {plannedOutputs.map((plannedOutput, i) => (
+          <div className="portPowerItem" key={port.id + "output" + i}>
+            <input
+              className="powerInput"
+              value={plannedOutput.power}
+              onChange={(event) => handleChangeOutput(event, i)}
+              onKeyDown={handleKeyDown}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              type="number"
+            />
+          </div>
+        ))}
+        <button className="addOutputButton" onClick={handleAddClick}>
+          Add Value
+        </button>
+      </div>
+      <div className="powerSourceTime">
+        <span>Time:</span>
+        {plannedOutputs.map((plannedOutput, i) => (
+          <div className="portPowerItem" key={port.id + "time" + i}>
+            <input
+              className="powerInput"
+              value={plannedOutput.time}
+              onChange={(event) => handleChangeTime(event, i)}
+              onFocus={handleFocus}
+              type="number"
+            />
+          </div>
+        ))}
+        <button className="saveButton" onClick={handleSaveClick}>
+          Save
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const mapDispatchToProps = (dispatch) => ({
-    setPower: bindActionCreators(setPower, dispatch),
+  savePlannedOutputs: bindActionCreators(savePlannedOutputs, dispatch),
 });
 
 export default connect(null, mapDispatchToProps)(PowerSourceInspectionOutuputs);

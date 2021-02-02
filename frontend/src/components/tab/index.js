@@ -69,6 +69,7 @@ const Tab = ({
       onDoubleClick={handleDoubleClick}
     >
       <div className="tabContainer">
+        {!isSaved && <span> *</span>}
         <input
           className="tabTitle"
           readOnly={disabled}
@@ -77,7 +78,6 @@ const Tab = ({
           onChange={handleChange}
           onKeyDown={handleKeyDown}
         />
-        {!isSaved && <span> *</span>}
         <XCircle
           size={16}
           className="closeIcon"

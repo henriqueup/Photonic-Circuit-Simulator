@@ -3,17 +3,20 @@ import Container from "../container";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import "./styles.css";
-import { store } from "../../store";
+import { getPortData } from "../../store";
 import InspectionOutputs from "../inspectionOutputs";
 import PowerSourceInspectionOutputs from "../powerSourceInspectionOutputs";
-import { calculateOutputs, deleteSelected } from "../../store/ducks/circuitComponent";
+import {
+  calculateOutputs,
+  deleteSelected,
+} from "../../store/ducks/circuitComponent";
 import { FaTrashAlt } from "react-icons/fa";
 
-const SelectedComponent = ({ selectedComponent, calculateOutputs, deleteComponent }) => {
-  const getPortData = (portID) => {
-    return store.getState().port.instances.find((port) => port.id === portID);
-  };
-
+const SelectedComponent = ({
+  selectedComponent,
+  calculateOutputs,
+  deleteComponent,
+}) => {
   return (
     <div>
       <Container
@@ -22,7 +25,9 @@ const SelectedComponent = ({ selectedComponent, calculateOutputs, deleteComponen
           selectedComponent != null ? (
             <div className="selectedData">
               <div className="selectedHeader">
-                <span className="selectedKind">Kind: {selectedComponent.kind.name}</span>
+                <span className="selectedKind">
+                  Kind: {selectedComponent.kind.name}
+                </span>
                 <div className="selectedDelete" onClick={deleteComponent}>
                   <FaTrashAlt />
                 </div>
@@ -42,17 +47,18 @@ const SelectedComponent = ({ selectedComponent, calculateOutputs, deleteComponen
                     })}
                   </div>
                 ) : null}
-                {selectedComponent.outputs && selectedComponent.outputs.length ? (
+                {selectedComponent.outputs &&
+                selectedComponent.outputs.length ? (
                   <div className="selectedPortsValues">
-                    <span>Outputs:</span>
-                    {selectedComponent.outputs.map((portID) => {
-                      const port = getPortData(portID);
-                      if (selectedComponent.kind.kind !== "power_source") {
-                        return <InspectionOutputs key={port.id} port={port} />;
-                      } else {
-                        return <PowerSourceInspectionOutputs key={port.id} selectedComponent={selectedComponent} port={port} />
-                      }
-                    })}
+                    {selectedComponent.kind.kind !== "power_source" ? (
+                      <InspectionOutputs
+                        selectedComponent={selectedComponent}
+                      />
+                    ) : (
+                      <PowerSourceInspectionOutputs
+                        selectedComponent={selectedComponent}
+                      />
+                    )}
                   </div>
                 ) : null}
               </div>
@@ -65,7 +71,16 @@ const SelectedComponent = ({ selectedComponent, calculateOutputs, deleteComponen
                 </div>
               </div>
               {selectedComponent.kind.kind !== "output_reader" ? (
-                <button onClick={() => calculateOutputs(selectedComponent.id, selectedComponent.outputs)}>Calculate Outputs</button>
+                <button
+                  onClick={() =>
+                    calculateOutputs(
+                      selectedComponent.id,
+                      selectedComponent.outputs
+                    )
+                  }
+                >
+                  Calculate Outputs
+                </button>
               ) : null}
             </div>
           ) : null
