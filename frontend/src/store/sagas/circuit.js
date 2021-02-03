@@ -1,11 +1,24 @@
 import { takeEvery, call, put, all } from "redux-saga/effects";
 import api from "../../api";
-import { addConnection, createWithData, createWithID, save, setCurrent, setLabel } from "../ducks/circuit";
+import {
+  addConnection,
+  createWithData,
+  createWithID,
+  save,
+  setCurrent,
+  setLabel,
+} from "../ducks/circuit";
 import { create as createPorts } from "../ducks/port";
 import { create as createConnection } from "../ducks/connection";
 import { store } from "..";
-import { calculateOutputs, confirmCreation, createWithData as createComponentWithData } from "../ducks/circuitComponent";
+import {
+  calculateOutputs,
+  confirmCreation,
+  createWithData as createComponentWithData,
+} from "../ducks/circuitComponent";
 import createPortModels, { PORT_WIDTH } from "../../models/Port";
+import { savePlannedOutputs } from "../ducks/powerSourcePlannedOutputs";
+import { createPlannedOutput } from "../../utils/powerSource";
 
 function* createCircuitSaga() {
   const response = yield call(api.postCircuit);
@@ -35,10 +48,14 @@ export function* watchSaveCircuit() {
 }
 
 function* simulateComponent(currentComponent, components, ports, coverageMap) {
-  const inputs = currentComponent.inputs.map((input) => ports.find((port) => port.id === input)).filter((input) => input.target);
+  const inputs = currentComponent.inputs
+    .map((input) => ports.find((port) => port.id === input))
+    .filter((input) => input.target);
   for (const input of inputs) {
     const targetPort = ports.find((port) => port.id === input.target);
-    const targetComponent = components.find((component) => component.id === targetPort.parentID);
+    const targetComponent = components.find(
+      (component) => component.id === targetPort.parentID
+    );
     if (coverageMap[components.indexOf(targetComponent)] === false) {
       yield* simulateComponent(targetComponent, components, ports, coverageMap);
     }
@@ -47,10 +64,14 @@ function* simulateComponent(currentComponent, components, ports, coverageMap) {
   coverageMap[components.indexOf(currentComponent)] = true;
   yield put(calculateOutputs(currentComponent.id, currentComponent.outputs));
 
-  const outputs = currentComponent.outputs.map((output) => ports.find((port) => port.id === output)).filter((output) => output.target);
+  const outputs = currentComponent.outputs
+    .map((output) => ports.find((port) => port.id === output))
+    .filter((output) => output.target);
   for (const output of outputs) {
     const targetPort = ports.find((port) => port.id === output.target);
-    const targetComponent = components.find((component) => component.id === targetPort.parentID);
+    const targetComponent = components.find(
+      (component) => component.id === targetPort.parentID
+    );
     if (coverageMap[components.indexOf(targetComponent)] === false) {
       yield* simulateComponent(targetComponent, components, ports, coverageMap);
     }
@@ -61,16 +82,27 @@ function* simulateSaga() {
   const kinds = ["swn", "swp", "y_junction", "y_split"];
   const currentStoreState = store.getState();
 
-  const components = currentStoreState.circuitComponent.instances.filter((instance) => kinds.includes(instance.kind.kind));
-  const currentCircuit = currentStoreState.circuit.instances.find((instance) => instance.id === currentStoreState.circuit.current);
-  const currentCircuitComponents = components.filter((component) => currentCircuit.components.includes(component.id));
+  const components = currentStoreState.circuitComponent.instances.filter(
+    (instance) => kinds.includes(instance.kind.kind)
+  );
+  const currentCircuit = currentStoreState.circuit.instances.find(
+    (instance) => instance.id === currentStoreState.circuit.current
+  );
+  const currentCircuitComponents = components.filter((component) =>
+    currentCircuit.components.includes(component.id)
+  );
 
   const ports = currentStoreState.port.instances;
   const coverageMap = currentCircuitComponents.map((i) => false);
 
   while (coverageMap.includes(false)) {
     let currentComponent = currentCircuitComponents[coverageMap.indexOf(false)];
-    yield* simulateComponent(currentComponent, currentCircuitComponents, ports, coverageMap);
+    yield* simulateComponent(
+      currentComponent,
+      currentCircuitComponents,
+      ports,
+      coverageMap
+    );
   }
 }
 
@@ -100,13 +132,35 @@ function* loadCircuitSaga(action) {
     let connections = [];
 
     for (const component of components) {
-      yield put(createPorts(component.inputs, component.id, component.kind, true));
-      yield put(createPorts(component.outputs, component.id, component.kind, false));
+      yield put(
+        createPorts(component.inputs, component.id, component.kind, true)
+      );
+      yield put(
+        createPorts(component.outputs, component.id, component.kind, false)
+      );
 
-      const inputModels = createPortModels(component.inputs, component.id, component.kind, true, component.x, component.y);
-      const outputModels = createPortModels(component.outputs, component.id, component.kind, false, component.x, component.y);
-      inputsWithConnection = inputsWithConnection.concat(inputModels.filter((port) => port.target !== null));
-      outputsWithConnection = outputsWithConnection.concat(outputModels.filter((port) => port.target !== null));
+      const inputModels = createPortModels(
+        component.inputs,
+        component.id,
+        component.kind,
+        true,
+        component.x,
+        component.y
+      );
+      const outputModels = createPortModels(
+        component.outputs,
+        component.id,
+        component.kind,
+        false,
+        component.x,
+        component.y
+      );
+      inputsWithConnection = inputsWithConnection.concat(
+        inputModels.filter((port) => port.target !== null)
+      );
+      outputsWithConnection = outputsWithConnection.concat(
+        outputModels.filter((port) => port.target !== null)
+      );
 
       const componentData = {
         ...component,
@@ -115,10 +169,18 @@ function* loadCircuitSaga(action) {
       };
       yield put(createComponentWithData(componentData));
       yield put(confirmCreation(component.id));
+
+      if (component.kind === "power_source") {
+        yield put(
+          savePlannedOutputs(component.id, [createPlannedOutput(0, 0)])
+        );
+      }
     }
 
     for (const input of inputsWithConnection) {
-      const targetPort = outputsWithConnection.find((output) => output.id === input.target);
+      const targetPort = outputsWithConnection.find(
+        (output) => output.id === input.target
+      );
 
       const points = [
         targetPort.worldX + PORT_WIDTH / 2,
@@ -127,7 +189,11 @@ function* loadCircuitSaga(action) {
         input.worldY + PORT_WIDTH / 2,
       ];
       yield put(createConnection(points, targetPort.id, input.id));
-      connections.push({ points: points, originPortID: targetPort.id, targetPortID: input.id });
+      connections.push({
+        points: points,
+        originPortID: targetPort.id,
+        targetPortID: input.id,
+      });
     }
 
     const data = {

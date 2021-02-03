@@ -1,34 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { getPlannedOutput, getPortData } from "../../store";
+import { getPlannedOutput } from "../../store";
 import { savePlannedOutputs } from "../../store/ducks/powerSourcePlannedOutputs";
+import { createPlannedOutput } from "../../utils/powerSource";
 import "./styles.css";
-
-const createPlannedOutput = (power, time) => {
-  return {
-    power: power,
-    time: time,
-  };
-};
 
 const PowerSourceInspectionOutuputs = ({
   selectedComponent,
   savePlannedOutputs,
 }) => {
-  const port = getPortData(selectedComponent.outputs[0]);
-  const [plannedOutputs, setPlannedOutputs] = useState([
-    createPlannedOutput(port.power, 0),
-  ]);
+  const [plannedOutputs, setPlannedOutputs] = useState([]);
 
   useEffect(() => {
     const savedPlannedOutput = getPlannedOutput(selectedComponent.id);
-    if (savedPlannedOutput) {
-      setPlannedOutputs(savedPlannedOutput);
-    } else {
-      setPlannedOutputs([createPlannedOutput(port.power, 0)]);
+
+    if (!savedPlannedOutput) {
+      console.log("Error: power source should have planned outputs saved.");
     }
-  }, [selectedComponent, port]);
+
+    setPlannedOutputs(savedPlannedOutput);
+  }, [selectedComponent]);
 
   const handleChangeOutput = (event, index) => {
     setPlannedOutputs(
@@ -82,9 +74,7 @@ const PowerSourceInspectionOutuputs = ({
   };
 
   const handleAddClick = () => {
-    setPlannedOutputs(
-      plannedOutputs.concat([createPlannedOutput(port.power, 0)])
-    );
+    setPlannedOutputs(plannedOutputs.concat([createPlannedOutput(0, 0)]));
   };
 
   return (
@@ -92,7 +82,10 @@ const PowerSourceInspectionOutuputs = ({
       <div className="powerSourceOutputs">
         <span>Outputs:</span>
         {plannedOutputs.map((plannedOutput, i) => (
-          <div className="portPowerItem" key={port.id + "output" + i}>
+          <div
+            className="portPowerItem"
+            key={selectedComponent.id + "output" + i}
+          >
             <input
               className="powerInput"
               value={plannedOutput.power}
@@ -111,12 +104,16 @@ const PowerSourceInspectionOutuputs = ({
       <div className="powerSourceTime">
         <span>Time:</span>
         {plannedOutputs.map((plannedOutput, i) => (
-          <div className="portPowerItem" key={port.id + "time" + i}>
+          <div
+            className="portPowerItem"
+            key={selectedComponent.id + "time" + i}
+          >
             <input
               className="powerInput"
               value={plannedOutput.time}
               onChange={(event) => handleChangeTime(event, i)}
               onFocus={handleFocus}
+              disabled={i === 0}
               type="number"
             />
           </div>

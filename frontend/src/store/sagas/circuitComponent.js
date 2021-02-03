@@ -1,10 +1,31 @@
-import { takeEvery, call, put, all, actionChannel, take } from "redux-saga/effects";
+import {
+  takeEvery,
+  call,
+  put,
+  all,
+  actionChannel,
+  take,
+} from "redux-saga/effects";
 import { store } from "..";
 import api from "../../api";
 import { addComponent, setSaved } from "../ducks/circuit";
-import { confirmCreation, confirmSelectedDelete, createWithData, deselect, setOutputsUpToDate, setSelected } from "../ducks/circuitComponent";
+import {
+  confirmCreation,
+  confirmSelectedDelete,
+  createWithData,
+  deselect,
+  setOutputsUpToDate,
+  setSelected,
+} from "../ducks/circuitComponent";
 import { deleteConnection } from "../ducks/connection";
-import { changePower, create as createPorts, deletePort, setWorldTransform } from "../ducks/port";
+import {
+  changePower,
+  create as createPorts,
+  deletePort,
+  setWorldTransform,
+} from "../ducks/port";
+import { savePlannedOutputs } from "../ducks/powerSourcePlannedOutputs";
+import { createPlannedOutput } from "../../utils/powerSource";
 
 export function* helloSaga() {
   yield console.log("Sagas working!");
@@ -25,8 +46,28 @@ function* createCircuitComponentSaga(action) {
     yield put(createWithData(data));
     yield put(addComponent(circuitComponent.id));
 
-    yield put(createPorts(circuitComponent.inputs, circuitComponent.id, circuitComponent.kind, true));
-    yield put(createPorts(circuitComponent.outputs, circuitComponent.id, circuitComponent.kind, false));
+    yield put(
+      createPorts(
+        circuitComponent.inputs,
+        circuitComponent.id,
+        circuitComponent.kind,
+        true
+      )
+    );
+    yield put(
+      createPorts(
+        circuitComponent.outputs,
+        circuitComponent.id,
+        circuitComponent.kind,
+        false
+      )
+    );
+
+    if (circuitComponent.kind === "power_source") {
+      yield put(
+        savePlannedOutputs(circuitComponent.id, [createPlannedOutput(0, 0)])
+      );
+    }
 
     yield put(confirmCreation(circuitComponent.id));
     yield put(setSaved(false));
@@ -38,13 +79,30 @@ export function* watchCreateCircuitComponent() {
 }
 
 function* updatePosSaga(action) {
-  const response = yield call(api.setPosition, action.payload.id, action.payload.x, action.payload.y);
+  const response = yield call(
+    api.setPosition,
+    action.payload.id,
+    action.payload.x,
+    action.payload.y
+  );
 
   if (response.ok) {
-    const circuitComponent = store.getState().circuitComponent.instances.find((instance) => instance.id === action.payload.id);
+    const circuitComponent = store
+      .getState()
+      .circuitComponent.instances.find(
+        (instance) => instance.id === action.payload.id
+      );
 
-    yield all(circuitComponent.inputs.map((portID) => put(setWorldTransform(portID, action.payload.x, action.payload.y))));
-    yield all(circuitComponent.outputs.map((portID) => put(setWorldTransform(portID, action.payload.x, action.payload.y))));
+    yield all(
+      circuitComponent.inputs.map((portID) =>
+        put(setWorldTransform(portID, action.payload.x, action.payload.y))
+      )
+    );
+    yield all(
+      circuitComponent.outputs.map((portID) =>
+        put(setWorldTransform(portID, action.payload.x, action.payload.y))
+      )
+    );
 
     yield put(setSaved(false));
   }
@@ -68,7 +126,11 @@ export function* watchSelect() {
 }
 
 function* setPowerSaga(action) {
-  const response = yield call(api.setPower, action.payload.componentID, action.payload.power);
+  const response = yield call(
+    api.setPower,
+    action.payload.componentID,
+    action.payload.power
+  );
 
   if (response.ok) {
     yield put(changePower(action.payload.portID, action.payload.power));
@@ -86,7 +148,11 @@ function* calculateOutputsSaga(action) {
     const body = response.body;
 
     if (body && body.outputs && body.outputs.length) {
-      yield all(body.outputs.map((power, i) => put(changePower(action.payload.outputIDs[i], power))));
+      yield all(
+        body.outputs.map((power, i) =>
+          put(changePower(action.payload.outputIDs[i], power))
+        )
+      );
       yield put(setOutputsUpToDate(action.payload.id, true));
     } else {
       console.log(`Invalid responseBody: ${body}`);
