@@ -20,6 +20,11 @@ import {
 import createPortModels, { PORT_WIDTH } from "../../models/Port";
 import { savePlannedOutputs } from "../ducks/powerSourcePlannedOutputs";
 import { createPlannedOutput } from "../../utils/powerSource";
+import {
+  measureSimulationValues,
+  endSimulation,
+  startSimulation,
+} from "../ducks/simulation";
 
 function* createCircuitSaga() {
   const response = yield call(api.postCircuit);
@@ -80,6 +85,8 @@ function* simulateComponent(currentComponent, components, ports, coverageMap) {
 }
 
 function* simulateSaga() {
+  yield put(startSimulation());
+
   const kinds = ["swn", "swp", "y_junction", "y_split"];
   const currentStoreState = store.getState();
 
@@ -140,12 +147,16 @@ function* simulateSaga() {
       );
     }
 
+    yield put(measureSimulationValues(nextTime));
+
     timesMapping
       .filter((item) => item.times.includes(nextTime))
       .forEach((item) => {
         item.times = item.times.slice(1);
       });
   }
+
+  yield put(endSimulation());
 }
 
 export function* watchSimulate() {

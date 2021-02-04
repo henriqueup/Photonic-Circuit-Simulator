@@ -12,11 +12,11 @@ import {
   watchCreateCircuitComponent,
   watchDeleteSelected,
   watchSelect,
-  watchCalculateOutputsAndSetPower,
+  watchCalculateOutputs_SetPower_MeasureSimulationValues,
   watchUpdatePos,
 } from "./circuitComponent";
 import { watchCreateConnection, watchDeleteConnection } from "./connection";
-import { watchChangePower, watchSetWorldTransform } from "./port";
+import { watchSetWorldTransform } from "./port";
 import { watchSavePlannedOutputs } from "./powerSourcePlannedOutputs";
 
 export default function* rootSaga() {
@@ -29,8 +29,7 @@ export default function* rootSaga() {
     watchUpdatePos(),
     watchSetWorldTransform(),
     watchSelect(),
-    watchChangePower(),
-    watchCalculateOutputsAndSetPower(),
+    watchCalculateOutputs_SetPower_MeasureSimulationValues(),
     watchSimulate(),
     watchDeleteSelected(),
     watchDeleteConnection(),

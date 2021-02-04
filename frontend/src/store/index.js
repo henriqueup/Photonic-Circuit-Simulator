@@ -6,6 +6,7 @@ import circuit from "./ducks/circuit";
 import port from "./ducks/port";
 import connection from "./ducks/connection";
 import powerSourcePlannedOutputs from "./ducks/powerSourcePlannedOutputs";
+import simulation from "./ducks/simulation";
 
 const reducers = combineReducers({
   circuitComponent,
@@ -13,6 +14,7 @@ const reducers = combineReducers({
   port,
   connection,
   powerSourcePlannedOutputs,
+  simulation,
 });
 
 export default reducers;
@@ -43,4 +45,19 @@ export const getCircuitComponentData = (id) => {
   return store
     .getState()
     .circuitComponent.instances.find((instance) => instance.id === id);
+};
+
+export const getCurrentReaderValues = () => {
+  const outputReaders = store
+    .getState()
+    .circuitComponent.instances.filter(
+      (instance) => instance.kind.kind === "output_reader"
+    );
+
+  return store
+    .getState()
+    .port.instances.filter((port) =>
+      outputReaders.map((reader) => reader.id).includes(port.parentID)
+    )
+    .map((port) => port.power);
 };

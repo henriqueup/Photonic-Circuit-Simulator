@@ -6,7 +6,7 @@ import {
   actionChannel,
   take,
 } from "redux-saga/effects";
-import { store } from "..";
+import { getCurrentReaderValues, getPortData, store } from "..";
 import api from "../../api";
 import { addComponent, setSaved } from "../ducks/circuit";
 import {
@@ -26,6 +26,7 @@ import {
 } from "../ducks/port";
 import { savePlannedOutputs } from "../ducks/powerSourcePlannedOutputs";
 import { createPlannedOutput } from "../../utils/powerSource";
+import { addSimulationValues } from "../ducks/simulation";
 
 export function* helloSaga() {
   yield console.log("Sagas working!");
@@ -133,7 +134,12 @@ function* setPowerSaga(action) {
   );
 
   if (response.ok) {
-    yield put(changePower(action.payload.portID, action.payload.power));
+    const port = getPortData(action.payload.portID);
+
+    yield put(changePower(port.id, action.payload.power));
+    if (port.target) {
+      yield put(changePower(port.target, action.payload.power));
+    }
   }
 }
 
@@ -144,11 +150,15 @@ function* calculateOutputsSaga(action) {
     const body = response.body;
 
     if (body && body.outputs && body.outputs.length) {
-      yield all(
-        body.outputs.map((power, i) =>
-          put(changePower(action.payload.outputIDs[i], power))
-        )
-      );
+      for (let i = 0; i < body.outputs.length; i++) {
+        const port = getPortData(action.payload.outputIDs[i]);
+
+        yield put(changePower(port.id, body.outputs[i]));
+        if (port.target) {
+          yield put(changePower(port.target, body.outputs[i]));
+        }
+      }
+
       yield put(setOutputsUpToDate(action.payload.id, true));
     } else {
       console.log(`Invalid responseBody: ${body}`);
@@ -156,19 +166,31 @@ function* calculateOutputsSaga(action) {
   }
 }
 
-export function* watchCalculateOutputsAndSetPower() {
+function* measureSimulationValuesSaga(action) {
+  const values = getCurrentReaderValues();
+
+  yield put(addSimulationValues(action.payload.time, values));
+}
+
+export function* watchCalculateOutputs_SetPower_MeasureSimulationValues() {
   const channel = yield actionChannel([
     "circuitComponent/CALCULATE_OUTPUTS",
     "circuitComponent/SET_POWER",
+    "simulation/MEASURE_VALUES",
   ]);
+
   while (true) {
     const action = yield take(channel);
+
     switch (action.type) {
       case "circuitComponent/CALCULATE_OUTPUTS":
         yield call(calculateOutputsSaga, action);
         break;
       case "circuitComponent/SET_POWER":
         yield call(setPowerSaga, action);
+        break;
+      case "simulation/MEASURE_VALUES":
+        yield call(measureSimulationValuesSaga, action);
         break;
       default:
         break;
