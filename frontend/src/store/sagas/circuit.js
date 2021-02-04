@@ -15,6 +15,7 @@ import {
   calculateOutputs,
   confirmCreation,
   createWithData as createComponentWithData,
+  setPower,
 } from "../ducks/circuitComponent";
 import createPortModels, { PORT_WIDTH } from "../../models/Port";
 import { savePlannedOutputs } from "../ducks/powerSourcePlannedOutputs";
@@ -93,16 +94,57 @@ function* simulateSaga() {
   );
 
   const ports = currentStoreState.port.instances;
-  const coverageMap = currentCircuitComponents.map((i) => false);
 
-  while (coverageMap.includes(false)) {
-    let currentComponent = currentCircuitComponents[coverageMap.indexOf(false)];
-    yield* simulateComponent(
-      currentComponent,
-      currentCircuitComponents,
-      ports,
-      coverageMap
-    );
+  const allPlannedOutputs =
+    currentStoreState.powerSourcePlannedOutputs.instances;
+  const timesMapping = allPlannedOutputs.map((instance) => {
+    return {
+      id: instance.id,
+      times: instance.plannedOutputs
+        .map((output) => output.time)
+        .sort((a, b) => a - b),
+    };
+  });
+
+  while (timesMapping.find((item) => item.times.length)) {
+    const nextTime = timesMapping
+      .filter((item) => item.times.length)
+      .map((item) => item.times[0])
+      .reduce((a, b) => (a < b ? a : b));
+    const idsToUpdate = timesMapping
+      .filter((item) => item.times.includes(nextTime))
+      .map((item) => item.id);
+
+    for (const id of idsToUpdate) {
+      const power = allPlannedOutputs
+        .find((item) => item.id === id)
+        .plannedOutputs.find((output) => output.time === nextTime).power;
+
+      const portID = currentStoreState.circuitComponent.instances.find(
+        (instance) => instance.id === id
+      ).outputs[0];
+
+      yield put(setPower(id, portID, power));
+    }
+
+    const coverageMap = currentCircuitComponents.map((i) => false);
+
+    while (coverageMap.includes(false)) {
+      let currentComponent =
+        currentCircuitComponents[coverageMap.indexOf(false)];
+      yield* simulateComponent(
+        currentComponent,
+        currentCircuitComponents,
+        ports,
+        coverageMap
+      );
+    }
+
+    timesMapping
+      .filter((item) => item.times.includes(nextTime))
+      .forEach((item) => {
+        item.times = item.times.slice(1);
+      });
   }
 }
 

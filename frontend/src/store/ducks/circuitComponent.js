@@ -27,7 +27,9 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.CREATE_WITH_DATA:
       return {
         ...state,
-        instances: state.instances.concat([createCircuitComponent(action.payload.data)]),
+        instances: state.instances.concat([
+          createCircuitComponent(action.payload.data),
+        ]),
       };
     case Types.UPDATE_POS:
       return {
@@ -62,7 +64,9 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.SET_SELECTED:
       return {
         ...state,
-        selected: state.instances.find((instance) => instance.id === action.payload.id),
+        selected: state.instances.find(
+          (instance) => instance.id === action.payload.id
+        ),
         instances: state.instances.map((content) =>
           content.id === action.payload.id
             ? {
@@ -97,11 +101,17 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.SET_OUTPUTS_UPTODATE:
       return {
         ...state,
-        selected: {
-          ...state.selected,
-          outputsUpToDate:
-            action.payload.id === state.selected.id ? action.payload.outputsUpToDate : state.selected ? state.selected.outputsUpToDate : false,
-        },
+        selected: state.selected
+          ? {
+              ...state.selected,
+              outputsUpToDate:
+                action.payload.id === state.selected.id
+                  ? action.payload.outputsUpToDate
+                  : state.selected
+                  ? state.selected.outputsUpToDate
+                  : false,
+            }
+          : null,
         instances: state.instances.map((content) =>
           content.id === action.payload.id
             ? {
@@ -115,7 +125,9 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         selected: null,
-        instances: state.instances.filter((content) => content.id !== state.selected.id),
+        instances: state.instances.filter(
+          (content) => content.id !== state.selected.id
+        ),
       };
     default:
       return state;

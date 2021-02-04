@@ -1,4 +1,4 @@
-import { put, takeEvery } from "redux-saga/effects";
+import { put, takeEvery, take, call, actionChannel } from "redux-saga/effects";
 import { store } from "..";
 import { PORT_WIDTH } from "../../models/Port";
 import { setOutputsUpToDate } from "../ducks/circuitComponent";
@@ -7,7 +7,10 @@ import { updateConnectionPos as updateCircuitConnectionPos } from "../ducks/circ
 import { changePower } from "../ducks/port";
 
 function* setWorldTransformSaga(action) {
-  const port = store.getState().port.instances.find((port) => port.id === action.payload.id);
+  const port = store
+    .getState()
+    .port.instances.find((port) => port.id === action.payload.id);
+
   if (port.target) {
     const newX = port.worldX + PORT_WIDTH / 2;
     const newY = port.worldY + PORT_WIDTH / 2;
@@ -22,18 +25,29 @@ export function* watchSetWorldTransform() {
 
 function* changePowerSaga(action) {
   //port which is changing power
-  const originPort = store.getState().port.instances.find((port) => port.id === action.payload.id);
-  yield put(setOutputsUpToDate(originPort.parentID, false));
+  const originPort = store
+    .getState()
+    .port.instances.find((port) => port.id === action.payload.id);
 
-  if (originPort.target) {
-    const targetPort = store.getState().port.instances.find((port) => port.id === originPort.target);
+  if (originPort) {
+    yield put(setOutputsUpToDate(originPort.parentID, false));
 
-    if (targetPort.power !== action.payload.power) {
-      yield put(changePower(targetPort.id, action.payload.power));
+    if (originPort.target) {
+      const targetPort = store
+        .getState()
+        .port.instances.find((port) => port.id === originPort.target);
+
+      if (targetPort.power !== action.payload.power) {
+        yield put(changePower(targetPort.id, action.payload.power));
+      }
     }
   }
 }
 
 export function* watchChangePower() {
-  yield takeEvery("port/CHANGE_POWER", changePowerSaga);
+  const channel = yield actionChannel("port/CHANGE_POWER");
+  while (true) {
+    const action = yield take(channel);
+    yield call(changePowerSaga, action);
+  }
 }

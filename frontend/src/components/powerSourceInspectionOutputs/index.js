@@ -28,7 +28,7 @@ const PowerSourceInspectionOutuputs = ({
         if (i === index) {
           return {
             ...output,
-            power: event.target.value,
+            power: parseFloat(event.target.value),
           };
         }
         return output;
@@ -42,7 +42,7 @@ const PowerSourceInspectionOutuputs = ({
         if (i === index) {
           return {
             ...output,
-            time: event.target.value,
+            time: parseFloat(event.target.value),
           };
         }
         return output;
@@ -58,8 +58,20 @@ const PowerSourceInspectionOutuputs = ({
     // setPowerState(Number.parseFloat(event.target.value).toFixed(4));
   };
 
+  const validatePlannedOutputs = () => {
+    const uniqueOutputs = new Set(plannedOutputs.map((output) => output.time));
+    if (uniqueOutputs.size !== plannedOutputs.length) {
+      alert("Every output planned for a power source must have a unique time.");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSaveClick = () => {
-    savePlannedOutputs(selectedComponent.id, plannedOutputs);
+    if (validatePlannedOutputs()) {
+      savePlannedOutputs(selectedComponent.id, plannedOutputs);
+    }
   };
 
   const handleKeyDown = (event) => {

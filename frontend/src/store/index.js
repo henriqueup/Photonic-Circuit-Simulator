@@ -38,3 +38,9 @@ export const getPlannedOutput = (powerSourceID) => {
       (instance) => instance.id === powerSourceID
     )?.plannedOutputs;
 };
+
+export const getCircuitComponentData = (id) => {
+  return store
+    .getState()
+    .circuitComponent.instances.find((instance) => instance.id === id);
+};

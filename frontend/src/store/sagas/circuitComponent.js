@@ -137,10 +137,6 @@ function* setPowerSaga(action) {
   }
 }
 
-export function* watchSetPower() {
-  yield takeEvery("circuitComponent/SET_POWER", setPowerSaga);
-}
-
 function* calculateOutputsSaga(action) {
   const response = yield call(api.calculateOutputs, action.payload.id);
 
@@ -160,11 +156,23 @@ function* calculateOutputsSaga(action) {
   }
 }
 
-export function* watchCalculateOutputs() {
-  const channel = yield actionChannel("circuitComponent/CALCULATE_OUTPUTS");
+export function* watchCalculateOutputsAndSetPower() {
+  const channel = yield actionChannel([
+    "circuitComponent/CALCULATE_OUTPUTS",
+    "circuitComponent/SET_POWER",
+  ]);
   while (true) {
     const action = yield take(channel);
-    yield call(calculateOutputsSaga, action);
+    switch (action.type) {
+      case "circuitComponent/CALCULATE_OUTPUTS":
+        yield call(calculateOutputsSaga, action);
+        break;
+      case "circuitComponent/SET_POWER":
+        yield call(setPowerSaga, action);
+        break;
+      default:
+        break;
+    }
   }
 }
 
