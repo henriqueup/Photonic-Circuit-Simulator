@@ -24,6 +24,7 @@ import {
   measureSimulationValues,
   endSimulation,
   startSimulation,
+  createSimulation,
 } from "../ducks/simulation";
 
 function* createCircuitSaga() {
@@ -34,6 +35,7 @@ function* createCircuitSaga() {
 
     yield put(createWithID(body.id));
     yield put(setCurrent(body.id));
+    yield put(createSimulation(body.id));
   }
 }
 
@@ -257,6 +259,7 @@ function* loadCircuitSaga(action) {
     };
     yield put(createWithData(data));
     yield all(connections.map((connection) => put(addConnection(connection))));
+    yield put(createSimulation(data.id));
   }
 }
 

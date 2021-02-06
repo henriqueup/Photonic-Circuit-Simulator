@@ -48,16 +48,26 @@ export const getCircuitComponentData = (id) => {
 };
 
 export const getCurrentReaderValues = () => {
-  const outputReaders = store
-    .getState()
-    .circuitComponent.instances.filter(
-      (instance) => instance.kind.kind === "output_reader"
-    );
+  const currentStoreState = store.getState();
+  const currentCircuitID = currentStoreState.circuit.current;
 
-  return store
-    .getState()
-    .port.instances.filter((port) =>
+  const currentCircuitComponentsIDs = currentStoreState.circuit.instances.find(
+    (circuit) => circuit.id === currentCircuitID
+  ).components;
+
+  const outputReaders = currentStoreState.circuitComponent.instances.filter(
+    (instance) =>
+      instance.kind.kind === "output_reader" &&
+      currentCircuitComponentsIDs.includes(instance.id)
+  );
+
+  return currentStoreState.port.instances
+    .filter((port) =>
       outputReaders.map((reader) => reader.id).includes(port.parentID)
     )
     .map((port) => port.power);
+};
+
+export const getCurrentCircuitID = () => {
+  return store.getState().circuit.current;
 };

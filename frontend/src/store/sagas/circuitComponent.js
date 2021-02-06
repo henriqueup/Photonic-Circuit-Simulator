@@ -6,7 +6,12 @@ import {
   actionChannel,
   take,
 } from "redux-saga/effects";
-import { getCurrentReaderValues, getPortData, store } from "..";
+import {
+  getCurrentCircuitID,
+  getCurrentReaderValues,
+  getPortData,
+  store,
+} from "..";
 import api from "../../api";
 import { addComponent, setSaved } from "../ducks/circuit";
 import {
@@ -168,8 +173,9 @@ function* calculateOutputsSaga(action) {
 
 function* measureSimulationValuesSaga(action) {
   const values = getCurrentReaderValues();
+  const currentCircuitID = getCurrentCircuitID();
 
-  yield put(addSimulationValues(action.payload.time, values));
+  yield put(addSimulationValues(action.payload.time, values, currentCircuitID));
 }
 
 export function* watchCalculateOutputs_SetPower_MeasureSimulationValues() {

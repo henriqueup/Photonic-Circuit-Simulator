@@ -4,12 +4,13 @@ export const Types = {
   END: "simulation/END",
   ADD_VALUES: "simulation/ADD_VALUES",
   MEASURE_VALUES: "simulation/MEASURE_VALUES",
+  CREATE: "simulation/CREATE",
 };
 
 // Reducer
 const INITIAL_STATE = {
   onGoing: false,
-  measuredValues: [],
+  instances: [],
 };
 
 export default function reducer(state = INITIAL_STATE, action) {
@@ -18,7 +19,15 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         onGoing: true,
-        measuredValues: [],
+        instances: state.instances.map((instance) => {
+          if (instance.circuitID === action.payload.currentCircuitID) {
+            return {
+              ...instance,
+              measuredValues: [],
+            };
+          }
+          return instance;
+        }),
       };
     case Types.END:
       return {
@@ -28,10 +37,28 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.ADD_VALUES:
       return {
         ...state,
-        measuredValues: state.measuredValues.concat({
-          time: action.payload.time,
-          values: action.payload.values,
+        instances: state.instances.map((instance) => {
+          if (instance.circuitID === action.payload.currentCircuitID) {
+            return {
+              ...instance,
+              measuredValues: instance.measuredValues.concat({
+                time: action.payload.time,
+                values: action.payload.values,
+              }),
+            };
+          }
+          return instance;
         }),
+      };
+    case Types.CREATE:
+      return {
+        ...state,
+        instances: state.instances.concat([
+          {
+            circuitID: action.payload.circuitID,
+            measuredValues: [],
+          },
+        ]),
       };
     default:
       return state;
@@ -39,10 +66,12 @@ export default function reducer(state = INITIAL_STATE, action) {
 }
 
 // Action Creators
-export function startSimulation() {
+export function startSimulation(currentCircuitID) {
   return {
     type: Types.START,
-    payload: {},
+    payload: {
+      currentCircuitID: currentCircuitID,
+    },
   };
 }
 
@@ -53,12 +82,13 @@ export function endSimulation() {
   };
 }
 
-export function addSimulationValues(time, values) {
+export function addSimulationValues(time, values, currentCircuitID) {
   return {
     type: Types.ADD_VALUES,
     payload: {
       time: time,
       values: values,
+      currentCircuitID: currentCircuitID,
     },
   };
 }
@@ -68,6 +98,15 @@ export function measureSimulationValues(time) {
     type: Types.MEASURE_VALUES,
     payload: {
       time: time,
+    },
+  };
+}
+
+export function createSimulation(circuitID) {
+  return {
+    type: Types.CREATE,
+    payload: {
+      circuitID: circuitID,
     },
   };
 }
