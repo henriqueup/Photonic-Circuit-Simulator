@@ -8,7 +8,7 @@ import {
 } from "redux-saga/effects";
 import {
   getCurrentCircuitID,
-  getCurrentReaderValues,
+  getCurrentReaderValuesAndIDs,
   getPortData,
   store,
 } from "..";
@@ -172,7 +172,7 @@ function* calculateOutputsSaga(action) {
 }
 
 function* measureSimulationValuesSaga(action) {
-  const values = getCurrentReaderValues();
+  const values = getCurrentReaderValuesAndIDs();
   const currentCircuitID = getCurrentCircuitID();
 
   yield put(addSimulationValues(action.payload.time, values, currentCircuitID));

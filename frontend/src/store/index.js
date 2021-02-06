@@ -47,7 +47,7 @@ export const getCircuitComponentData = (id) => {
     .circuitComponent.instances.find((instance) => instance.id === id);
 };
 
-export const getCurrentReaderValues = () => {
+export const getCurrentReaderValuesAndIDs = () => {
   const currentStoreState = store.getState();
   const currentCircuitID = currentStoreState.circuit.current;
 
@@ -65,7 +65,12 @@ export const getCurrentReaderValues = () => {
     .filter((port) =>
       outputReaders.map((reader) => reader.id).includes(port.parentID)
     )
-    .map((port) => port.power);
+    .map((port) => {
+      return {
+        id: port.target,
+        power: port.power,
+      };
+    });
 };
 
 export const getCurrentCircuitID = () => {

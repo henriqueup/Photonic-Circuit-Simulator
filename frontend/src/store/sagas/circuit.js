@@ -10,7 +10,7 @@ import {
 } from "../ducks/circuit";
 import { create as createPorts } from "../ducks/port";
 import { create as createConnection } from "../ducks/connection";
-import { store } from "..";
+import { getCurrentCircuitID, store } from "..";
 import {
   calculateOutputs,
   confirmCreation,
@@ -87,7 +87,7 @@ function* simulateComponent(currentComponent, components, ports, coverageMap) {
 }
 
 function* simulateSaga() {
-  yield put(startSimulation());
+  yield put(startSimulation(getCurrentCircuitID()));
 
   const kinds = ["swn", "swp", "y_junction", "y_split"];
   const currentStoreState = store.getState();
