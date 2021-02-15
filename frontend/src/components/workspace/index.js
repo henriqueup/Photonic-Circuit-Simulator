@@ -15,7 +15,12 @@ const Workspace = ({ circuitComponents, connections, heightOffset }) => {
   }, [heightOffset]);
 
   return (
-    <Stage width={STAGE_WIDTH} height={STAGE_HEIGHT} options={{ antialias: true, backgroundColor: 0xffffff }}>
+    <Stage
+      width={STAGE_WIDTH}
+      height={STAGE_HEIGHT}
+      options={{ antialias: true, backgroundColor: 0xffffff }}
+      style={{ width: "100%" }}
+    >
       <Container>
         <Grid stageHeight={STAGE_HEIGHT} stageWidth={STAGE_WIDTH} />
         {circuitComponents.map((component) => (

@@ -1,9 +1,7 @@
 -[FRONT] refactor menu components into one component
 -[BACK] refactor errors 
--add tab close feature
 -temas sass ou less (pre processador CSS)
 -grafico:
   -jogo de cores vermelho e azul (desligado e ligado)
-  -eixo constante (0-70 talvez) DONE
   -habilitar e desabilitar valores
   -incluir conexões (clicando)

@@ -20,6 +20,38 @@ export const generateColorFromID = (id) => {
   return "#" + resultString;
 };
 
+export const generateColorFromPower = (power) => {
+  let color = "";
+
+  switch (power) {
+    case power < 10:
+      color = "ff0000"
+      break;
+    case power < 20:
+      color = "ff4400"
+      break;
+    case power < 30:
+      color = "ff8800"
+      break;
+    case power < 40:
+      color = "ffff00"
+      break;
+    case power < 50:
+      color = "88ff00"
+      break;
+    case power < 60:
+      color = "44ff00"
+      break;
+    case power >= 60:
+      color = "00ff00"
+      break;
+    default:
+      break;
+  }
+
+  return "#" + color;
+}
+
 const createConnection = (ports, points, originPortID) => {
   const targetX = points[2];
   const targetY = points[3];

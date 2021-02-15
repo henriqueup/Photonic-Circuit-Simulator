@@ -69,6 +69,7 @@ export const getCurrentReaderValuesAndIDs = () => {
       return {
         id: port.target,
         power: port.power,
+        label: outputReaders.find(reader => reader.id === port.parentID).label
       };
     });
 };

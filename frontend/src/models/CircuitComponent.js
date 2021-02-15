@@ -75,6 +75,7 @@ const createCircuitComponent = (data) => {
     outputs: data.outputs,
     kind: basicKinds.find((component) => component.kind === data.kind),
     outputsUpToDate: true,
+    label: "",
   };
 };
 

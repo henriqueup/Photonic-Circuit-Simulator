@@ -1,3 +1,5 @@
 .measuredOutputs {
   margin: 8px 8px;
+  display: flex;
+  flex-direction: column;
 }

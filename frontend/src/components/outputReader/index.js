@@ -57,6 +57,14 @@ const OutputReader = ({ circuitComponent }) => {
           align: "center",
         }}
       />
+      <SpriteLabel
+        kind={circuitComponent.kind.kind}
+        text={circuitComponent.label}
+        style={{
+          fontSize: 14,
+          align: "top-right",
+        }}
+      />
     </CircuitComponent>
   );
 };

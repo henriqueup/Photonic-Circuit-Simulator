@@ -14,6 +14,7 @@ export const Types = {
   SET_OUTPUTS_UPTODATE: "circuitComponent/SET_OUTPUTS_UPTODATE",
   DELETE_SELECTED: "circuitComponent/DELETE_SELECTED",
   CONFIRM_DELETE_SELECTED: "circuitComponent/CONFIRM_DELETE_SELECTED",
+  SET_LABEL: "circuitComponent/SET_LABEL",
 };
 
 // Reducer
@@ -42,10 +43,10 @@ export default function reducer(state = INITIAL_STATE, action) {
         instances: state.instances.map((content) =>
           content.id === action.payload.id
             ? {
-                ...content,
-                x: action.payload.x,
-                y: action.payload.y,
-              }
+              ...content,
+              x: action.payload.x,
+              y: action.payload.y,
+            }
             : content
         ),
       };
@@ -55,9 +56,9 @@ export default function reducer(state = INITIAL_STATE, action) {
         instances: state.instances.map((content) =>
           content.id === action.payload.id
             ? {
-                ...content,
-                confirmedCreation: true,
-              }
+              ...content,
+              confirmedCreation: true,
+            }
             : content
         ),
       };
@@ -70,14 +71,14 @@ export default function reducer(state = INITIAL_STATE, action) {
         instances: state.instances.map((content) =>
           content.id === action.payload.id
             ? {
-                ...content,
-                selected: true,
-                kind: {
-                  ...content.kind,
-                  image: content.kind.alternateImage,
-                  alternateImage: content.kind.image,
-                },
-              }
+              ...content,
+              selected: true,
+              kind: {
+                ...content.kind,
+                image: content.kind.alternateImage,
+                alternateImage: content.kind.image,
+              },
+            }
             : content
         ),
       };
@@ -87,14 +88,14 @@ export default function reducer(state = INITIAL_STATE, action) {
         instances: state.instances.map((content) =>
           content.id === action.payload.id
             ? {
-                ...content,
-                selected: false,
-                kind: {
-                  ...content.kind,
-                  image: content.kind.alternateImage,
-                  alternateImage: content.kind.image,
-                },
-              }
+              ...content,
+              selected: false,
+              kind: {
+                ...content.kind,
+                image: content.kind.alternateImage,
+                alternateImage: content.kind.image,
+              },
+            }
             : content
         ),
       };
@@ -103,21 +104,21 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         selected: state.selected
           ? {
-              ...state.selected,
-              outputsUpToDate:
-                action.payload.id === state.selected.id
-                  ? action.payload.outputsUpToDate
-                  : state.selected
+            ...state.selected,
+            outputsUpToDate:
+              action.payload.id === state.selected.id
+                ? action.payload.outputsUpToDate
+                : state.selected
                   ? state.selected.outputsUpToDate
                   : false,
-            }
+          }
           : null,
         instances: state.instances.map((content) =>
           content.id === action.payload.id
             ? {
-                ...content,
-                outputsUpToDate: action.payload.outputsUpToDate,
-              }
+              ...content,
+              outputsUpToDate: action.payload.outputsUpToDate,
+            }
             : content
         ),
       };
@@ -127,6 +128,22 @@ export default function reducer(state = INITIAL_STATE, action) {
         selected: null,
         instances: state.instances.filter(
           (content) => content.id !== state.selected.id
+        ),
+      };
+    case Types.SET_LABEL:
+      return {
+        ...state,
+        selected: {
+          ...state.selected,
+          label: action.payload.label
+        },
+        instances: state.instances.map((instance) =>
+          instance.id === state.selected.id
+            ? {
+              ...instance,
+              label: action.payload.label,
+            }
+            : instance
         ),
       };
     default:
@@ -242,5 +259,14 @@ export function confirmSelectedDelete() {
   return {
     type: Types.CONFIRM_DELETE_SELECTED,
     payload: {},
+  };
+}
+
+export function setSelectedComponentLabel(label) {
+  return {
+    type: Types.SET_LABEL,
+    payload: {
+      label: label
+    },
   };
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
-import { generateColorFromID } from "../../models/Connection";
+import { generateColorFromID, generateColorFromPower } from "../../models/Connection";
 import { connect } from "react-redux";
 import "./styles.css";
 
@@ -20,8 +20,8 @@ const MeasuredOutputs = ({ outputs, currentCircuitID, simulations }) => {
       const lastTime =
         timesAux.length > 1
           ? timesAux[timesAux.length - 1] +
-            timesAux[timesAux.length - 1] -
-            timesAux[timesAux.length - 2]
+          timesAux[timesAux.length - 1] -
+          timesAux[timesAux.length - 2]
           : 5;
 
       timesAux = timesAux.reduce((acc, curr, i) => {
@@ -39,6 +39,7 @@ const MeasuredOutputs = ({ outputs, currentCircuitID, simulations }) => {
         currentSimulation.measuredValues[0].values.forEach((value) => {
           portsAux.push({
             id: value.id,
+            label: value.label,
             powers: [],
           });
         });
@@ -75,13 +76,12 @@ const MeasuredOutputs = ({ outputs, currentCircuitID, simulations }) => {
   };
 
   const data = {
-    datasets: ports.map((port, i) => {
-      console.log(port.powers);
+    datasets: ports.filter(port => !port.disabled).map((port, i) => {
       return {
         ...baseDataset,
-        backgroundColor: generateColorFromID(port.id),
-        pointBackgroundColor: generateColorFromID(port.id),
-        borderColor: generateColorFromID(port.id),
+        backgroundColor: generateColorFromPower(port.power),
+        pointBackgroundColor: generateColorFromPower(port.power),
+        borderColor: generateColorFromPower(port.power),
         label: `Reader ${i + 1}`,
         data: port.powers.map((power, j) => {
           return {
@@ -128,9 +128,37 @@ const MeasuredOutputs = ({ outputs, currentCircuitID, simulations }) => {
     maintainAspectRatio: false,
   };
 
+  const handleCheckChange = (event, clickedPort) => {
+    if (event.target.value === "on") {
+      setPorts(ports.map((port) =>
+        port.id === clickedPort.id
+          ? {
+            ...port,
+            disabled: false
+          }
+          : port
+      ));
+    } else {
+      setPorts(ports.map((port) =>
+        port.id === clickedPort.id
+          ? {
+            ...port,
+            disabled: true
+          }
+          : port
+      ));
+    }
+  }
+
   return (
     <div className="measuredOutputs">
       <span>Measured Outputs</span>
+      {ports.map((port, i) =>
+        <div>
+          <span>{port.label || "Reader " + (i + 1)}</span>
+          <input type="checkbox" defaultChecked onChange={(event) => handleCheckChange(event, port)} />
+        </div>
+      )}
       <Line data={data} legend={legendOpts} options={options} />
     </div>
   );
