@@ -2,6 +2,9 @@
   display: flex;
   justify-content: space-between;
 }
+.selectedLabel {
+  margin-left: 16px;
+}
 .selectedDelete {
   margin: 6px 6px 0px 6px;
   padding: 2px 2px 0px 2px;

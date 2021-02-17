@@ -1,27 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
-import { generateColorFromID, generateColorFromPower } from "../../models/Connection";
-import { connect } from "react-redux";
+import {
+  generateColorFromID,
+  generateColorFromPower,
+} from "../../models/Connection";
 import "./styles.css";
 
 const delay = 0.2;
 
-const MeasuredOutputs = ({ outputs, currentCircuitID, simulations }) => {
+const MeasuredOutputs = ({ currentSimulation }) => {
   const [times, setTimes] = useState([]);
   const [ports, setPorts] = useState([]);
 
   useEffect(() => {
-    const currentSimulation = simulations.find(
-      (simulation) => simulation.circuitID === currentCircuitID
-    );
-
     if (currentSimulation) {
       let timesAux = currentSimulation.measuredValues.map((item) => item.time);
       const lastTime =
         timesAux.length > 1
           ? timesAux[timesAux.length - 1] +
-          timesAux[timesAux.length - 1] -
-          timesAux[timesAux.length - 2]
+            timesAux[timesAux.length - 1] -
+            timesAux[timesAux.length - 2]
           : 5;
 
       timesAux = timesAux.reduce((acc, curr, i) => {
@@ -65,7 +63,7 @@ const MeasuredOutputs = ({ outputs, currentCircuitID, simulations }) => {
         setPorts(portsAux);
       }
     }
-  }, [currentCircuitID, simulations]);
+  }, [currentSimulation]);
 
   const baseDataset = {
     fill: false,
@@ -76,24 +74,26 @@ const MeasuredOutputs = ({ outputs, currentCircuitID, simulations }) => {
   };
 
   const data = {
-    datasets: ports.filter(port => !port.disabled).map((port, i) => {
-      return {
-        ...baseDataset,
-        backgroundColor: generateColorFromPower(port.power),
-        pointBackgroundColor: generateColorFromPower(port.power),
-        borderColor: generateColorFromPower(port.power),
-        label: `Reader ${i + 1}`,
-        data: port.powers.map((power, j) => {
-          return {
-            x: times[j],
-            y: power,
-          };
-        }),
-        xAxesID: "x-axes",
-        yAxesID: "y-axes",
-        lineTension: 0,
-      };
-    }),
+    datasets: ports
+      .filter((port) => !port.disabled)
+      .map((port, i) => {
+        return {
+          ...baseDataset,
+          backgroundColor: generateColorFromID(port.id),
+          pointBackgroundColor: generateColorFromID(port.id),
+          borderColor: generateColorFromID(port.id),
+          label: `Reader ${i + 1}`,
+          data: port.powers.map((power, j) => {
+            return {
+              x: times[j],
+              y: power,
+            };
+          }),
+          xAxesID: "x-axes",
+          yAxesID: "y-axes",
+          lineTension: 0,
+        };
+      }),
   };
 
   const legendOpts = {
@@ -129,44 +129,52 @@ const MeasuredOutputs = ({ outputs, currentCircuitID, simulations }) => {
   };
 
   const handleCheckChange = (event, clickedPort) => {
-    if (event.target.value === "on") {
-      setPorts(ports.map((port) =>
-        port.id === clickedPort.id
-          ? {
-            ...port,
-            disabled: false
-          }
-          : port
-      ));
+    if (event.target.checked) {
+      setPorts(
+        ports.map((port) =>
+          port.id === clickedPort.id
+            ? {
+                ...port,
+                disabled: false,
+              }
+            : port
+        )
+      );
     } else {
-      setPorts(ports.map((port) =>
-        port.id === clickedPort.id
-          ? {
-            ...port,
-            disabled: true
-          }
-          : port
-      ));
+      setPorts(
+        ports.map((port) =>
+          port.id === clickedPort.id
+            ? {
+                ...port,
+                disabled: true,
+              }
+            : port
+        )
+      );
     }
-  }
+  };
 
   return (
-    <div className="measuredOutputs">
-      <span>Measured Outputs</span>
-      {ports.map((port, i) =>
-        <div>
-          <span>{port.label || "Reader " + (i + 1)}</span>
-          <input type="checkbox" defaultChecked onChange={(event) => handleCheckChange(event, port)} />
+    <>
+      <div className="measuredOutputs">
+        <div className="outputLabels">
+          {ports.map((port, i) => (
+            <div key={port.id}>
+              <span>{port.label || "Reader " + (i + 1)}</span>
+              <input
+                type="checkbox"
+                defaultChecked
+                onChange={(event) => handleCheckChange(event, port)}
+              />
+            </div>
+          ))}
         </div>
-      )}
-      <Line data={data} legend={legendOpts} options={options} />
-    </div>
+        <div className="chartContainer">
+          <Line data={data} legend={legendOpts} options={options} />
+        </div>
+      </div>
+    </>
   );
 };
 
-const mapStateToProps = (state) => ({
-  currentCircuitID: state.circuit.current,
-  simulations: state.simulation.instances,
-});
-
-export default connect(mapStateToProps, null)(MeasuredOutputs);
+export default MeasuredOutputs;

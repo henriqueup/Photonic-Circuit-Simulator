@@ -21,9 +21,8 @@ import DropdownMenu from "../components/dropdownMenu";
 import { FileButton, EditButton } from "./MainMenuButtons";
 
 const buttons = [FileButton, EditButton];
-
-export let WORKSPACE_X = 0;
-export let WORKSPACE_Y = 0;
+const INITIAL_WORKSPACE_HEIGHT = window.innerHeight - 8;
+const INITIAL_ANALYTICS_HEIGHT = (window.innerHeight * 3) / 10;
 
 const Layout = ({
   circuits,
@@ -33,7 +32,6 @@ const Layout = ({
   createCircuit,
   circuitComponents,
   deleteCircuit,
-  ports,
   simulate,
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -42,6 +40,8 @@ const Layout = ({
   const [currentComponents, setCurrentComponents] = useState([]);
   const [currentConnections, setCurrentConnections] = useState([]);
   const [customComponents, setCustomComponents] = useState([]);
+  const [workspaceHeightOffset, setWorkspaceHeightOffset] = useState(0);
+  const [analyticsHeight, setAnalyticsHeight] = useState(0);
 
   const onClickMenuButton = () => {
     setShowDropdown(!showDropdown);
@@ -86,6 +86,14 @@ const Layout = ({
     }
   };
 
+  const handleChangeHeightOffset = (heightOffset) => {
+    setWorkspaceHeightOffset(heightOffset);
+  };
+
+  const handleChangeAnalyticsHeight = (newAnalyticsHeight) => {
+    setAnalyticsHeight(newAnalyticsHeight);
+  };
+
   return (
     <div className="main">
       <MainMenu
@@ -117,27 +125,23 @@ const Layout = ({
                 label={circuit.label}
                 isSaved={circuit.isSaved}
                 key={circuit.id}
-                ref={(element) => {
-                  if (!element) return;
-
-                  const rect = element.getBoundingClientRect();
-                  WORKSPACE_X = rect.x;
-                  WORKSPACE_Y = rect.y;
-                }}
               >
                 <Workspace
                   circuitComponents={currentComponents}
                   connections={currentConnections}
-                  heightOffset={WORKSPACE_Y}
+                  workspaceHeight={
+                    INITIAL_WORKSPACE_HEIGHT -
+                    workspaceHeightOffset -
+                    analyticsHeight
+                  }
+                  handleChangeHeightOffset={handleChangeHeightOffset}
                 />
               </div>
             ))}
           </Tabs>
           <AnalyticsMenu
-            outputReaders={currentComponents.filter(
-              (component) => component.kind.kind === "output_reader"
-            )}
-            ports={ports}
+            analyticsHeight={INITIAL_ANALYTICS_HEIGHT}
+            handleChangeAnalyticsHeight={handleChangeAnalyticsHeight}
           />
         </div>
         <InspectionMenu simulate={simulate} />
@@ -150,7 +154,6 @@ const mapStateToProps = (state) => ({
   circuits: state.circuit.instances,
   currentCircuitID: state.circuit.current,
   circuitComponents: state.circuitComponent.instances,
-  ports: state.port.instances,
 });
 
 const mapDispatchToProps = (dispatch) => ({

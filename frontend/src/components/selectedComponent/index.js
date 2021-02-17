@@ -21,7 +21,7 @@ const SelectedComponent = ({
 }) => {
   const handleLabelChange = (event) => {
     setSelectedComponentLabel(event.target.value);
-  }
+  };
 
   return (
     <div>
@@ -39,11 +39,10 @@ const SelectedComponent = ({
                 </div>
               </div>
               <i className="fas fa-trash-alt"></i>
-              <div className="selectedHeader">
-                <span className="selectedKind">
-                  Label:
-                </span>
+              <div>
+                <span className="selectedKind">Label:</span>
                 <input
+                  className="selectedLabel"
                   value={selectedComponent.label}
                   style={{ width: "100px" }}
                   onChange={handleLabelChange}
@@ -64,19 +63,19 @@ const SelectedComponent = ({
                   </div>
                 ) : null}
                 {selectedComponent.outputs &&
-                  selectedComponent.outputs.length ? (
-                    <div className="selectedPortsValues">
-                      {selectedComponent.kind.kind !== "power_source" ? (
-                        <InspectionOutputs
-                          selectedComponent={selectedComponent}
-                        />
-                      ) : (
-                          <PowerSourceInspectionOutputs
-                            selectedComponent={selectedComponent}
-                          />
-                        )}
-                    </div>
-                  ) : null}
+                selectedComponent.outputs.length ? (
+                  <div className="selectedPortsValues">
+                    {selectedComponent.kind.kind !== "power_source" ? (
+                      <InspectionOutputs
+                        selectedComponent={selectedComponent}
+                      />
+                    ) : (
+                      <PowerSourceInspectionOutputs
+                        selectedComponent={selectedComponent}
+                      />
+                    )}
+                  </div>
+                ) : null}
               </div>
               <div className="selectedPorts">
                 <div className="selectedPortsValues">
@@ -113,7 +112,10 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   calculateOutputs: bindActionCreators(calculateOutputs, dispatch),
   deleteComponent: bindActionCreators(deleteSelected, dispatch),
-  setSelectedComponentLabel: bindActionCreators(setSelectedComponentLabel, dispatch),
+  setSelectedComponentLabel: bindActionCreators(
+    setSelectedComponentLabel,
+    dispatch
+  ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectedComponent);

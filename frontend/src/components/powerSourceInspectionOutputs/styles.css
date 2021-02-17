@@ -23,3 +23,13 @@
 .powerSourceInspectionContainer {
   display: flex;
 }
+.closeIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  border-radius: 50%;
+}
+.closeIcon:hover {
+  background-color: lightgray;
+}

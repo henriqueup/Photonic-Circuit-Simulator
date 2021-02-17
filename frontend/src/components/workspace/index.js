@@ -7,22 +7,28 @@ import GenericLine from "../genericLine";
 import { generateColorFromID } from "../../models/Connection";
 
 const STAGE_WIDTH = (window.innerWidth * 7) / 10;
-let STAGE_HEIGHT = (window.innerHeight * 65) / 100;
 
-const Workspace = ({ circuitComponents, connections, heightOffset }) => {
+const Workspace = ({
+  circuitComponents,
+  connections,
+  workspaceHeight,
+  handleChangeHeightOffset,
+}) => {
   useEffect(() => {
-    STAGE_HEIGHT -= heightOffset;
-  }, [heightOffset]);
+    const stageElement = document.getElementById("workspace");
+    handleChangeHeightOffset(stageElement.getBoundingClientRect().top);
+  }, [handleChangeHeightOffset]);
 
   return (
     <Stage
+      id="workspace"
       width={STAGE_WIDTH}
-      height={STAGE_HEIGHT}
+      height={workspaceHeight}
       options={{ antialias: true, backgroundColor: 0xffffff }}
       style={{ width: "100%" }}
     >
       <Container>
-        <Grid stageHeight={STAGE_HEIGHT} stageWidth={STAGE_WIDTH} />
+        <Grid stageHeight={workspaceHeight} stageWidth={STAGE_WIDTH} />
         {circuitComponents.map((component) => (
           <CircuitComponent circuitComponent={component} key={component.id} />
         ))}

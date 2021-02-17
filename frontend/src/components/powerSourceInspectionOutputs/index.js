@@ -4,6 +4,7 @@ import { bindActionCreators } from "redux";
 import { getPlannedOutput } from "../../store";
 import { savePlannedOutputs } from "../../store/ducks/powerSourcePlannedOutputs";
 import { createPlannedOutput } from "../../utils/powerSource";
+import { X } from "react-feather";
 import "./styles.css";
 
 const PowerSourceInspectionOutuputs = ({
@@ -89,6 +90,10 @@ const PowerSourceInspectionOutuputs = ({
     setPlannedOutputs(plannedOutputs.concat([createPlannedOutput(0, 0)]));
   };
 
+  const handleDeleteValueClick = (index) => {
+    setPlannedOutputs(plannedOutputs.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="powerSourceInspectionContainer">
       <div className="powerSourceOutputs">
@@ -128,6 +133,14 @@ const PowerSourceInspectionOutuputs = ({
               disabled={i === 0}
               type="number"
             />
+            {i > 0 && (
+              <div
+                className="closeIcon"
+                onClick={() => handleDeleteValueClick(i)}
+              >
+                <X color="gray" />
+              </div>
+            )}
           </div>
         ))}
         <button className="saveButton" onClick={handleSaveClick}>
