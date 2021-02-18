@@ -87,3 +87,16 @@ def set_position(id):
     return response, 400
 
   return jsonify(component.to_json()), 200
+  
+@components_bp.route('/data/<id>/set_label', methods=['PUT'])
+def set_label(id):
+  body = request.get_json()
+  if (not 'label' in body or not isinstance(body['label'], str)):
+    return "Request doesn\'t have an \'label\' string field.", 400
+
+  response, success = controller.set_component_label(id, body['label'])
+
+  if (not success):
+    return response, 400
+
+  return response, 200

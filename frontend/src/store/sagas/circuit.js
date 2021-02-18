@@ -10,7 +10,7 @@ import {
 } from "../ducks/circuit";
 import { create as createPorts } from "../ducks/port";
 import { create as createConnection } from "../ducks/connection";
-import { getCurrentCircuitID, store } from "..";
+import { getCurrentCircuitID, getCurrentPowerSources, store } from "..";
 import {
   calculateOutputs,
   confirmCreation,
@@ -30,7 +30,7 @@ import {
 function* createCircuitSaga() {
   const response = yield call(api.postCircuit);
 
-  if (response.ok) {
+  if (response?.ok) {
     const body = response.body;
 
     yield put(createWithID(body.id));
@@ -46,7 +46,7 @@ export function* watchCreateCircuit() {
 function* saveCircuitSaga() {
   const response = yield call(api.saveCircuit);
 
-  if (response.ok) {
+  if (response?.ok) {
     yield put(save());
   }
 }
@@ -106,14 +106,20 @@ function* simulateSaga() {
 
   const allPlannedOutputs =
     currentStoreState.powerSourcePlannedOutputs.instances;
-  const timesMapping = allPlannedOutputs.map((instance) => {
-    return {
-      id: instance.id,
-      times: instance.plannedOutputs
-        .map((output) => output.time)
-        .sort((a, b) => a - b),
-    };
-  });
+  const circuitPowerSourcesIDs = getCurrentPowerSources().map(
+    (powerSource) => powerSource.id
+  );
+
+  const timesMapping = allPlannedOutputs
+    .filter((instance) => circuitPowerSourcesIDs.includes(instance.id))
+    .map((instance) => {
+      return {
+        id: instance.id,
+        times: instance.plannedOutputs
+          .map((output) => output.time)
+          .sort((a, b) => a - b),
+      };
+    });
 
   while (timesMapping.find((item) => item.times.length)) {
     const nextTime = timesMapping
@@ -124,6 +130,7 @@ function* simulateSaga() {
       .filter((item) => item.times.includes(nextTime))
       .map((item) => item.id);
 
+    console.log(idsToUpdate);
     for (const id of idsToUpdate) {
       const power = allPlannedOutputs
         .find((item) => item.id === id)
@@ -168,7 +175,7 @@ export function* watchSimulate() {
 function* setCircuitLabelSaga(action) {
   const response = yield call(api.setCircuitLabel, action.payload.label);
 
-  if (response.ok) {
+  if (response?.ok) {
     yield put(setLabel(action.payload.label));
   }
 }
@@ -180,7 +187,7 @@ export function* watchSetCircuitLabel() {
 function* loadCircuitSaga(action) {
   const response = yield call(api.loadCircuit, action.payload.id);
 
-  if (response.ok) {
+  if (response?.ok) {
     const components = response.body.components;
     let inputsWithConnection = [];
     let outputsWithConnection = [];
@@ -270,7 +277,7 @@ export function* watchLoadCircuit() {
 function* attemptChangeCurrentSaga(action) {
   const response = yield call(api.setCurrentCircuit, action.payload.id);
 
-  if (response.ok) {
+  if (response?.ok) {
     yield put(setCurrent(action.payload.id));
   }
 }

@@ -69,9 +69,25 @@ export const getCurrentReaderValuesAndIDs = () => {
       return {
         id: port.target,
         power: port.power,
-        label: outputReaders.find(reader => reader.id === port.parentID).label
+        label: outputReaders.find((reader) => reader.id === port.parentID)
+          .label,
       };
     });
+};
+
+export const getCurrentPowerSources = () => {
+  const currentStoreState = store.getState();
+  const currentCircuitID = currentStoreState.circuit.current;
+
+  const currentCircuitComponentsIDs = currentStoreState.circuit.instances.find(
+    (circuit) => circuit.id === currentCircuitID
+  ).components;
+
+  return currentStoreState.circuitComponent.instances.filter(
+    (instance) =>
+      instance.kind.kind === "power_source" &&
+      currentCircuitComponentsIDs.includes(instance.id)
+  );
 };
 
 export const getCurrentCircuitID = () => {

@@ -91,15 +91,37 @@ async function deleteComponent(id) {
 
 async function setPosition(componentID, x, y) {
   try {
-    const response = await fetch(baseURL + `/data/${componentID}/set_position`, {
+    const response = await fetch(
+      baseURL + `/data/${componentID}/set_position`,
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          x: x,
+          y: y,
+        }),
+      }
+    );
+
+    return validateResponse(response);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function setLabel(componentID, label) {
+  try {
+    const response = await fetch(baseURL + `/data/${componentID}/set_label`, {
       method: "PUT",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        x: x,
-        y: y,
+        label: label,
       }),
     });
 
@@ -109,4 +131,13 @@ async function setPosition(componentID, x, y) {
   }
 }
 
-export default { postComponent, getAllComponents, setOutputs, setPower, calculateOutputs, deleteComponent, setPosition };
+export default {
+  postComponent,
+  getAllComponents,
+  setOutputs,
+  setPower,
+  calculateOutputs,
+  deleteComponent,
+  setPosition,
+  setLabel,
+};

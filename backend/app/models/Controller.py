@@ -79,7 +79,7 @@ class Controller:
     except NotUniqueError:
       return f"Circuit \'{self.current_circuit.label}\' already exists.", False
 
-  def set_label(self, label):
+  def set_circuit_label(self, label):
     if (self.current_circuit is None):
       return "No circuit selected.", False
 
@@ -110,3 +110,10 @@ class Controller:
 
     del self.circuits[self.circuits.index(circuit)]
     return None
+
+  def set_component_label(self, component_id, label):
+    if (self.current_circuit is None):
+      return "No circuit selected.", False
+
+    response, success = self.current_circuit.set_label(component_id, label)
+    return response, success

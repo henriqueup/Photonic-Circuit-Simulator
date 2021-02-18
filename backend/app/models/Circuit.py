@@ -1,12 +1,6 @@
 from app.database.Component import Component as ComponentCollection
 from app.database.Circuit import Circuit as CircuitCollection
 from app.models.Component import Component
-from app.models.SwN import SwN
-from app.models.SwP import SwP
-from app.models.PowerSource import PowerSource
-from app.models.OutputReader import OutputReader
-from app.models.YJunction import YJunction
-from app.models.YSplit import YSplit
 from app.database.db import get_objectid
 
 class Circuit():
@@ -36,22 +30,9 @@ class Circuit():
     ports = []
 
     for component in circuit_db.components:
-      component = Component.load(component.id)
+      component = ComponentCollection.objects(id=component.id).get()
 
-      if (component.kind == 'swn'):
-        components.append(SwN.load(component.id))
-      elif (component.kind == 'swp'):
-        components.append(SwP.load(component.id))
-      elif (component.kind == 'power_source'):
-        components.append(PowerSource.load(component.id))
-      elif (component.kind == 'output_reader'):
-        components.append(OutputReader.load(component.id))
-      elif (component.kind == 'y_junction'):
-        components.append(YJunction.load(component.id))
-      elif (component.kind == 'y_split'):
-        components.append(YSplit.load(component.id))
-      else:
-        raise TypeError
+      components.append(Component.load(component.id, component.kind))
 
       for port in components[-1].inputs:
         ports.append(port)
@@ -101,20 +82,7 @@ class Circuit():
   def add_component(self, kind):
     component = None
 
-    if (kind == 'swn'):
-      component = SwN.create()
-    elif (kind == 'power_source'):
-      component = PowerSource.create()
-    elif (kind == 'swp'):
-      component = SwP.create()
-    elif (kind == 'output_reader'):
-      component = OutputReader.create()
-    elif (kind == 'y_junction'):
-      component = YJunction.create()
-    elif (kind == 'y_split'):
-      component = YSplit.create()
-    else:
-      raise TypeError("Kind \'" + kind + "\' doesn't exist.")
+    component = Component.create(kind)
 
     self.components.append(component)
     for port in component.inputs:
@@ -202,3 +170,11 @@ class Circuit():
 
     for component in self.components:
       component.save()
+      
+  def set_label(self, id, label):
+    component = self.get_component(id)
+    if (component == None):
+      return "Component with id: " + str(id) + " doesn\'t exist.", False
+
+    component.set_label(label)
+    return "OK", True

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Container from "../container";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -12,6 +12,7 @@ import {
   setSelectedComponentLabel,
 } from "../../store/ducks/circuitComponent";
 import { FaTrashAlt } from "react-icons/fa";
+import { applyDebounce, createDebounce } from "../../utils/debounce";
 
 const SelectedComponent = ({
   selectedComponent,
@@ -19,9 +20,23 @@ const SelectedComponent = ({
   deleteComponent,
   setSelectedComponentLabel,
 }) => {
+  const [label, setLabel] = useState(selectedComponent?.label);
+
+  const saveLabelValue = useCallback(
+    (value) => {
+      setSelectedComponentLabel(value);
+    },
+    [setSelectedComponentLabel]
+  );
+
   const handleLabelChange = (event) => {
-    setSelectedComponentLabel(event.target.value);
+    setLabel(event.target.value);
+    applyDebounce([event.target.value]);
   };
+
+  useEffect(() => {
+    createDebounce(saveLabelValue, 800);
+  }, [saveLabelValue]);
 
   return (
     <div>
@@ -43,7 +58,7 @@ const SelectedComponent = ({
                 <span className="selectedKind">Label:</span>
                 <input
                   className="selectedLabel"
-                  value={selectedComponent.label}
+                  value={label}
                   style={{ width: "100px" }}
                   onChange={handleLabelChange}
                 />

@@ -21,6 +21,7 @@ import {
   deselect,
   setOutputsUpToDate,
   setSelected,
+  Types as ComponentTypes,
 } from "../ducks/circuitComponent";
 import { deleteConnection } from "../ducks/connection";
 import {
@@ -81,7 +82,7 @@ function* createCircuitComponentSaga(action) {
 }
 
 export function* watchCreateCircuitComponent() {
-  yield takeEvery("circuitComponent/CREATE", createCircuitComponentSaga);
+  yield takeEvery(ComponentTypes.CREATE, createCircuitComponentSaga);
 }
 
 function* updatePosSaga(action) {
@@ -115,7 +116,7 @@ function* updatePosSaga(action) {
 }
 
 export function* watchUpdatePos() {
-  yield takeEvery("circuitComponent/UPDATE_POS", updatePosSaga);
+  yield takeEvery(ComponentTypes.UPDATE_POS, updatePosSaga);
 }
 
 function* selectSaga(action) {
@@ -128,7 +129,7 @@ function* selectSaga(action) {
 }
 
 export function* watchSelect() {
-  yield takeEvery("circuitComponent/SELECT", selectSaga);
+  yield takeEvery(ComponentTypes.SELECT, selectSaga);
 }
 
 function* setPowerSaga(action) {
@@ -180,8 +181,8 @@ function* measureSimulationValuesSaga(action) {
 
 export function* watchCalculateOutputs_SetPower_MeasureSimulationValues() {
   const channel = yield actionChannel([
-    "circuitComponent/CALCULATE_OUTPUTS",
-    "circuitComponent/SET_POWER",
+    ComponentTypes.CALCULATE_OUTPUTS,
+    ComponentTypes.SET_POWER,
     "simulation/MEASURE_VALUES",
   ]);
 
@@ -189,10 +190,10 @@ export function* watchCalculateOutputs_SetPower_MeasureSimulationValues() {
     const action = yield take(channel);
 
     switch (action.type) {
-      case "circuitComponent/CALCULATE_OUTPUTS":
+      case ComponentTypes.CALCULATE_OUTPUTS:
         yield call(calculateOutputsSaga, action);
         break;
-      case "circuitComponent/SET_POWER":
+      case ComponentTypes.SET_POWER:
         yield call(setPowerSaga, action);
         break;
       case "simulation/MEASURE_VALUES":
@@ -226,5 +227,16 @@ function* deleteSelectedSaga() {
 }
 
 export function* watchDeleteSelected() {
-  yield takeEvery("circuitComponent/DELETE_SELECTED", deleteSelectedSaga);
+  yield takeEvery(ComponentTypes.DELETE_SELECTED, deleteSelectedSaga);
+}
+
+function* setLabelSaga(action) {
+  const selected = store.getState().circuitComponent.selected;
+  if (selected === null) return;
+
+  yield call(api.setLabel, action.payload.label, selected.id);
+}
+
+export function* watchSetLabel() {
+  yield takeEvery(ComponentTypes.SET_LABEL, setLabelSaga);
 }

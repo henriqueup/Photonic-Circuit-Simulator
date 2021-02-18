@@ -46,7 +46,7 @@ def set_label():
   if (label is None):
     return "Bad Request", 400
   
-  response, saved = controller.set_label(label)
+  response, saved = controller.set_circuit_label(label)
 
   if (not saved):
     return response, 400
