@@ -5,6 +5,7 @@ export const Types = {
   ADD_VALUES: "simulation/ADD_VALUES",
   MEASURE_VALUES: "simulation/MEASURE_VALUES",
   CREATE: "simulation/CREATE",
+  SET_VALUE_LABEL: "simulation/SET_VALUE_LABEL",
 };
 
 // Reducer
@@ -60,6 +61,24 @@ export default function reducer(state = INITIAL_STATE, action) {
           },
         ]),
       };
+    case Types.SET_VALUE_LABEL:
+      return {
+        ...state,
+        instances: state.instances.map((instance) => ({
+          ...instance,
+          measuredValues: instance.measuredValues.map((time) => ({
+            ...time,
+            values: time.values.map((value) =>
+              value.id === action.payload.targetID
+                ? {
+                    ...value,
+                    label: action.payload.label,
+                  }
+                : value
+            ),
+          })),
+        })),
+      };
     default:
       return state;
   }
@@ -107,6 +126,16 @@ export function createSimulation(circuitID) {
     type: Types.CREATE,
     payload: {
       circuitID: circuitID,
+    },
+  };
+}
+
+export function setValueLabel(targetID, label) {
+  return {
+    type: Types.SET_VALUE_LABEL,
+    payload: {
+      targetID: targetID,
+      label: label,
     },
   };
 }

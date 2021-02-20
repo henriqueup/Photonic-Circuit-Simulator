@@ -5,13 +5,20 @@ import {
   onDragEnd as circuitComponentOnDragEnd,
   CircuitComponent,
 } from "../../models/CircuitComponent";
-import { onDragStart as portOnDragStart, onDragMove as portOnDragMove, onDragEnd as portOnDragEnd, Port } from "../../models/Port";
+import {
+  onDragStart as portOnDragStart,
+  onDragMove as portOnDragMove,
+  onDragEnd as portOnDragEnd,
+  Port,
+} from "../../models/Port";
 import "./styles.css";
 import { store } from "../../store";
 import { SpriteLabel } from "../../models/SpriteLabel";
 
 const PowerSource = ({ circuitComponent }) => {
-  const outputPort = store.getState().port.instances.find((port) => port.id === circuitComponent.outputs[0]);
+  const outputPort = store
+    .getState()
+    .port.instances.find((port) => port.id === circuitComponent.outputs[0]);
 
   return (
     <CircuitComponent
@@ -49,6 +56,14 @@ const PowerSource = ({ circuitComponent }) => {
           }}
         />
       </Port>
+      <SpriteLabel
+        kind={circuitComponent.kind.kind}
+        text={circuitComponent.label}
+        style={{
+          fontSize: 14,
+          align: "top-right",
+        }}
+      />
     </CircuitComponent>
   );
 };

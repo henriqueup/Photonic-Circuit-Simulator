@@ -8,7 +8,7 @@ import {
 } from "redux-saga/effects";
 import {
   getCurrentCircuitID,
-  getCurrentReaderValuesAndIDs,
+  getCurrentReaderAndSourceValuesAndIDs,
   getPortData,
   store,
 } from "..";
@@ -32,7 +32,7 @@ import {
 } from "../ducks/port";
 import { savePlannedOutputs } from "../ducks/powerSourcePlannedOutputs";
 import { createPlannedOutput } from "../../utils/powerSource";
-import { addSimulationValues } from "../ducks/simulation";
+import { addSimulationValues, setValueLabel } from "../ducks/simulation";
 
 export function* helloSaga() {
   yield console.log("Sagas working!");
@@ -173,7 +173,7 @@ function* calculateOutputsSaga(action) {
 }
 
 function* measureSimulationValuesSaga(action) {
-  const values = getCurrentReaderValuesAndIDs();
+  const values = getCurrentReaderAndSourceValuesAndIDs();
   const currentCircuitID = getCurrentCircuitID();
 
   yield put(addSimulationValues(action.payload.time, values, currentCircuitID));
@@ -234,7 +234,19 @@ function* setLabelSaga(action) {
   const selected = store.getState().circuitComponent.selected;
   if (selected === null) return;
 
-  yield call(api.setLabel, action.payload.label, selected.id);
+  const response = yield call(api.setLabel, selected.id, action.payload.label);
+  if (response.ok) {
+    yield put(setSaved(false));
+
+    if (selected.kind.kind === "output_reader") {
+      const targetID = getPortData(selected.inputs[0])?.target;
+      yield put(setValueLabel(targetID, action.payload.label));
+    }
+    if (selected.kind.kind === "power_source") {
+      const targetID = getPortData(selected.outputs[0])?.target;
+      yield put(setValueLabel(targetID, action.payload.label));
+    }
+  }
 }
 
 export function* watchSetLabel() {

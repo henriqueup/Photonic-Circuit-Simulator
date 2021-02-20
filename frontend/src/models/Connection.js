@@ -1,3 +1,4 @@
+import { getPortData } from "../store";
 import { PORT_WIDTH } from "./Port";
 
 const CONNECTION_PADDING = 4;
@@ -12,7 +13,11 @@ export const generateColorFromID = (id) => {
   const thirdValue = parseInt(id.substring(12, 18), 16);
   const fourthValue = parseInt(id.substring(18), 16);
 
-  let resultString = ((((((firstValue * secondValue) % base) * thirdValue) % base) * fourthValue) % base).toString(16);
+  let resultString = (
+    (((((firstValue * secondValue) % base) * thirdValue) % base) *
+      fourthValue) %
+    base
+  ).toString(16);
   while (resultString.length < 6) {
     resultString = "0" + resultString;
   } // Zero pad.
@@ -20,37 +25,40 @@ export const generateColorFromID = (id) => {
   return "#" + resultString;
 };
 
-export const generateColorFromPower = (power) => {
+export const generateColorFromPower = (id) => {
   let color = "";
+  const power = getPortData(id)?.power;
 
-  switch (power) {
+  if (!(power >= 0)) return;
+
+  switch (true) {
     case power < 10:
-      color = "ff0000"
+      color = "ff0000";
       break;
     case power < 20:
-      color = "ff4400"
+      color = "ff4400";
       break;
     case power < 30:
-      color = "ff8800"
+      color = "ff8800";
       break;
     case power < 40:
-      color = "ffff00"
+      color = "ffff00";
       break;
     case power < 50:
-      color = "88ff00"
+      color = "88ff00";
       break;
     case power < 60:
-      color = "44ff00"
+      color = "44ff00";
       break;
     case power >= 60:
-      color = "00ff00"
+      color = "00ff00";
       break;
     default:
       break;
   }
 
   return "#" + color;
-}
+};
 
 const createConnection = (ports, points, originPortID) => {
   const targetX = points[2];
@@ -67,7 +75,9 @@ const createConnection = (ports, points, originPortID) => {
 
       // console.log(`${xMin}, ${xMax}, ${yMin}, ${yMax}, ${targetX}, ${targetY}`)
 
-      return targetX >= xMin && targetX <= xMax && targetY >= yMin && targetY <= yMax;
+      return (
+        targetX >= xMin && targetX <= xMax && targetY >= yMin && targetY <= yMax
+      );
     });
 
   if (targetPort === undefined) {

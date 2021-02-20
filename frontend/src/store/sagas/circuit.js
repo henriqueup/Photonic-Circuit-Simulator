@@ -130,7 +130,6 @@ function* simulateSaga() {
       .filter((item) => item.times.includes(nextTime))
       .map((item) => item.id);
 
-    console.log(idsToUpdate);
     for (const id of idsToUpdate) {
       const power = allPlannedOutputs
         .find((item) => item.id === id)

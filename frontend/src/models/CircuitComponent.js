@@ -60,6 +60,7 @@ export const CircuitComponent = PixiComponent("CircuitComponent", {
   },
   applyProps(instance, oldProps, newProps) {
     instance.texture = Texture.from(newProps.image);
+    instance.zIndex = instance.y;
     applyDefaultProps(instance, oldProps, newProps);
   },
 });

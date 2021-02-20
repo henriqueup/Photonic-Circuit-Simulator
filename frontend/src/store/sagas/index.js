@@ -14,6 +14,7 @@ import {
   watchSelect,
   watchCalculateOutputs_SetPower_MeasureSimulationValues,
   watchUpdatePos,
+  watchSetLabel,
 } from "./circuitComponent";
 import { watchCreateConnection, watchDeleteConnection } from "./connection";
 import { watchSetWorldTransform } from "./port";
@@ -37,5 +38,6 @@ export default function* rootSaga() {
     watchLoadCircuit(),
     watchAttemptChangeCurrentCircuit(),
     watchSavePlannedOutputs(),
+    watchSetLabel(),
   ]);
 }

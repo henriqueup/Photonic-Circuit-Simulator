@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
-import {
-  generateColorFromID,
-  generateColorFromPower,
-} from "../../models/Connection";
+import { generateColorFromID } from "../../models/Connection";
 import "./styles.css";
 
 const delay = 0.2;
@@ -82,7 +79,7 @@ const MeasuredOutputs = ({ currentSimulation }) => {
           backgroundColor: generateColorFromID(port.id),
           pointBackgroundColor: generateColorFromID(port.id),
           borderColor: generateColorFromID(port.id),
-          label: `Reader ${i + 1}`,
+          label: port.label || `Reader ${i + 1}`,
           data: port.powers.map((power, j) => {
             return {
               x: times[j],
@@ -159,7 +156,11 @@ const MeasuredOutputs = ({ currentSimulation }) => {
       <div className="measuredOutputs">
         <div className="outputLabels">
           {ports.map((port, i) => (
-            <div key={port.id}>
+            <div className="portSubtitle" key={port.id}>
+              <div
+                className="portColor"
+                style={{ backgroundColor: generateColorFromID(port.id) }}
+              />
               <span>{port.label || "Reader " + (i + 1)}</span>
               <input
                 type="checkbox"

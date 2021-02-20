@@ -20,7 +20,11 @@ const SelectedComponent = ({
   deleteComponent,
   setSelectedComponentLabel,
 }) => {
-  const [label, setLabel] = useState(selectedComponent?.label);
+  const [label, setLabel] = useState(selectedComponent?.label || "");
+
+  useEffect(() => {
+    setLabel(selectedComponent?.label || "");
+  }, [selectedComponent]);
 
   const saveLabelValue = useCallback(
     (value) => {
@@ -43,7 +47,7 @@ const SelectedComponent = ({
       <Container
         title={"Selected Component"}
         content={
-          selectedComponent != null ? (
+          selectedComponent && (
             <div className="selectedData">
               <div className="selectedHeader">
                 <span className="selectedKind">
@@ -113,7 +117,7 @@ const SelectedComponent = ({
                 </button>
               ) : null}
             </div>
-          ) : null
+          )
         }
       />
     </div>

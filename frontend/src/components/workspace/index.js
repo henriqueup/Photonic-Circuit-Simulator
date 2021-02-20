@@ -4,7 +4,7 @@ import CircuitComponent from "../circuitComponent";
 import "./styles.css";
 import Grid from "../grid";
 import GenericLine from "../genericLine";
-import { generateColorFromID } from "../../models/Connection";
+import { generateColorFromPower } from "../../models/Connection";
 
 const STAGE_WIDTH = (window.innerWidth * 7) / 10;
 
@@ -27,7 +27,7 @@ const Workspace = ({
       options={{ antialias: true, backgroundColor: 0xffffff }}
       style={{ width: "100%" }}
     >
-      <Container>
+      <Container sortableChildren>
         <Grid stageHeight={workspaceHeight} stageWidth={STAGE_WIDTH} />
         {circuitComponents.map((component) => (
           <CircuitComponent circuitComponent={component} key={component.id} />
@@ -37,7 +37,7 @@ const Workspace = ({
             key={connection.originPortID}
             points={connection.points}
             lineWidth={2}
-            lineColor={generateColorFromID(connection.originPortID)}
+            lineColor={generateColorFromPower(connection.originPortID)}
           />
         ))}
       </Container>
