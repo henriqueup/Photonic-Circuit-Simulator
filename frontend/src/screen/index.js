@@ -22,7 +22,6 @@ import { FileButton, EditButton } from "./MainMenuButtons";
 
 const buttons = [FileButton, EditButton];
 const INITIAL_WORKSPACE_HEIGHT = window.innerHeight - 8;
-const INITIAL_ANALYTICS_HEIGHT = (window.innerHeight * 3) / 10;
 
 const Layout = ({
   circuits,
@@ -140,7 +139,7 @@ const Layout = ({
             ))}
           </Tabs>
           <AnalyticsMenu
-            analyticsHeight={INITIAL_ANALYTICS_HEIGHT}
+            analyticsHeight={analyticsHeight}
             handleChangeAnalyticsHeight={handleChangeAnalyticsHeight}
           />
         </div>
