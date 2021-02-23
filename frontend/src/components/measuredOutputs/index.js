@@ -39,9 +39,10 @@ const MeasuredOutputs = ({ currentSimulation }) => {
           portsAux.push({
             id: value.id,
             label:
-              value.label || value.kind === "output_reader"
+              value.label ||
+              (value.kind === "output_reader"
                 ? `Reader ${++readersCount}`
-                : `Source ${++sourcesCount}`,
+                : `Source ${++sourcesCount}`),
             powers: [],
           });
         });
