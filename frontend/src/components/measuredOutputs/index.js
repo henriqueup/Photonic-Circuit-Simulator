@@ -4,6 +4,8 @@ import { generateColorFromID } from "../../models/Connection";
 import "./styles.css";
 
 const delay = 0.2;
+let readersCount;
+let sourcesCount;
 
 const MeasuredOutputs = ({ currentSimulation }) => {
   const [times, setTimes] = useState([]);
@@ -11,6 +13,8 @@ const MeasuredOutputs = ({ currentSimulation }) => {
 
   useEffect(() => {
     if (currentSimulation) {
+      readersCount = 0;
+      sourcesCount = 0;
       let timesAux = currentSimulation.measuredValues.map((item) => item.time);
       const lastTime =
         timesAux.length > 1
@@ -34,7 +38,10 @@ const MeasuredOutputs = ({ currentSimulation }) => {
         currentSimulation.measuredValues[0].values.forEach((value) => {
           portsAux.push({
             id: value.id,
-            label: value.label,
+            label:
+              value.label || value.kind === "output_reader"
+                ? `Reader ${++readersCount}`
+                : `Source ${++sourcesCount}`,
             powers: [],
           });
         });
@@ -73,13 +80,13 @@ const MeasuredOutputs = ({ currentSimulation }) => {
   const data = {
     datasets: ports
       .filter((port) => !port.disabled)
-      .map((port, i) => {
+      .map((port) => {
         return {
           ...baseDataset,
           backgroundColor: generateColorFromID(port.id),
           pointBackgroundColor: generateColorFromID(port.id),
           borderColor: generateColorFromID(port.id),
-          label: port.label || `Reader ${i + 1}`,
+          label: port.label,
           data: port.powers.map((power, j) => {
             return {
               x: times[j],
@@ -155,13 +162,13 @@ const MeasuredOutputs = ({ currentSimulation }) => {
     <>
       <div className="measuredOutputs">
         <div className="outputLabels">
-          {ports.map((port, i) => (
+          {ports.map((port) => (
             <div className="portSubtitle" key={port.id}>
               <div
                 className="portColor"
                 style={{ backgroundColor: generateColorFromID(port.id) }}
               />
-              <span>{port.label || "Reader " + (i + 1)}</span>
+              <span>{port.label}</span>
               <input
                 type="checkbox"
                 defaultChecked

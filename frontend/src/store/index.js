@@ -75,6 +75,7 @@ export const getCurrentReaderAndSourceValuesAndIDs = () => {
       return {
         id: port.target,
         power: port.power,
+        kind: "output_reader",
         label: outputReaders.find((reader) => reader.id === port.parentID)
           .label,
       };
@@ -89,6 +90,7 @@ export const getCurrentReaderAndSourceValuesAndIDs = () => {
         return {
           id: port.target,
           power: port.power,
+          kind: "power_source",
           label: powerSources.find((reader) => reader.id === port.parentID)
             .label,
         };
