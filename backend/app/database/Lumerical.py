@@ -8,6 +8,7 @@ from sklearn.preprocessing import PolynomialFeatures
 from sympy.solvers import solve
 from sympy import Symbol
 from mongoengine.queryset.visitor import Q
+import scipy as sp
 
 class Lumerical(gj.Document):
   switch_cols = {
@@ -25,6 +26,8 @@ class Lumerical(gj.Document):
   #list of polynomial variables, indexed by degree-1
   variables = []
 
+  splines = []
+
   kind = db.StringField()
   degree = db.IntField()
   betas = db.ListField(db.DecimalField(precision=10))
@@ -33,13 +36,60 @@ class Lumerical(gj.Document):
   df_switch = pd.read_csv('app/resources/LumericalValues/switchValues.csv')
   df_y_connector = pd.read_csv('app/resources/LumericalValues/yConnectorValues.csv')
 
+  def get_col_index(col):
+    if col in Lumerical.switch_cols:
+      return Lumerical.switch_cols[col]
+    elif col in Lumerical.y_connector_cols:
+      return Lumerical.y_connector_cols[col]
+
   def set_df(col):
     if col in Lumerical.switch_cols:
       Lumerical.df = Lumerical.df_switch
     elif col in Lumerical.y_connector_cols:
       Lumerical.df = Lumerical.df_y_connector
 
-  def initialize():
+  def generate_spline(col):
+    if Lumerical.df is None:
+      return None
+
+    z_col = Lumerical.get_col_index(col)
+
+    x = Lumerical.df.iloc[:,0:1].copy().to_numpy()
+    y = Lumerical.df.iloc[:,1:2].copy().to_numpy()
+    z = Lumerical.df.iloc[:,z_col].copy().to_numpy()
+
+    return {
+      'col': col,
+      'approx': sp.interpolate.Rbf(x,y,z,function='thin_plate',smooth=5, episilon=5)
+    }
+
+  def get_spline(col):
+    spline = next((x for x in Lumerical.splines if x["col"] == col), None)
+
+    if (spline is None):
+      spline = Lumerical.generate_spline(col)
+
+      if (spline is None):
+        return None
+
+      Lumerical.splines.append(spline)
+
+    return spline
+
+  def calculate(col, control, input):
+    Lumerical.set_df(col)
+
+    if Lumerical.df is None:
+      return None
+
+    spline = Lumerical.get_spline(col)
+    result = spline["approx"](input, control)
+
+    return result if result > 0 else 0
+    
+
+
+  def initialize_old():
     for degree in range(1, 5):
       Lumerical.variables.append(Lumerical.generateVariables(degree))
 
@@ -99,7 +149,7 @@ class Lumerical(gj.Document):
     
     return curr
 
-  def calculate(col, control, input):
+  def calculate_old(col, control, input):
     x = float(input)
     y = float(control)
     Lumerical.set_df(col)
