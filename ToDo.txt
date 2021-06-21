@@ -1,7 +1,0 @@
--[FRONT] refactor menu components into one component
--[BACK] refactor errors 
--temas sass ou less (pre processador CSS)
--grafico:
-  -jogo de cores vermelho e azul (desligado e ligado)
-  -habilitar e desabilitar valores
-  -incluir conexões (clicando)
