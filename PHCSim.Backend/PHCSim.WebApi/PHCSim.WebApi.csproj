@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PHCSim.Data\PHCSim.Data.csproj" />
     <ProjectReference Include="..\PHCSim.Domain\PHCSim.Domain.csproj" />
   </ItemGroup>
 

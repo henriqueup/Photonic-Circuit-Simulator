@@ -8,6 +8,8 @@ namespace PHCSim.Data.Repositories
 {
     public class CircuitRepository : ICircuitRepository
     {
+        public CircuitRepository() { }
+
         public List<Circuit> GetCircuits()
         {
             var circuitDAO = new CircuitDAO
