@@ -5,12 +5,12 @@ services:
         image: phcsim-webapi
         container_name: phcsim-webapi 
         build:
-            context: ./PHCSim.Backend/PHCSim.WebApi
+            context: ./PHCSim.Backend
             dockerfile: Dockerfile
         ports:
             - 8080:80
         volumes:
-            - ./PHCSim.Backend/PHCSim.WebApi:/app
+            - ./PHCSim.Backend:/app
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
         depends_on: 

@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PHCSim.WebApi", "PHCSim.WebApi\PHCSim.WebApi.csproj", "{AC6AFFA5-43C4-4DF2-805D-A3CA6795A73C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PHCSim.WebApi", "PHCSim.WebApi\PHCSim.WebApi.csproj", "{AC6AFFA5-43C4-4DF2-805D-A3CA6795A73C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PHCSim.Domain", "PHCSim.Domain\PHCSim.Domain.csproj", "{15EADC85-8CA6-413E-9157-1FE1358E69D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PHCSim.Data", "PHCSim.Data\PHCSim.Data.csproj", "{4AEB57C6-6E59-4137-B78F-E720789B51B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{AC6AFFA5-43C4-4DF2-805D-A3CA6795A73C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC6AFFA5-43C4-4DF2-805D-A3CA6795A73C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC6AFFA5-43C4-4DF2-805D-A3CA6795A73C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15EADC85-8CA6-413E-9157-1FE1358E69D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15EADC85-8CA6-413E-9157-1FE1358E69D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15EADC85-8CA6-413E-9157-1FE1358E69D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15EADC85-8CA6-413E-9157-1FE1358E69D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AEB57C6-6E59-4137-B78F-E720789B51B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AEB57C6-6E59-4137-B78F-E720789B51B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AEB57C6-6E59-4137-B78F-E720789B51B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AEB57C6-6E59-4137-B78F-E720789B51B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
