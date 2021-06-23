@@ -1,22 +1,20 @@
 version: '3.3'
 
 services:
-    patterns-webapi:
-        image: patterns-webapi
-        container_name: patterns-webapi 
+    phcsim-webapi:
+        image: phcsim-webapi
+        container_name: phcsim-webapi 
         build:
-            context: ./Patterns.WebAPI
+            context: ./PHCSim.Backend/PHCSim.WebApi
             dockerfile: Dockerfile
         ports:
             - 8080:80
         volumes:
-            - ./Patterns.WebAPI:/app
+            - ./PHCSim.Backend/PHCSim.WebApi:/app
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
         depends_on: 
             - reverse-proxy
-        # networks:
-        #     - patterns-network
 
     frontend:
         image: frontend
@@ -29,28 +27,18 @@ services:
             - /app/node_modules
         ports:
             - 3000:3000
-        # networks:
-        #     - frontend-network
 
     reverse-proxy:
         image: reverse-proxy
         container_name: reverse-proxy
         build:
-            context: ./Patterns.WebAPI/Nginx
+            context: ./PHCSim.Backend/PHCSim.WebApi/Nginx
             dockerfile: Dockerfile
         ports:
             - '80:80'
-        # networks:
-        #     - patterns-network
-
-# networks:
-#     patterns-network:
-#         driver: bridge
-#     frontend-network:
-#         driver: bridge
 
 volumes:
     frontend:
         driver: local
-    patterns-webapi:
+    phcsim-webapi:
         driver: local
