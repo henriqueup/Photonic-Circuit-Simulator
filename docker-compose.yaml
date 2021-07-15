@@ -15,6 +15,7 @@ services:
             - ASPNETCORE_ENVIRONMENT=Development
         depends_on: 
             - reverse-proxy
+            - mongodb
 
     frontend:
         image: frontend
@@ -39,8 +40,25 @@ services:
         ports:
             - '80:80'
 
+    mongodb:
+        image: mongo:4.4.0
+        container_name: mongodb
+        command: mongod --auth
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: 3xtr454f3
+            MONGO_INITDB_DATABASE: phcsim
+            MONGO_DATA_DIR: /data/db
+            MONGO_LOG_DIR: /dev/null
+        ports:
+            - "27017:27017"
+        volumes:
+            - mongodbdata:/data/db
+
 volumes:
     frontend:
         driver: local
     phcsim-webapi:
+        driver: local
+    mongodbdata:
         driver: local

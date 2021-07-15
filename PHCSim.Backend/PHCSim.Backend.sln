@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PHCSim.Domain", "PHCSim.Dom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PHCSim.Data", "PHCSim.Data\PHCSim.Data.csproj", "{4AEB57C6-6E59-4137-B78F-E720789B51B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PHCSim.Shared", "PHCSim.Shared\PHCSim.Shared.csproj", "{D926B022-1D2A-4E75-BC45-0A23DBDDE54F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{4AEB57C6-6E59-4137-B78F-E720789B51B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AEB57C6-6E59-4137-B78F-E720789B51B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AEB57C6-6E59-4137-B78F-E720789B51B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D926B022-1D2A-4E75-BC45-0A23DBDDE54F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D926B022-1D2A-4E75-BC45-0A23DBDDE54F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D926B022-1D2A-4E75-BC45-0A23DBDDE54F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D926B022-1D2A-4E75-BC45-0A23DBDDE54F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

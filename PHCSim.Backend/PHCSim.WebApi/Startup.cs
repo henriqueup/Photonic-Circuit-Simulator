@@ -10,6 +10,7 @@ using PHCSim.Domain.AppServices.Interfaces;
 using PHCSim.Domain.Repositories;
 using PHCSim.Domain.Services;
 using PHCSim.Domain.Services.Interfaces;
+using PHCSim.Shared;
 
 namespace PHCSim.WebApi
 {
@@ -33,9 +34,15 @@ namespace PHCSim.WebApi
 
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -52,6 +59,10 @@ namespace PHCSim.WebApi
             services.AddAppServices();
             services.AddServices();
             services.AddRepositories();
+
+            var appSettings = new AppSettings();
+            Configuration.GetSection("AppSettings").Bind(appSettings);
+            services.AddSingleton(appSettings);
 
             services.AddCors(options =>
             {
@@ -70,7 +81,11 @@ namespace PHCSim.WebApi
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PHCSim.WebApi v1"));
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "PHCSim.WebApi v1");
+                    c.RoutePrefix = string.Empty;
+                });
             }
 
             app.UseCors();
