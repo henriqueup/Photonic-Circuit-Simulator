@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using PHCSim.Data.DAOs;
+using PHCSim.Data.Utils.Factories;
 using PHCSim.Domain.Entities;
 using PHCSim.Domain.Repositories;
 using PHCSim.Shared;
@@ -15,13 +16,7 @@ namespace PHCSim.Data.Repositories
 
         public CircuitRepository(AppSettings appSettings)
         {
-            var mongoSettings = appSettings.MongoDB;
-
-            var connectionString = $"mongodb://{mongoSettings.User}:{mongoSettings.Password}@{mongoSettings.Host}/{mongoSettings.Database}";
-            var client = new MongoClient(connectionString);
-            var database = client.GetDatabase(mongoSettings.Database);
-
-            circuitCollection = database.GetCollection<CircuitDAO>(CIRCUIT_COLLECTION);
+            circuitCollection = MongoCollectionFactory.CreateCollection<CircuitDAO>(appSettings.MongoDB, CIRCUIT_COLLECTION);
         }
 
         public List<Circuit> GetCircuits()
