@@ -9,6 +9,8 @@ namespace PHCSim.Data.Repositories
 {
     public class CircuitRepository : ICircuitRepository
     {
+        private readonly static string CIRCUIT_COLLECTION = "Circuits";
+
         private readonly IMongoCollection<CircuitDAO> circuitCollection;
 
         public CircuitRepository(AppSettings appSettings)
@@ -19,17 +21,17 @@ namespace PHCSim.Data.Repositories
             var client = new MongoClient(connectionString);
             var database = client.GetDatabase(mongoSettings.Database);
 
-            circuitCollection = database.GetCollection<CircuitDAO>(mongoSettings.CircuitCollection);
+            circuitCollection = database.GetCollection<CircuitDAO>(CIRCUIT_COLLECTION);
         }
 
         public List<Circuit> GetCircuits()
         {
             var circuitDAOs = circuitCollection.Find(circuit => true).ToList();
 
-            return CreateCircuitList(circuitDAOs);
+            return ConvertDAOsToEntities(circuitDAOs);
         }
 
-        private List<Circuit> CreateCircuitList(List<CircuitDAO> circuitDAOs)
+        private List<Circuit> ConvertDAOsToEntities(List<CircuitDAO> circuitDAOs)
         {
             var circuits = new List<Circuit>();
 
