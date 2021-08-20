@@ -21,7 +21,7 @@ namespace PHCSim.WebApi.Controllers
         [ProducesResponseType(500)]
         public ActionResult GetCircuits()
         {
-            var circuits = circuitAppService.GetCircuits();
+            var circuits = circuitAppService.GetAll();
 
             return Ok(circuits);
         }
@@ -32,7 +32,7 @@ namespace PHCSim.WebApi.Controllers
         [ProducesResponseType(500)]
         public ActionResult CreateCircuit([FromBody] CircuitModel model)
         {
-            model.Id = circuitAppService.CreateCircuit(model.Label);
+            model.Id = circuitAppService.Create(model.Label);
 
             return Ok(model);
         }

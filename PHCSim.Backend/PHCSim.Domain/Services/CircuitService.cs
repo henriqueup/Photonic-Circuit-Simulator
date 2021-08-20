@@ -14,14 +14,14 @@ namespace PHCSim.Domain.Services
             this.circuitRepository = circuitRepository;
         }
 
-        public List<Circuit> GetCircuits()
+        public List<Circuit> GetAll()
         {
-            return circuitRepository.GetCircuits();
+            return circuitRepository.GetAll();
         }
 
-        public string CreateCircuit(string label)
+        public string Create(string label)
         {
-            return circuitRepository.CreateCircuit(label);
+            return circuitRepository.Create(label);
         }
 
         public void Delete(string id)

@@ -19,14 +19,14 @@ namespace PHCSim.Data.Repositories
             circuitCollection = MongoCollectionFactory.CreateCollection<CircuitDAO>(appSettings.MongoDB, CIRCUIT_COLLECTION);
         }
 
-        public List<Circuit> GetCircuits()
+        public List<Circuit> GetAll()
         {
             var circuitDAOs = circuitCollection.Find(circuit => true).ToList();
 
             return ConvertDAOsToEntities(circuitDAOs);
         }
 
-        public string CreateCircuit(string label)
+        public string Create(string label)
         {
             var newCircuit = new CircuitDAO
             {

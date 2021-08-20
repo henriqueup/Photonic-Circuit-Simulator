@@ -5,8 +5,8 @@ namespace PHCSim.Domain.Services.Interfaces
 {
     public interface ICircuitService
     {
-        List<Circuit> GetCircuits();
-        string CreateCircuit(string label);
+        List<Circuit> GetAll();
+        string Create(string label);
         void Delete(string id);
     }
 }
