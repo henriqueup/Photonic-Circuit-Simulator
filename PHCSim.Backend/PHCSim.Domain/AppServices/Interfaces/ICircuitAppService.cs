@@ -7,5 +7,6 @@ namespace PHCSim.Domain.AppServices.Interfaces
     {
         List<Circuit> GetCircuits();
         string CreateCircuit(string label);
+        void Delete(string id);
     }
 }

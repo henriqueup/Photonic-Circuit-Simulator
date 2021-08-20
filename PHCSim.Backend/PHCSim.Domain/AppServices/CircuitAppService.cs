@@ -23,5 +23,10 @@ namespace PHCSim.Domain.AppServices
         {
             return circuitService.CreateCircuit(label);
         }
+
+        public void Delete(string id)
+        {
+            circuitService.Delete(id);
+        }
     }
 }

@@ -36,5 +36,16 @@ namespace PHCSim.WebApi.Controllers
 
             return Ok(model);
         }
+
+        [HttpDelete("circuits/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public ActionResult DeleteCircuit([FromRoute] string id)
+        {
+            circuitAppService.Delete(id);
+
+            return Ok();
+        }
     }
 }

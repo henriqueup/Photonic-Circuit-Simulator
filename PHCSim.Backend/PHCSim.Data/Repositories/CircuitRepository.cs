@@ -38,6 +38,11 @@ namespace PHCSim.Data.Repositories
             return newCircuit.Id;
         }
 
+        public void Delete(string id)
+        {
+            circuitCollection.DeleteOne(circuit => circuit.Id == id);
+        }
+
         private List<Circuit> ConvertDAOsToEntities(List<CircuitDAO> circuitDAOs)
         {
             var circuits = new List<Circuit>();

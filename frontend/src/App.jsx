@@ -3,9 +3,14 @@ import './App.css';
 
 const App = () => {
   const [label, setLabel] = useState("");
+  const [deletionId, setDeletionId] = useState("");
 
   const handleChangeLabel = (event) => {
     setLabel(event.target.value);
+  }
+
+  const handleChangeDeletionId = (event) => {
+    setDeletionId(event.target.value);
   }
 
   const handleClick = async () => {
@@ -32,13 +37,23 @@ const App = () => {
     setLabel("");
   }
 
+  const handleClick3 = async () => {
+    await fetch(`http://localhost:8080/api/v1/circuits/${deletionId}`,{
+      method: 'DELETE'
+    });
+
+    setDeletionId("");
+  }
+
   return (
     <div className="App">
       <header className="App-header">
         <p>Teste</p>
         <input onChange={handleChangeLabel} value={label} />
-        <button onClick={handleClick}>LISTAR PRODUTOS</button>
         <button onClick={handleClick2}>INSERIR PRODUTO</button>
+        <button onClick={handleClick}>LISTAR PRODUTOS</button>
+        <input onChange={handleChangeDeletionId} value={deletionId} />
+        <button onClick={handleClick3}>DELETAR PRODUTO</button>
       </header>
     </div>
   );
