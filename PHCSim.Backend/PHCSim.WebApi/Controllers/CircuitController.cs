@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PHCSim.Domain.AppServices.Interfaces;
+using PHCSim.WebApi.Models;
 
 namespace PHCSim.WebApi.Controllers
 {
@@ -23,6 +24,17 @@ namespace PHCSim.WebApi.Controllers
             var circuits = circuitAppService.GetCircuits();
 
             return Ok(circuits);
+        }
+
+        [HttpPost("circuits")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public ActionResult CreateCircuit([FromBody] CircuitModel model)
+        {
+            model.Id = circuitAppService.CreateCircuit(model.Label);
+
+            return Ok(model);
         }
     }
 }

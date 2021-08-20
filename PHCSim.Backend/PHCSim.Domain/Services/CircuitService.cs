@@ -18,5 +18,10 @@ namespace PHCSim.Domain.Services
         {
             return circuitRepository.GetCircuits();
         }
+
+        public string CreateCircuit(string label)
+        {
+            return circuitRepository.CreateCircuit(label);
+        }
     }
 }

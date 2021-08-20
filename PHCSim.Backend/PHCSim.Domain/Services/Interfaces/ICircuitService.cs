@@ -6,5 +6,6 @@ namespace PHCSim.Domain.Services.Interfaces
     public interface ICircuitService
     {
         List<Circuit> GetCircuits();
+        string CreateCircuit(string label);
     }
 }

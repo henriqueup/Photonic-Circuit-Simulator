@@ -26,6 +26,18 @@ namespace PHCSim.Data.Repositories
             return ConvertDAOsToEntities(circuitDAOs);
         }
 
+        public string CreateCircuit(string label)
+        {
+            var newCircuit = new CircuitDAO
+            {
+                Label = label
+            };
+
+            circuitCollection.InsertOne(newCircuit);
+
+            return newCircuit.Id;
+        }
+
         private List<Circuit> ConvertDAOsToEntities(List<CircuitDAO> circuitDAOs)
         {
             var circuits = new List<Circuit>();
