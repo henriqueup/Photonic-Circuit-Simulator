@@ -28,6 +28,7 @@ To do so, use the commands:
   - mongo -u ***rootUser*** -p ***rootPwd*** 
   - use ***database***
   - db.createUser({user: '***appUser***', pwd: '***appPwd***', roles: [{role: 'readWrite', db: '***database***'}]})
+  [//]: <> (db.createUser({user: 'appUser', pwd: 'phcsim123', roles: [{role: 'readWrite', db: 'phcsim'}]}))
   - exit
   - mongo -u ***appUser*** -p ***appPwd*** --authenticationDatabase ***database***
   - exit

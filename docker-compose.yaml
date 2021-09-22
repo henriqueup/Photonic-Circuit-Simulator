@@ -41,12 +41,11 @@ services:
             - '80:80'
 
     mongodb:
-        image: mongo:4.4.0
+        image: mongo
         container_name: mongodb
-        command: mongod --auth
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: 3xtr454f3
+            MONGO_INITDB_ROOT_PASSWORD: phcsim123
             MONGO_INITDB_DATABASE: phcsim
             MONGO_DATA_DIR: /data/db
             MONGO_LOG_DIR: /dev/null
