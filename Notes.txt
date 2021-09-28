@@ -1,0 +1,4 @@
+Backend:
+  -Entities equality, should I override the operator? Or maybe use identity equality? Maybe even implement a property recursive loop?
+
+Frontend:
